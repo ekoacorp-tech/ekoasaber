@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sankhya Blend">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a2b3c">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>Balizador Sankhya Mobile &amp; Desktop | Blendcoffee &amp; Ekoa</title>
+    <style>
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-surface: #ffffff;
+            --bg-sidebar: #1a2b3c;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #cbd5e1;
+            --brand-gold: #d59b2a;
+            --brand-navy: #1a2b3c;
+            --brand-teal: #008080;
+            --brand-orange: #d97706;
+            --row-hover: #f8fafc;
+            --row-zebra: #f8fafc;
+            --badge-sim-bg: #dcfce7;
+            --badge-sim-txt: #166534;
+            --badge-nao-bg: #fee2e2;
+            --badge-nao-txt: #991b1b;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        body.dark-mode {
+            --bg-body: #0b1120;
+            --bg-surface: #1e293b;
+            --bg-sidebar: #0f172a;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --row-hover: #263349;
+            --row-zebra: #162032;
+            --badge-sim-bg: #064e3b;
+            --badge-sim-txt: #6ee7b7;
+            --badge-nao-bg: #7f1d1d;
+            --badge-nao-txt: #fca5a5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Barra Superior Mobile (Oculta no Desktop) */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-sidebar);
+            color: #ffffff;
+            z-index: 900;
+            padding: 0 14px;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--brand-gold);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+
+        .mobile-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .drawer-toggle-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(213,155,42,0.6);
+            color: var(--brand-gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Backdrop do Drawer Mobile */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            z-index: 940;
+            backdrop-filter: blur(2px);
+        }
+
+        .sidebar-backdrop.open {
+            display: block;
+        }
+
+        /* Sidebar SaaS Padrão Blendcoffee / Ekoa */
+        .sidebar {
+            width: 290px;
+            background: var(--bg-sidebar);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+            border-right: 2px solid var(--brand-gold);
+            z-index: 950;
+            transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logo-blend {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            margin-bottom: 16px;
+        }
+
+        .logo-blend-box {
+            width: 48px;
+            height: 48px;
+            background: #111827;
+            border: 2.5px solid var(--brand-gold);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+            flex-shrink: 0;
+        }
+
+        .logo-blend-box .b-gold {
+            color: var(--brand-gold);
+            font-weight: 800;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .logo-blend-box .b-silver {
+            color: #cbd5e1;
+            font-weight: 700;
+            font-size: 8.5px;
+            letter-spacing: 0.8px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.02rem;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .sidebar p.sub {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+        }
+
+        .filter-group {
+            margin-bottom: 14px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.73rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--brand-gold);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        /* font-size 16px evita auto-zoom intrusivo no iPhone (iOS Safari) */
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.09);
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .filter-group select option {
+            background: #1a2b3c;
+            color: #ffffff;
+        }
+
+        .kpi-box {
+            background: rgba(255,255,255,0.06);
+            border-left: 4px solid var(--brand-gold);
+            padding: 9px 12px;
+            border-radius: 6px;
+            margin-bottom: 9px;
+        }
+
+        .kpi-box.green { border-left-color: #10b981; }
+        .kpi-box.amber { border-left-color: #f59e0b; }
+        .kpi-box.red { border-left-color: #ef4444; }
+        .kpi-box.blue { border-left-color: #38bdf8; }
+
+        .kpi-box span.label {
+            font-size: 0.73rem;
+            color: #cbd5e1;
+            display: block;
+        }
+
+        .kpi-box span.val {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .ekoa-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            margin-top: 14px;
+        }
+
+        .ekoa-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #008080 50%, #d97706 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Georgia, serif;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 20px;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .ekoa-text {
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            font-size: 0.95rem;
+            color: #ffffff;
+        }
+
+        /* Área Principal */
+        .main-content {
+            flex: 1;
+            padding: 22px 28px;
+            overflow-y: auto;
+            max-width: 100%;
+        }
+
+        .topbar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .topbar-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 9px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.84rem;
+            font-weight: 600;
+            transition: all 0.18s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn.primary {
+            background: var(--brand-navy);
+            color: #ffffff;
+            border-color: var(--brand-navy);
+        }
+
+        .btn.teal {
+            background: var(--brand-teal);
+            color: #ffffff;
+            border-color: var(--brand-teal);
+        }
+
+        .btn.gold {
+            background: var(--brand-gold);
+            color: #111827;
+            border-color: var(--brand-gold);
+            font-weight: 700;
+        }
+
+        .btn.danger-outline {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .user-bar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--brand-gold);
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .user-bar label {
+            font-size: 0.73rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* 16px para compatibilidade total com iOS / Android sem dar zoom forçado */
+        .user-bar input, .user-bar select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Filtro Rápido de Módulo Visível no Mobile */
+        .mobile-quick-filter {
+            display: none;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .mobile-quick-filter select,
+        .mobile-quick-filter input {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Painel de Histórico Evolutivo Salvo */
+        .history-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--brand-teal);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 18px;
+            display: none;
+        }
+
+        .history-panel.active {
+            display: block;
+        }
+
+        .history-list {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 10px;
+        }
+
+        .history-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            background: var(--bg-body);
+            font-size: 0.82rem;
+        }
+
+        .table-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--brand-navy);
+            color: #ffffff;
+            text-align: left;
+            padding: 13px 15px;
+            font-size: 0.84rem;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.87rem;
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {
+            background: var(--row-zebra);
+        }
+
+        .mod-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: rgba(213, 155, 42, 0.15);
+            color: var(--brand-gold);
+            font-weight: 700;
+            font-size: 0.74rem;
+            margin-bottom: 4px;
+        }
+
+        .hom-badge {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.71rem;
+            font-weight: 700;
+        }
+
+        .hom-sim { background: var(--badge-sim-bg); color: var(--badge-sim-txt); }
+        .hom-nao { background: var(--badge-nao-bg); color: var(--badge-nao-txt); }
+
+        .dica-box {
+            margin-top: 6px;
+            font-size: 0.81rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .stamp-tag {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.74rem;
+            color: var(--brand-teal);
+            font-weight: 600;
+        }
+
+        .options-cell {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .opt-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 11px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            user-select: none;
+            transition: all 0.15s;
+        }
+
+        .opt-pill input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .opt-pill.conf:has(input:checked) {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+        }
+
+        .opt-pill.apr:has(input:checked) {
+            background: #fef3c7;
+            border-color: #d97706;
+            color: #78350f;
+        }
+
+        .opt-pill.desc:has(input:checked) {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #7f1d1d;
+        }
+
+        .obs-input {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        /* Barra Inferior Fixa para Celular (Android & iPhone) */
+        .mobile-bottom-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-sidebar);
+            border-top: 2px solid var(--brand-gold);
+            padding: 10px 14px calc(10px + var(--safe-bottom));
+            z-index: 890;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+        }
+
+        .mobile-kpi-mini {
+            color: #ffffff;
+            font-size: 0.78rem;
+            line-height: 1.25;
+        }
+
+        .mobile-kpi-mini strong {
+            color: var(--brand-gold);
+            font-size: 0.95rem;
+            display: block;
+        }
+
+        /* Modais */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            max-width: 760px;
+            width: 100%;
+            border-radius: 14px;
+            border: 2px solid var(--brand-gold);
+            padding: 22px 24px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.35);
+        }
+
+        .modal-box.compact {
+            max-width: 540px;
+        }
+
+        .modal-box h3 {
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            color: var(--brand-gold);
+        }
+
+        .step-item {
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-left: 3px solid var(--brand-teal);
+            background: var(--bg-body);
+            border-radius: 6px;
+            font-size: 0.86rem;
+            line-height: 1.45;
+        }
+
+        .summary-banner {
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 14px 0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        /* =========================================================
+           RESPONSIVIDADE MOBILE-FIRST (ANDROID & iOS / IPHONE)
+           Transforma a Tabela em Cartões Touch Confortáveis
+           ========================================================= */
+        @media (max-width: 900px) {
+            body {
+                display: block;
+                padding-top: 60px;
+                padding-bottom: calc(76px + var(--safe-bottom));
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                height: 100%;
+                transform: translateX(-105%);
+                box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                padding: 14px 12px;
+            }
+
+            .topbar {
+                padding: 14px;
+            }
+
+            .topbar h1 {
+                font-size: 1.05rem !important;
+            }
+
+            .user-bar {
+                grid-template-columns: 1fr;
+                padding: 14px;
+                gap: 10px;
+            }
+
+            .mobile-quick-filter {
+                display: flex;
+            }
+
+            /* Transforma Tabela em Cards no Mobile */
+            .table-card {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+                width: 100%;
+            }
+
+            thead tr {
+                display: none;
+            }
+
+            tbody tr {
+                background: var(--bg-surface) !important;
+                border: 1px solid var(--border-color);
+                border-left: 4px solid var(--brand-navy);
+                border-radius: 12px;
+                margin-bottom: 14px;
+                padding: 14px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            }
+
+            tbody td {
+                border: none;
+                padding: 6px 0;
+                font-size: 0.92rem;
+            }
+
+            tbody td:first-child {
+                display: inline-block;
+                width: auto;
+                background: var(--brand-navy);
+                color: #ffffff;
+                padding: 2px 9px;
+                border-radius: 6px;
+                font-size: 0.78rem;
+                margin-bottom: 6px;
+            }
+
+            /* Botões de sentimento grandes para o polegar no celular */
+            .options-cell {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-top: 6px;
+            }
+
+            .opt-pill {
+                width: 100%;
+                padding: 12px 14px;
+                font-size: 0.92rem;
+                justify-content: flex-start;
+            }
+
+            .opt-pill input {
+                width: 18px;
+                height: 18px;
+            }
+
+            .mobile-bottom-bar {
+                display: flex;
+            }
+        }
+
+        @media print {
+            .sidebar, .topbar-actions, .mobile-header, .mobile-bottom-bar, .mobile-quick-filter { display: none !important; }
+            .main-content { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Cabeçalho Fixo Mobile (Android & iOS) -->
+<header class="mobile-header">
+    <div class="mobile-header-left">
+        <button class="drawer-toggle-btn" onclick="toggleMobileSidebar()" aria-label="Abrir Menu e Filtros">&#9776;</button>
+        <div class="logo-blend-box" style="width:38px; height:38px; border-width:2px;">
+            <span class="b-gold" style="font-size:8px;">BLEND</span>
+            <span class="b-silver" style="font-size:7px;">COFFEE</span>
+        </div>
+        <div>
+            <div style="font-weight:700; font-size:0.9rem; line-height:1.1;">Balizador Sankhya</div>
+            <div style="font-size:0.7rem; color:#cbd5e1;" id="mobileSubStatus">Toque em &#9776; p/ Filtros e KPIs</div>
+        </div>
+    </div>
+    <div style="display:flex; gap:6px;">
+        <button class="btn teal" style="padding:7px 10px; font-size:0.78rem;" onclick="toggleTutorial()">?</button>
+        <button class="btn" style="padding:7px 10px; font-size:0.78rem;" onclick="document.body.classList.toggle('dark-mode')">&#9790;</button>
+    </div>
+</header>
+
+<!-- Fundo escuro ao abrir menu no celular -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleMobileSidebar(false)"></div>
+
+<aside class="sidebar" id="appSidebar">
+    <div>
+        <div class="logo-blend">
+            <div class="logo-blend-box">
+                <span class="b-gold">BLEND</span>
+                <span class="b-silver">COFFEE</span>
+            </div>
+            <div>
+                <h2>Conhecimento Sankhya</h2>
+                <p class="sub">FAP 26511 • 194 Rotinas Datadas</p>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <label>1. Filtrar por Módulo (Setor)</label>
+            <select id="modFilter" onchange="syncAndFilter('sidebar')">
+                <option value="">Todos os Módulos (194)</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label>2. Busca Rápida na Tela</label>
+            <input type="text" id="searchFilter" placeholder="Ex: OFX, XML, SPED, Comissão..." onkeyup="syncAndFilter('sidebar')">
+        </div>
+
+        <div class="filter-group">
+            <label>3. Filtrar por Sentimento</label>
+            <select id="statusFilter" onchange="applyFilters()">
+                <option value="">Todos os Status</option>
+                <option value="Confiante">Confiante</option>
+                <option value="Preciso Aprender Mais">Preciso Aprender Mais</option>
+                <option value="Desconheço">Desconheço</option>
+                <option value="Pendente">Ainda Não Respondido</option>
+            </select>
+        </div>
+
+        <div class="kpi-box">
+            <span class="label">Progresso no Filtro Atual</span>
+            <span class="val" id="kpiProgress">0 / 194 (0%)</span>
+        </div>
+        <div class="kpi-box green">
+            <span class="label">&#9656; Confiante (Domínio)</span>
+            <span class="val" id="kpiConfiante">0</span>
+        </div>
+        <div class="kpi-box amber">
+            <span class="label">&#9656; Preciso Aprender Mais</span>
+            <span class="val" id="kpiAprender">0</span>
+        </div>
+        <div class="kpi-box red">
+            <span class="label">&#9656; Desconheço (Treinar do Zero)</span>
+            <span class="val" id="kpiDesconheco">0</span>
+        </div>
+        <div class="kpi-box blue">
+            <span class="label">&#9656; Avaliações Salvas c/ Data</span>
+            <span class="val" id="kpiSavedCycles">0 ciclos</span>
+        </div>
+    </div>
+
+    <div class="ekoa-footer">
+        <div class="ekoa-icon">e</div>
+        <div>
+            <div class="ekoa-text">EKOA</div>
+            <div style="font-size: 0.7rem; color: #94a3b8;">Gestão e Processos</div>
+        </div>
+    </div>
+</aside>
+
+<main class="main-content">
+    <div class="topbar">
+        <div>
+            <h1 style="font-size: 1.22rem;">Balizador Evolutivo de Conhecimento Sankhya</h1>
+            <p style="font-size: 0.83rem; color: var(--text-secondary);">Compatível com Android, iPhone (iOS) e Computador • Grava Ciclo &#8594; Envia (CSV) &#8594; Limpa p/ Nova Pessoa</p>
+        </div>
+        <div class="topbar-actions">
+            <button class="btn teal" onclick="toggleTutorial()">&#9432; Tutorial &amp; App Celular</button>
+            <button class="btn" onclick="toggleHistoryPanel()">&#128197; Evolução (<span id="btnHistCount">0</span>)</button>
+            <button class="btn gold" onclick="finishAndPromptNext()">&#128190; Gravar Ciclo</button>
+            <button class="btn" onclick="shareOrWhatsAppSummary()">&#128241; Compartilhar (WhatsApp/iOS)</button>
+            <button class="btn danger-outline" onclick="promptNewPersonDirect()">&#10227; Limpar p/ Nova Pessoa</button>
+            <button class="btn" onclick="document.body.classList.toggle('dark-mode')">&#9790; Modo Escuro</button>
+        </div>
+    </div>
+
+    <!-- Barra de Identificação & Ciclo Evolutivo -->
+    <div class="user-bar">
+        <div>
+            <label>Colaborador Avaliado</label>
+            <input type="text" id="userName" placeholder="Ex: Maria Silva" oninput="saveDraft()">
+        </div>
+        <div>
+            <label>Setor / Departamento</label>
+            <input type="text" id="userRole" placeholder="Ex: Compras, Financeiro..." oninput="saveDraft()">
+        </div>
+        <div>
+            <label>Ciclo de Evolução</label>
+            <select id="userCycle" onchange="saveDraft()">
+                <option value="1º Ciclo (Baseline / Virada)">1º Ciclo (Baseline / Virada)</option>
+                <option value="2º Ciclo (Evolução 30 Dias)">2º Ciclo (Evolução 30 Dias)</option>
+                <option value="3º Ciclo (Consolidação 60 Dias)">3º Ciclo (Consolidação 60 Dias)</option>
+                <option value="4º Ciclo (Reciclagem / Domínio)">4º Ciclo (Reciclagem / Domínio)</option>
+            </select>
+        </div>
+        <div>
+            <label>Data do Registro (Obrigatória)</label>
+            <input type="date" id="userDate" onchange="saveDraft()">
+        </div>
+    </div>
+
+    <!-- Filtro Rápido Direto na Tela para Celular (Android / iPhone) -->
+    <div class="mobile-quick-filter">
+        <label style="font-size:0.75rem; font-weight:700; color:var(--brand-gold); text-transform:uppercase;">Filtro Rápido de Módulo no Celular:</label>
+        <select id="modFilterMobile" onchange="syncAndFilter('mobile')">
+            <option value="">Todos os Módulos (194)</option>
+        </select>
+        <input type="text" id="searchFilterMobile" placeholder="Buscar rotina (ex: OFX, XML, Pedido)..." onkeyup="syncAndFilter('mobile')">
+    </div>
+
+    <!-- Painel de Histórico Evolutivo Salvo no Navegador -->
+    <div class="history-panel" id="historyPanel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <strong>&#128200; Linha do Tempo de Avaliações Gravadas neste Dispositivo</strong>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn gold" style="padding:6px 10px; font-size:0.78rem;" onclick="sendPending()">&#10148; Enviar pendentes (<span id="pendCount">0</span>)</button>
+                <button class="btn teal" style="padding:6px 10px; font-size:0.78rem;" onclick="exportAllSavedHistoryCSV()">&#8635; Baixar Histórico Consolidado</button>
+                <button class="btn" style="padding:6px 10px; font-size:0.78rem;" onclick="clearHistory()">Limpar Histórico</button>
+            </div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;">Cada vez que você conclui um questionário, a fotografia daquela pessoa fica salva abaixo e o formulário é preparado para o próximo colaborador.</p>
+        <div class="history-list" id="historyList"></div>
+    </div>
+
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">#</th>
+                    <th style="width: 21%;">Módulo &amp; Atividade</th>
+                    <th style="width: 36%;">Procedimento Sankhya &amp; Contexto para Leigos</th>
+                    <th style="width: 25%;">Sentimento Atual (Carimba Data)</th>
+                    <th style="width: 13%;">Observações / Plano</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Barra Fixa Inferior no Celular (Para finalizar com 1 toque de polegar) -->
+<div class="mobile-bottom-bar">
+    <div class="mobile-kpi-mini">
+        <span>Respondidas no filtro:</span>
+        <strong id="mobileBottomProgress">0 / 194 (0%)</strong>
+    </div>
+    <div style="display:flex; gap:8px;">
+        <button class="btn" style="padding:10px 12px; font-size:0.8rem;" onclick="shareOrWhatsAppSummary()">&#128241; Enviar</button>
+        <button class="btn gold" style="padding:10px 14px; font-size:0.84rem;" onclick="finishAndPromptNext()">&#128190; Gravar Ciclo</button>
+    </div>
+</div>
+
+<!-- Modal Confirmação Pós-Ciclo: Pergunta se está tudo certo para iniciar nova pessoa -->
+<div class="modal-overlay" id="nextPersonModal">
+    <div class="modal-box compact">
+        <h3>&#9989; Ciclo Gravado e Arquivo Gerado!</h3>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+            O ciclo foi salvo neste aparelho como <strong>pendente de envio</strong>. Para enviar o CSV, abra a Evolução e toque em <strong>Enviar</strong>.
+        </p>
+        <div class="summary-banner" id="finishSummaryBox"></div>
+        <p style="font-size: 0.92rem; font-weight: 700; margin-bottom: 14px;">
+            Está tudo certo para limpar as respostas atuais e começar um novo questionário com outra pessoa?
+        </p>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+            <button class="btn" onclick="shareOrWhatsAppSummary()">&#128241; Compartilhar no WhatsApp / E-mail</button>
+            <button class="btn" onclick="closeNextPersonModal(false)">Manter na tela</button>
+            <button class="btn gold" onclick="closeNextPersonModal(true)">&#10003; Sim, começar outra pessoa!</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tutorial Passo a Passo + Como Instalar no Android e iPhone -->
+<div class="modal-overlay" id="tutorialModal">
+    <div class="modal-box">
+        <h3>&#9656; Como Usar no Celular (Android &amp; iPhone) e no Computador</h3>
+        <div class="step-item">
+            <strong>&#128241; No Android (Chrome / Samsung Internet) e iPhone (Safari):</strong><br>
+            • Envie este arquivo HTML por <strong>WhatsApp, E-mail, Teams ou Google Drive/OneDrive</strong>.<br>
+            • Ao tocar nele no celular, a tabela se transforma automaticamente em <strong>Cartões Touch</strong> largos, ideais para marcar com o polegar.<br>
+            • <strong>Dica de App (Tela Inicial):</strong> No Safari (iPhone), toque em <em>Compartilhar &#8594; Adicionar à Tela de Início</em>. No Chrome (Android), toque nos <em>3 pontinhos &#8594; Adicionar à tela inicial</em>. Ele ficará com ícone de aplicativo na tela do telefone!
+        </div>
+        <div class="step-item">
+            <strong>Passo 1 — Quebre o Gelo:</strong><br>
+            Explique ao colaborador que este questionário <em>não é um teste</em>. Marcar 'Preciso Aprender Mais' ou 'Desconheço' mostra onde devemos apoiar e treinar.
+        </div>
+        <div class="step-item">
+            <strong>Passo 2 — Filtre Apenas o Módulo do Setor:</strong><br>
+            No celular, use a caixa <strong>"Filtro Rápido de Módulo"</strong> logo abaixo do nome (ou toque no menu &#9776; no canto superior esquerdo) para mostrar apenas o setor entrevistado.
+        </div>
+        <div class="step-item">
+            <strong>Passo 3 — Gravar &#8594; Enviar quando quiser &#8594; Próxima Pessoa:</strong><br>
+            Ao terminar, toque no botão dourado <strong>"Gravar Ciclo"</strong> na barra inferior do celular. Ele guarda o ciclo no aparelho, mesmo sem internet; o envio do CSV é feito depois, em Evolução &#8594; Enviar. Ele guarda apenas o que foi respondido (ou permite enviar direto no WhatsApp/AirDrop/E-mail) e pergunta se pode limpar a tela para a próxima pessoa!
+        </div>
+        <div style="text-align: right; margin-top: 16px;">
+            <button class="btn primary" onclick="toggleTutorial()">Entendi, Vamos Começar!</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const DATA = [{"id": 1, "modulo": "Caixas e Bancos", "atividade": "Caixas e Bancos", "procedimento": "Conciliação do extrato bancário através do arquivo OFX", "homologado": "SIM", "dica": "Importe o extrato OFX do banco no portal financeiro para conciliar lançamentos automaticamente e evitar erros de digitação."}, {"id": 2, "modulo": "Caixas e Bancos", "atividade": "Caixas e Bancos", "procedimento": "Movimentações financeiras entre contas da empresa", "homologado": "NÃO", "dica": "Registre transferências entre contas bancárias ou caixas internos garantindo que os saldos contábil e financeiro fechem diariamente."}, {"id": 3, "modulo": "Caixas e Bancos", "atividade": "Caixas e Bancos", "procedimento": "Conciliação bancária manual", "homologado": "SIM", "dica": "Confira lançamento a lançamento no sistema frente ao extrato bancário quando o banco não disponibilizar arquivo eletrônico."}, {"id": 4, "modulo": "Caixas e Bancos", "atividade": "Caixas e Bancos", "procedimento": "Conciliação Bancária Automática", "homologado": "SIM", "dica": "Utilize regras parametrizadas no Sankhya para parear baixas e tarifas bancárias sem necessidade de intervenção manual."}, {"id": 5, "modulo": "Caixas e Bancos", "atividade": "Caixas e Bancos", "procedimento": "Conciliação do extrato bancário", "homologado": "SIM", "dica": "Valide diariamente a data de conciliação e o saldo real das contas correntes na tela de Movimentação Bancária."}, {"id": 6, "modulo": "Caixas e Bancos", "atividade": "Caixas e Bancos", "procedimento": "Fechamento de caixa", "homologado": "SIM", "dica": "Realize a conferência diária dos valores físicos e digitais movimentados no caixa, bloqueando alterações retroativas."}, {"id": 7, "modulo": "Caixas e Bancos", "atividade": "Caixas e Bancos", "procedimento": "Controle de contas (bancária, caixa, adiantamento, fundos, etc.)", "homologado": "SIM", "dica": "Mantenha contas separadas para adiantamentos a fornecedores/clientes, caixas fixos e aplicações para transparência no fluxo de caixa."}, {"id": 8, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Compra com base em pedidos de venda", "homologado": "SIM", "dica": "Gere requisições ou pedidos de compra vinculados diretamente aos pedidos de venda firmados para evitar falta de mercadoria."}, {"id": 9, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Compra com base na emissão de relatórios da necessidade de compras", "homologado": "SIM", "dica": "Consulte os relatórios de giro e ponto de pedido antes de repor estoques para comprar na quantidade e momento certos."}, {"id": 10, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Análise de desempenho o produto por meio da Curva ABC e Rentabilidade", "homologado": "SIM", "dica": "Priorize o capital de giro nos itens Classe A de maior margem e giro utilizando a análise de Curva ABC do Sankhya."}, {"id": 11, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Análise de vendas perdidas, por ausência de estoque (ruptura) antes de comprar", "homologado": "SIM", "dica": "Monitore demandas não atendidas por ruptura para recalibrar o estoque mínimo e não perder vendas recorrentes."}, {"id": 12, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Compra em função de tendências de mercado", "homologado": "SIM", "dica": "Ajuste o planejamento de compras para períodos sazonais ou variações de safra/preço do café e insumos."}, {"id": 13, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Compra em função de solicitações ou requisições internas", "homologado": "SIM", "dica": "Centralize demandas de materiais de uso e consumo ou insumos através de requisições internas aprovadas pelos gestores."}, {"id": 14, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Análise da curva ABC no giro de produtos", "homologado": "SIM", "dica": "Avalie a frequência de saída dos itens no estoque para identificar produtos obsoletos ou de altíssima rotação."}, {"id": 15, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Compra com base na emissão de relatórios da necessidade de compras em função de requisições", "homologado": "SIM", "dica": "Consolide várias requisições internas em um único lote de compras para ganhar poder de negociação com fornecedores."}, {"id": 16, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Reposição do estoque em função do mínimo e máximo", "homologado": "SIM", "dica": "Mantenha os parâmetros de estoque mínimo e máximo atualizados no cadastro de produtos para alertas automáticos de reposição."}, {"id": 17, "modulo": "Compras", "atividade": "Análise da necessidade e possibilidade de compra", "procedimento": "Controla pedidos de compras e pedidos de vendas pendentes?", "homologado": "SIM", "dica": "Acompanhe no Portal de Compras e Vendas o saldo pendente de entrega para prever a disponibilidade futura de estoque."}, {"id": 18, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "ISS nas Entradas", "homologado": "SIM", "dica": "Verifique a retenção e alíquota de ISS ao lançar notas fiscais de serviços tomados de terceiros."}, {"id": 19, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "ICMS-ST (Substituição Tributária) nas Entradas", "homologado": "SIM", "dica": "Valide o cálculo e destaque do ICMS-ST na entrada de mercadorias para correta composição do custo e apuração fiscal."}, {"id": 20, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "Cadastrar CST", "homologado": "SIM", "dica": "Utilize o Código de Situação Tributária (CST) correto na entrada para garantir o aproveitamento exato de créditos fiscais."}, {"id": 21, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "Cadastrar NCM", "homologado": "SIM", "dica": "Mantenha a Nomenclatura Comum do Mercosul (NCM) revisada no cadastro do produto para evitar rejeições de NF-e e erros de alíquota."}, {"id": 22, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "Cadastrar Finalidade da Operação", "homologado": "SIM", "dica": "Defina corretamente a TOP e finalidade (industrialização, comercialização ou uso/consumo) pois ela determina a tributação da nota."}, {"id": 23, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "IPI nas Entradas", "homologado": "SIM", "dica": "Confira se o IPI da nota de compra compõe o custo do produto ou gera crédito fiscal conforme o regime da empresa."}, {"id": 24, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "ICMS-Normal nas Entradas", "homologado": "SIM", "dica": "Audite a base de cálculo e alíquota do ICMS próprio destacado pelo fornecedor na importação do XML."}, {"id": 25, "modulo": "Compras", "atividade": "Configurações Fiscais - Entrada", "procedimento": "PIS/COFINS nas Entradas", "homologado": "SIM", "dica": "Garanta a correta configuração de CST de PIS/COFINS nas TOPs de entrada para apuração exata de créditos no Lucro Real."}, {"id": 26, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Entrada manual via portal de compras/nota", "homologado": "SIM", "dica": "Utilize o lançamento manual apenas para documentos sem XML (como recibos ou notas de serviço específicas), conferindo os totais."}, {"id": 27, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Registro da entrada de produtos", "homologado": "SIM", "dica": "Confirme a nota de compra somente após a conferência física e validação dos itens, gerando estoque e financeiro integrados."}, {"id": 28, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Devolução de compras", "homologado": "SIM", "dica": "Emita a nota de devolução referenciando a nota de entrada original no Sankhya para estornar impostos e abater o financeiro."}, {"id": 29, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Conferência entre pedido x entrada", "homologado": "SIM", "dica": "Valide se preço, quantidade e condição de pagamento da NF-e do fornecedor batem exatamente com o Pedido de Compra aprovado."}, {"id": 30, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Importação de documentos eletrônicos", "homologado": "SIM", "dica": "Processe os arquivos XML na Central de Importação de XML para eliminar digitação manual e erros cadastrais."}, {"id": 31, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Manifesto do Destinatário de nota fiscal eletrônica MDe", "homologado": "SIM", "dica": "Realize a Ciência da Operação e Confirmação da NF-e via MD-e no Sankhya para baixar o XML automaticamente da SEFAZ."}, {"id": 32, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Importação de XML com vinculação do Pedido/Nota", "homologado": "SIM", "dica": "Vincule os itens do XML diretamente ao Pedido de Compra pendente durante a importação para baixar o saldo do pedido."}, {"id": 33, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Aquisição de frete", "homologado": "SIM", "dica": "Lance o CT-e (Conhecimento de Transporte) vinculando-o às notas de compra transportadas para ratear o frete no custo do produto."}, {"id": 34, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Devolução total da compra", "homologado": "SIM", "dica": "Gere a devolução integral a partir da nota de entrada quando toda a remessa for recusada por divergência ou avaria."}, {"id": 35, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Entrada via faturamento de pedido de compra Botão Faturar", "homologado": "SIM", "dica": "Fature o Pedido de Compra diretamente pelo botão Faturar na Central quando não houver importação via XML vinculada."}, {"id": 36, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Compensar devolução de compra Manual", "homologado": "SIM", "dica": "Realize o encontro de contas manual no Financeiro entre o crédito gerado pela devolução e os títulos a pagar ao fornecedor."}, {"id": 37, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Compra energia elétrica", "homologado": "SIM", "dica": "Registre a fatura de energia elétrica utilizando a TOP e modelo de documento fiscal específico para geração correta no SPED."}, {"id": 38, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Retorno de mercadoria remetida para conserto", "homologado": "SIM", "dica": "Controle o retorno de bens enviados para manutenção vinculando à nota de remessa original sem gerar novo custo financeiro."}, {"id": 39, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Compra para entrega futura", "homologado": "SIM", "dica": "Lance a nota de simples faturamento (gerando financeiro) e posteriormente a nota de remessa efetiva (alimentando o estoque)."}, {"id": 40, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Entrada de Transferência entre filiais", "homologado": "SIM", "dica": "Registre a entrada de mercadorias transferidas entre unidades da Blendcoffee garantindo a equivalência de custos e estoque."}, {"id": 41, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Compensar devolução Automática", "homologado": "SIM", "dica": "Utilize a rotina parametrizada na TOP de devolução para abater automaticamente o valor devolvido da duplicata do fornecedor."}, {"id": 42, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Outras entradas", "homologado": "SIM", "dica": "Utilize TOPs específicas para entradas diversas que não configuram compra comercial padrão, mantendo o controle de estoque."}, {"id": 43, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Registro das entradas em unidades diferentes da venda", "homologado": "SIM", "dica": "Configure o fator de conversão no produto (ex: compra em Caixa/Saca e vende em Quilo/Unidade) para conversão automática na entrada."}, {"id": 44, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Devolução parcial da compra", "homologado": "SIM", "dica": "Selecione apenas os itens ou quantidades avariadas/divergentes da nota original para emitir a NF-e de devolução parcial."}, {"id": 45, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Entrada de Amostra Grátis", "homologado": "SIM", "dica": "Registre o recebimento de amostras com CFOP e TOP adequados, dando entrada no estoque sem gerar contas a pagar."}, {"id": 46, "modulo": "Compras", "atividade": "Registro das entradas, notas fiscais e devoluções", "procedimento": "Entrada de bonificação", "homologado": "SIM", "dica": "Dê entrada nos produtos bonificados pelo fornecedor atualizando o estoque e reduzindo o custo médio sem gerar obrigação financeira."}, {"id": 47, "modulo": "Compras", "atividade": "Registro e histórico das compras", "procedimento": "Envio de Pedido de compra por e-mail", "homologado": "SIM", "dica": "Dispare o Pedido de Compra aprovado diretamente pelo Sankhya em PDF para o e-mail cadastrado no parceiro fornecedor."}, {"id": 48, "modulo": "Compras", "atividade": "Registro e histórico das compras", "procedimento": "Lançamento da cotação de compra para análise automática e aprovação", "homologado": "SIM", "dica": "Utilize a Central de Cotações para comparar preços, prazos e fretes de múltiplos fornecedores, apurando a melhor compra."}, {"id": 49, "modulo": "Compras", "atividade": "Registro e histórico das compras", "procedimento": "Registro dos pedidos de compra", "homologado": "SIM", "dica": "Formalize toda aquisição via Pedido de Compra no Sankhya antes do recebimento da nota para garantir governança e orçamento."}, {"id": 50, "modulo": "Compras", "atividade": "Registro e histórico das compras", "procedimento": "Aprovação de compras", "homologado": "SIM", "dica": "Respeite o fluxo de liberação de limites (alçadas de aprovação) no sistema antes de liberar o pedido ao fornecedor."}, {"id": 51, "modulo": "Compras", "atividade": "Registro e histórico das compras", "procedimento": "Registro do orçamento de compra", "homologado": "SIM", "dica": "Cadastre orçamentos prévios de fornecedores no sistema para histórico de negociação e futura conversão em pedido firme."}, {"id": 52, "modulo": "Compras", "atividade": "Registro e histórico das compras", "procedimento": "Controle do pedido de compra pendente", "homologado": "SIM", "dica": "Monitore pedidos de compra em aberto ou atrasados para cobrar entregas dos fornecedores ou cancelar saldos residuais."}, {"id": 53, "modulo": "Compras", "atividade": "Registro e histórico das compras", "procedimento": "Envio da cotação de compra para os Fornecedores - B2B", "homologado": "SIM", "dica": "Envie o link ou formulário de cotação eletrônica para que os próprios fornecedores preencham seus preços e condições."}, {"id": 54, "modulo": "Contabilidade*", "atividade": "Apuração Contábil", "procedimento": "Conciliação de Contas", "homologado": "SIM", "dica": "Compare os saldos razão das contas contábeis (bancos, clientes, fornecedores, estoques) com os relatórios auxiliares dos módulos."}, {"id": 55, "modulo": "Contabilidade*", "atividade": "Apuração Contábil", "procedimento": "Fechamento Contábil", "homologado": "SIM", "dica": "Execute a rotina mensal de fechamento contábil após validar todas as conciliações para garantir a integridade dos balancetes."}, {"id": 56, "modulo": "Contabilidade*", "atividade": "Apuração Contábil", "procedimento": "Bloqueio de lançamentos na contabilidade", "homologado": "SIM", "dica": "Trave o período contábil já encerrado nas preferências da empresa para impedir inserções ou exclusões retroativas indevidas."}, {"id": 57, "modulo": "Contabilidade*", "atividade": "Apuração Contábil", "procedimento": "Consolidação de Empresas", "homologado": "SIM", "dica": "Gere demonstrativos contábeis unificados somando matriz e filiais da Blendcoffee para visão societária do grupo."}, {"id": 58, "modulo": "Contabilidade*", "atividade": "Apuração Contábil", "procedimento": "Apuração Regime Normal - Lucro Real", "homologado": "SIM", "dica": "Apure os impostos e o resultado contábil trimestral/anual observando estritamente as regras de adições e exclusões do Lucro Real."}, {"id": 59, "modulo": "Contabilidade*", "atividade": "Apuração Contábil", "procedimento": "Apuração do Resultado do Exercicio", "homologado": "SIM", "dica": "Rode o zeramento das contas de resultado (receitas, custos e despesas) transferindo o saldo líquido para Lucros/Prejuízos Acumulados."}, {"id": 60, "modulo": "Contabilidade*", "atividade": "Configurações e Preferências para contabilidade", "procedimento": "Definição de Acessos e Permissões", "homologado": "SIM", "dica": "Restrinja o acesso às telas de lançamentos manuais, plano de contas e fechamento apenas à equipe contábil autorizada."}, {"id": 61, "modulo": "Contabilidade*", "atividade": "Configurações e Preferências para contabilidade", "procedimento": "Cadastros e preferencias para contabilidade", "homologado": "NÃO", "dica": "Mantenha atualizados o Plano de Contas, Históricos Padrão e Centros de Resultado de acordo com as normas contábeis vigentes."}, {"id": 62, "modulo": "Contabilidade*", "atividade": "Elaboração de Demonstrativos contábeis", "procedimento": "Demonstrativo de Fluxo de Caixa (DFC)", "homologado": "SIM", "dica": "Emita o DFC contábil demonstrando a geração e consumo de caixa nas atividades operacionais, de investimento e financiamento."}, {"id": 63, "modulo": "Contabilidade*", "atividade": "Elaboração de Demonstrativos contábeis", "procedimento": "Demonstração das Mutações do Patrimônio Líquido (DMPL)", "homologado": "SIM", "dica": "Gere a DMPL para evidenciar todas as movimentações ocorridas nas contas do Patrimônio Líquido durante o exercício."}, {"id": 64, "modulo": "Contabilidade*", "atividade": "Elaboração de Demonstrativos contábeis", "procedimento": "Balanço Patrimonial", "homologado": "SIM", "dica": "Extraia o Balanço Patrimonial estruturado em Ativo, Passivo e Patrimônio Líquido após o fechamento mensal/anual."}, {"id": 65, "modulo": "Contabilidade*", "atividade": "Elaboração de Demonstrativos contábeis", "procedimento": "Demonstração do resultado do exercicio (DRE)", "homologado": "SIM", "dica": "Analise a DRE contábil gerada pelo sistema para verificar a margem bruta, resultado operacional e lucro líquido do período."}, {"id": 66, "modulo": "Contabilidade*", "atividade": "Elaboração de Demonstrativos contábeis", "procedimento": "Notas Explicativas", "homologado": "SIM", "dica": "Elabore e vincule as Notas Explicativas às demonstrações financeiras para detalhar práticas contábeis e composições de saldos."}, {"id": 67, "modulo": "Contabilidade*", "atividade": "Geração e Envio de Obrigações Contábeis Legais", "procedimento": "Escrituração Contábil Digital (ECD)", "homologado": "SIM", "dica": "Gere o arquivo digital do SPED Contábil (ECD) no Sankhya e valide-o no PVA da Receita Federal sem erros estruturais."}, {"id": 68, "modulo": "Contabilidade*", "atividade": "Geração e Envio de Obrigações Contábeis Legais", "procedimento": "Escrituração Contábil Fiscal (ECF)", "homologado": "SIM", "dica": "Exporte os dados contábeis para a ECF garantindo o correto mapeamento do Plano de Contas Referencial da Receita Federal."}, {"id": 69, "modulo": "Contabilidade*", "atividade": "Implantação do Processo", "procedimento": "Contabilidade", "homologado": "SIM", "dica": "Valide a implantação global do módulo contábil assegurando que saldos iniciais e estrutura de relatórios atendem à empresa."}, {"id": 70, "modulo": "Contabilidade*", "atividade": "Registro Contábil", "procedimento": "Registro de Lançamentos Contábeis Manuais", "homologado": "SIM", "dica": "Utilize lotes de lançamentos manuais apenas para ajustes societários, folha ou provisões que não venham da integração automática."}, {"id": 71, "modulo": "Contabilidade*", "atividade": "Registro Contábil", "procedimento": "Importação de Dados de outro Sistema", "homologado": "SIM", "dica": "Importe layouts contábeis externos (como folha de pagamento) validando partidas dobradas antes de confirmar o lote no Sankhya."}, {"id": 72, "modulo": "Contabilização*", "atividade": "Configurações e Preferências para contablização", "procedimento": "Contabilização por Atributos Gerenciais", "homologado": "SIM", "dica": "Configure regras de contabilização dinâmicas por Centro de Resultado, Natureza ou Projeto para análises gerenciais detalhadas."}, {"id": 73, "modulo": "Contabilização*", "atividade": "Configurações e Preferências para contablização", "procedimento": "Cadastros e preferencias para Contabilização", "homologado": "SIM", "dica": "Parametrize as regras de integração nas TOPs para que cada operação comercial/financeira saiba exatamente quais contas debitar e creditar."}, {"id": 74, "modulo": "Contabilização*", "atividade": "Configurações e Preferências para contablização", "procedimento": "Definição de Acessos e Permissões", "homologado": "SIM", "dica": "Controle quem pode alterar regras de contabilização nas TOPs ou reprocessar lotes contábeis integrados."}, {"id": 75, "modulo": "Contabilização*", "atividade": "Escrituração Contábil Integrada", "procedimento": "Contabilização de Produção", "homologado": "SIM", "dica": "Integre automaticamente a baixa de matérias-primas e a entrada de produto acabado para refletir o custo industrial na contabilidade."}, {"id": 76, "modulo": "Contabilização*", "atividade": "Escrituração Contábil Integrada", "procedimento": "Contabilização de Devedores Duvidosos", "homologado": "SIM", "dica": "Contabilize a provisão e baixa de créditos de liquidação duvidosa (PCLD) conforme critérios fiscais e societários."}, {"id": 77, "modulo": "Contabilização*", "atividade": "Escrituração Contábil Integrada", "procedimento": "Contabilização de Notas de Entrada", "homologado": "SIM", "dica": "Processe a contabilização automática das compras, apropriando estoques/despesas, impostos a recuperar e fornecedores a pagar."}, {"id": 78, "modulo": "Contabilização*", "atividade": "Escrituração Contábil Integrada", "procedimento": "Contabilização de Movimentações Bancárias", "homologado": "SIM", "dica": "Gere os lançamentos contábil-financeiros de tarifas, aplicações, transferências e conciliações bancárias automaticamente."}, {"id": 79, "modulo": "Contabilização*", "atividade": "Escrituração Contábil Integrada", "procedimento": "Contabilização de Financeiro", "homologado": "SIM", "dica": "Contabilize baixas de recebimentos e pagamentos, reconhecendo juros, multas, descontos concedidos/obtidos nas contas corretas."}, {"id": 80, "modulo": "Contabilização*", "atividade": "Escrituração Contábil Integrada", "procedimento": "Contabilização de Notas de Saída", "homologado": "SIM", "dica": "Integre o faturamento de vendas gerando automaticamente os lançamentos de Receita Bruta, Impostos sobre Vendas e Clientes a Receber."}, {"id": 81, "modulo": "Contabilização*", "atividade": "Escrituração Contábil Integrada", "procedimento": "Contabilização de Ajustes de Estoque e Inventário", "homologado": "SIM", "dica": "Reflita contabilmente o Custo da Mercadoria Vendida (CMV) e eventuais perdas ou sobras apuradas em inventário."}, {"id": 82, "modulo": "Contabilização*", "atividade": "Implantação do Processo", "procedimento": "Contabilização", "homologado": "SIM", "dica": "Homologue a integração contábil garantindo que 100% das operações operacionais gerem partidas dobradas sem diferenças."}, {"id": 83, "modulo": "Distribuição", "atividade": "Expedição e acerto de carga", "procedimento": "Acerto da ordem de carga", "homologado": "SIM", "dica": "Realize o fechamento financeiro e físico da Ordem de Carga no retorno do motorista, conferindo entregas, canhotos e devoluções."}, {"id": 84, "modulo": "Distribuição", "atividade": "Expedição e acerto de carga", "procedimento": "Emissão do Manifesto Eletrônico de Documentos Fiscais - MDF-e", "homologado": "SIM", "dica": "Emita e encerre o MDF-e no Sankhya vinculando todas as NF-es ou CT-es da viagem antes da saída do veículo."}, {"id": 85, "modulo": "Distribuição", "atividade": "Expedição e acerto de carga", "procedimento": "Mapa de separação da ordem de carga", "homologado": "SIM", "dica": "Imprima ou consulte o Mapa de Separação consolidado por Ordem de Carga para agilizar o picking e carregamento no armazém."}, {"id": 86, "modulo": "Distribuição", "atividade": "Expedição e acerto de carga", "procedimento": "Emissão do Conhecimento de Transporte Eletrônico - CT-e", "homologado": "SIM", "dica": "Emita o CT-e quando aplicável à operação de transporte, validando impostos e vinculação às notas transportadas."}, {"id": 87, "modulo": "Distribuição", "atividade": "Formação de carga", "procedimento": "Definição da sequência de entrega por região", "homologado": "SIM", "dica": "Roteirize os pedidos na Ordem de Carga por região e sequência lógica de entrega para otimizar o carregamento do caminhão."}, {"id": 88, "modulo": "Distribuição", "atividade": "Formação de carga", "procedimento": "Criação e formação da ordem de carga", "homologado": "SIM", "dica": "Agrupe pedidos de venda liberados em uma Ordem de Carga respeitando a capacidade de peso e cubagem da frota."}, {"id": 89, "modulo": "Estocagem", "atividade": "Balanço e Inventário", "procedimento": "Apontamento da contagem e análise das causas de diferenças de estoque", "homologado": "SIM", "dica": "Compare a contagem física com o estoque do sistema na tela de Inventário e investigue divergências antes de ajustar."}, {"id": 90, "modulo": "Estocagem", "atividade": "Balanço e Inventário", "procedimento": "Contagem fisica dos estoques", "homologado": "SIM", "dica": "Realize contagens cíclicas ou gerais organizadas por local e lote, utilizando listas cegas para garantir imparcialidade."}, {"id": 91, "modulo": "Estocagem", "atividade": "Balanço e Inventário", "procedimento": "Cópia de estoque", "homologado": "SIM", "dica": "Execute a rotina de Cópia de Estoque (congelamento do saldo na data) antes de iniciar a contagem física e movimentações."}, {"id": 92, "modulo": "Estocagem", "atividade": "Balanço e Inventário", "procedimento": "Realização do ajuste de estoque", "homologado": "SIM", "dica": "Gere as notas/movimentações de ajuste de inventário (entrada de sobras ou baixa de perdas) após aprovação da gerência."}, {"id": 93, "modulo": "Estocagem", "atividade": "Balanço e Inventário", "procedimento": "Análise do Inventário em termos de quantidades, custos e valor total do estoque, para tomar decisões", "homologado": "SIM", "dica": "Audite o relatório de valoração de inventário para validar o impacto financeiro do estoque no balanço e no capital de giro."}, {"id": 94, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Realizar Entradas de Mercadorias no estoque", "homologado": "SIM", "dica": "Confira fisicamente os produtos recebidos na doca e direcione-os para o local de armazenagem correto no sistema."}, {"id": 95, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Controle do estoque de terceiros em consignação na empresa, ou estoque da empresa em consignado a terceiros", "homologado": "SIM", "dica": "Separe em locais de estoque específicos os itens em poder de terceiros ou de terceiros em nosso poder para controle fiscal e físico."}, {"id": 96, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Controle dos produtos avariados", "homologado": "SIM", "dica": "Transfira imediatamente itens danificados ou vencidos para o Local de Avarias, bloqueando sua disponibilidade para venda."}, {"id": 97, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Realizar Reservas de Mercadorias no Estoque", "homologado": "SIM", "dica": "Utilize a reserva de estoque no pedido de venda para garantir que o item negociado não seja vendido em duplicidade."}, {"id": 98, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Realizar Saida de Mercadorias no estoque", "homologado": "SIM", "dica": "Efetue a baixa de estoque exclusivamente através de notas de saída ou requisições confirmadas na expedição."}, {"id": 99, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Realizar o Kardex", "homologado": "SIM", "dica": "Consulte a Ficha Kardex para auditar todo o histórico cronológico de entradas, saídas, reservas e saldo final de um produto."}, {"id": 100, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Controle do estoque considerando critérios como tamanho, cor, lote, data de validade, número de série, etc.", "homologado": "SIM", "dica": "Rastreie lotes e datas de validade (FEFO - Primeiro que Vence, Primeiro que Sai) em todas as entradas e expedições."}, {"id": 101, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Extrato de todas as operações de entrada e saída de estoque", "homologado": "SIM", "dica": "Analise relatórios gerenciais de movimentação de estoque por período e TOP para auditar o fluxo físico da operação."}, {"id": 102, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Registro das transferências de produtos entre diferentes locais e/ou empresas", "homologado": "SIM", "dica": "Registre no sistema toda movimentação física de mercadoria entre depósitos internos ou filiais no exato momento em que ocorrer."}, {"id": 103, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Controle das saídas de estoque para consumo interno da empresa", "homologado": "SIM", "dica": "Baixe materiais de uso/consumo ou degustação mediante requisição interna apropriada ao respectivo Centro de Resultado."}, {"id": 104, "modulo": "Estocagem", "atividade": "Organização de Estoque", "procedimento": "Controle dos produtos por local de estoque para agilizar o processo de entradas e de saídas", "homologado": "SIM", "dica": "Estruture o endereçamento e locais de estoque no Sankhya refletindo o layout físico real do armazém."}, {"id": 105, "modulo": "Estocagem", "atividade": "Pré-requisitos do processo de Estocagem", "procedimento": "Cadastrar os locais de estoque.", "homologado": "SIM", "dica": "Mantenha a árvore de Locais de Estoque padronizada, definindo quais locais permitem venda, bloqueio ou reserva."}, {"id": 106, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "SPED Contribuições - Registro 0500-Plano de contas contábil", "homologado": "SIM", "dica": "Vincule a conta contábil em todas as operações geradoras de receita ou crédito para alimentar o Registro 0500 sem advertências."}, {"id": 107, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "SPED Contribuições", "homologado": "SIM", "dica": "Gere e valide mensalmente o arquivo da EFD-Contribuições (PIS/COFINS) conferindo bases de cálculo, créditos e retenções."}, {"id": 108, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "SPED Fiscal Bloco H inventário", "homologado": "SIM", "dica": "Exporte o Bloco H do SPED Fiscal com a posição oficial de inventário valorada ao custo contábil conforme exigência legal."}, {"id": 109, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "SPED Fiscal", "homologado": "SIM", "dica": "Processe a apuração de ICMS e IPI no Sankhya e gere o arquivo do SPED Fiscal (EFD ICMS/IPI) para validação no PVA."}, {"id": 110, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "Geração dos livros fiscais de entrada e saída", "homologado": "SIM", "dica": "Emita e confira os Livros Fiscais de Entrada, Saída e Apuração para fechamento mensal dos impostos estaduais e federais."}, {"id": 111, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "SPED Fiscal CIAP Controle de Crédito do Ativo Permanente", "homologado": "SIM", "dica": "Controle no módulo CIAP o aproveitamento das parcelas de 1/48 avos de crédito de ICMS sobre aquisições de imobilizado."}, {"id": 112, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "Sintegra", "homologado": "SIM", "dica": "Gere o arquivo magnético do Sintegra quando exigido por legislações estaduais específicas."}, {"id": 113, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "Geração do EFD - Reinf - Escrituração Fiscal Digital de Retenções e Outras Informações Fiscais", "homologado": "SIM", "dica": "Confira as notas de serviço com retenções federais (IR, CSLL, PIS, COFINS, INSS) e transmita os eventos periódicos da EFD-Reinf."}, {"id": 114, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "SPED Fiscal - Bloco K- Registro de Controle da Produção e do Estoque", "homologado": "SIM", "dica": "Gere o Bloco K no SPED Fiscal reportando os saldos de estoque e movimentações de produção/industrialização exigidos pelo fisco."}, {"id": 115, "modulo": "Fiscal", "atividade": "Obrigações Fiscais", "procedimento": "SPED Contribuições - Registro 0600 - Centro de custo", "homologado": "SIM", "dica": "Garanta o correto preenchimento do Centro de Resultado nas notas para geração automática do Registro 0600 na EFD-Contribuições."}, {"id": 116, "modulo": "Gestão de Veículos", "atividade": "Gestão de Veículos", "procedimento": "Gestão de Veículos", "homologado": "SIM", "dica": "Mantenha o cadastro da frota atualizado (placas, RNTRC, tara, capacidade) para uso na Ordem de Carga e emissão de MDF-e."}, {"id": 117, "modulo": "Pagamentos", "atividade": "Pagamentos", "procedimento": "Contas a pagar", "homologado": "SIM", "dica": "Controle na Movimentação Financeira todos os títulos a pagar, conferindo vencimentos, boletos, dados bancários e autorizações."}, {"id": 118, "modulo": "Pagamentos", "atividade": "Pagamentos", "procedimento": "Comparação das despesas e receitas de determinados grupos de Centros de Resultados em períodos diferentes", "homologado": "SIM", "dica": "Analise relatórios gerenciais por Natureza e Centro de Resultado para comparar a evolução de despesas mês a mês."}, {"id": 119, "modulo": "Pagamentos", "atividade": "Pagamentos", "procedimento": "Controle de cheque pré-datados", "homologado": "SIM", "dica": "Registre e acompanhe o vencimento e compensação de cheques emitidos quando essa modalidade de pagamento for utilizada."}, {"id": 120, "modulo": "Pagamentos", "atividade": "Pagamentos", "procedimento": "Emissão de cheques", "homologado": "SIM", "dica": "Gere a impressão e controle de numeração de cheques diretamente pela baixa financeira caso aplicável à rotina."}, {"id": 121, "modulo": "Pagamentos", "atividade": "Pagamentos", "procedimento": "Baixa de títulos a pagar", "homologado": "SIM", "dica": "Efetue a baixa de pagamentos via remessa/retorno bancário (CNAB/Pix) ou manualmente, informando a conta bancária e data real."}, {"id": 122, "modulo": "Pagamentos", "atividade": "Provisão do contas a pagar", "procedimento": "Provisão do contas a pagar", "homologado": "SIM", "dica": "Lance provisões financeiras de despesas recorrentes (aluguel, energia, contratos) para projetar o fluxo de caixa futuro com antecedência."}, {"id": 123, "modulo": "Precificação", "atividade": "Apuração de custos", "procedimento": "Apuração do custo gerencial dos produtos e serviços", "homologado": "SIM", "dica": "Calcule o custo gerencial considerando todas as variáveis comerciais para tomada de decisão rápida da diretoria."}, {"id": 124, "modulo": "Precificação", "atividade": "Apuração de custos", "procedimento": "Apuração do custo de reposição dos produtos, considerando acréscimos, descontos, tributos, fretes, carga, descarga, etc.", "homologado": "SIM", "dica": "Verifique se o sistema está compondo o custo de entrada somando fretes, IPI e ST e deduzindo créditos de ICMS/PIS/COFINS."}, {"id": 125, "modulo": "Precificação", "atividade": "Apuração de custos", "procedimento": "Apuração do custo Contábil dos produtos e serviços", "homologado": "SIM", "dica": "Acompanhe a evolução do Custo Médio Ponderado contábil recalculado a cada entrada de compra ou produção."}, {"id": 126, "modulo": "Precificação", "atividade": "Apuração de custos", "procedimento": "Validação dos Custos", "homologado": "SIM", "dica": "Audite periodicamente a tela de Análise de Custos para identificar distorções causadas por notas lançadas com unidade ou valor errados."}, {"id": 127, "modulo": "Precificação", "atividade": "Apuração de custos", "procedimento": "Consulta Ficha Kardex", "homologado": "SIM", "dica": "Utilize a Ficha Kardex Financeira para visualizar como cada nota de entrada alterou o custo médio do item no estoque."}, {"id": 128, "modulo": "Precificação", "atividade": "Apuração de custos", "procedimento": "Apuração dos gastos fixos da empresa e dos gastos variáveis incidentes nas vendas dos produtos ou serviços", "homologado": "SIM", "dica": "Mapeie o percentual de custos fixos operacionais e despesas variáveis (comissões, impostos de saída, frete) para compor o Markup."}, {"id": 129, "modulo": "Precificação", "atividade": "Formação do preço de venda", "procedimento": "Formação do preço de venda", "homologado": "SIM", "dica": "Utilize o simulador de Formação de Preços do Sankhya para calcular o preço ideal a partir do custo de reposição e margem desejada."}, {"id": 130, "modulo": "Precificação", "atividade": "Formação do preço de venda", "procedimento": "Definição das tabelas de preços", "homologado": "SIM", "dica": "Estruture diferentes Tabelas de Preços no sistema por canal de venda, região ou perfil de cliente (atacado, varejo, food service)."}, {"id": 131, "modulo": "Precificação", "atividade": "Formação do preço de venda", "procedimento": "Definição do preço de venda", "homologado": "SIM", "dica": "Atualize os preços aprovados nas respectivas Tabelas de Preços com data de vigência controlada."}, {"id": 132, "modulo": "Precificação", "atividade": "Formação do preço de venda", "procedimento": "Definição das políticas de descontos e promoções dos produtos", "homologado": "SIM", "dica": "Cadastre regras comerciais de descontos promocionais ou por volume diretamente no sistema para aplicação automática no pedido."}, {"id": 133, "modulo": "Recebimentos", "atividade": "Cobrança", "procedimento": "Régua de cobrança", "homologado": "SIM", "dica": "Automatize o envio de notificações preventivas de vencimento e avisos de cobrança por e-mail para reduzir o esquecimento do cliente."}, {"id": 134, "modulo": "Recebimentos", "atividade": "Cobrança", "procedimento": "Controle de inadimplência", "homologado": "SIM", "dica": "Monitore diariamente o relatório de títulos vencidos (Aging List), registrando o histórico de contatos de cobrança no Sankhya."}, {"id": 135, "modulo": "Recebimentos", "atividade": "Contas a receber", "procedimento": "Formação de duplicatas", "homologado": "SIM", "dica": "Verifique a geração automática das parcelas a receber no faturamento da NF-e conforme a condição de pagamento negociada."}, {"id": 136, "modulo": "Recebimentos", "atividade": "Contas a receber", "procedimento": "Provisão do contas a receber", "homologado": "SIM", "dica": "Acompanhe as previsões de recebimento geradas por pedidos ou contratos antes do faturamento definitivo para projeção de caixa."}, {"id": 137, "modulo": "Recebimentos", "atividade": "Contas a receber", "procedimento": "Contas a receber", "homologado": "SIM", "dica": "Gerencie a carteira de recebíveis (boletos, Pix, cartões), geração de remessas de cobrança bancária e conciliação de retornos."}, {"id": 138, "modulo": "Recebimentos", "atividade": "Recebimento", "procedimento": "Renegociação de títulos", "homologado": "SIM", "dica": "Utilize a rotina de Renegociação de Títulos para agrupar ou parcelar dívidas vencidas, mantendo o rastro dos títulos originais."}, {"id": 139, "modulo": "Recebimentos", "atividade": "Recebimento", "procedimento": "Controle de cheques pré-datados", "homologado": "SIM", "dica": "Cadastre e controle a custódia e data de depósito de cheques recebidos de clientes."}, {"id": 140, "modulo": "Recebimentos", "atividade": "Recebimento", "procedimento": "Baixa de títulos a receber", "homologado": "SIM", "dica": "Processe os arquivos de retorno bancário (CNAB) diariamente para baixar os boletos pagos automaticamente com juros/multas."}, {"id": 141, "modulo": "Recebimentos", "atividade": "Recebimento", "procedimento": "Antecipação de recebíveis", "homologado": "SIM", "dica": "Registre operações de desconto ou antecipação de duplicatas/cartões controlando as taxas financeiras descontadas pelos bancos."}, {"id": 142, "modulo": "Recebimentos", "atividade": "Recebimento", "procedimento": "Controle de cheques devolvidos", "homologado": "SIM", "dica": "Registre a devolução de cheques sem fundos reabrindo a pendência financeira contra o cliente e bloqueando novo limite de crédito."}, {"id": 143, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Acompanhar data de expiração do contrato", "homologado": "SIM", "dica": "Monitore os alertas de vigência e vencimento dos contratos ativos para acionar a renovação comercial em tempo hábil."}, {"id": 144, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Parametrizar contrato para faturamento com data de vencimento fixa", "homologado": "SIM", "dica": "Configure o dia fixo de vencimento mensal no cadastro do contrato para padronizar o fluxo de faturamento recorrente."}, {"id": 145, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Definir a precificação dos serviços do contratos por data de referência", "homologado": "SIM", "dica": "Estabeleça os valores e índices de referência dos serviços/locações contratados de acordo com a data-base do acordo."}, {"id": 146, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Definir o tipo de pagamento do contrato em relação ao momento da prestação de serviço", "homologado": "SIM", "dica": "Configure se o contrato possui cobrança pré-paga (antecipada) ou pós-paga (após o mês de competência/medição)."}, {"id": 147, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Parametrizar contrato para faturamento com data de vencimento variável", "homologado": "SIM", "dica": "Permita o cálculo dinâmico de vencimento quando o faturamento depender da data de medição ou entrega efetiva."}, {"id": 148, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Registrar em contrato as negociações realizadas para a prestação de serviços recorrentes (Receitas)", "homologado": "SIM", "dica": "Cadastre todos os contratos de receita recorrente (ex: locação de máquinas de café, comodatos ou serviços) com itens e regras claras."}, {"id": 149, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Calcular valor do serviço de forma proporcional à sua ativação e/ou cancelamento no contrato (Pro-rata)", "homologado": "SIM", "dica": "Utilize o cálculo automático de Pro-rata die no primeiro ou último mês quando o contrato iniciar ou encerrar no meio do período."}, {"id": 150, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Registrar em contrato as negociações realizadas para a contratação de serviços recorrentes (Despesas)", "homologado": "SIM", "dica": "Controle também os contratos de fornecedores (despesas fixas/recorrentes) no módulo de Contratos para auditoria de pagamentos."}, {"id": 151, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Definir rateio do contrato por grupo econômico", "homologado": "SIM", "dica": "Configure regras de rateio quando um mesmo contrato atender múltiplas unidades de negócio ou filiais de um grupo."}, {"id": 152, "modulo": "Serviços - Controle de Contratos*", "atividade": "Controle de Contratos", "procedimento": "Realizar o controle do status de cada serviço no contrato", "homologado": "SIM", "dica": "Atualize o status dos itens ou equipamentos do contrato (ativo, suspenso, cancelado) para faturar apenas o que está em operação."}, {"id": 153, "modulo": "Serviços - Controle de Contratos*", "atividade": "Faturamento de Contratos", "procedimento": "Realizar o faturamento agrupado dos contratos", "homologado": "SIM", "dica": "Execute a rotina de faturamento em lote para gerar todas as notas e boletos mensais dos contratos ativos de uma só vez."}, {"id": 154, "modulo": "Serviços - Controle de Contratos*", "atividade": "Faturamento de Contratos", "procedimento": "Realizar rateio financeiro nas notas faturadas a partir do contrato", "homologado": "SIM", "dica": "Garanta que o faturamento do contrato distribua automaticamente as receitas ou despesas nos Centros de Resultado pré-definidos."}, {"id": 155, "modulo": "Serviços - Controle de Contratos*", "atividade": "Faturamento de Contratos", "procedimento": "Realizar o faturamento dos contratos", "homologado": "SIM", "dica": "Fature mensalmente os contratos verificando a geração correta das notas de serviço/locação e títulos no financeiro."}, {"id": 156, "modulo": "Serviços - Controle de Contratos*", "atividade": "Implantação Serviços - Controle de Contratos", "procedimento": "Controle de Contratos", "homologado": "SIM", "dica": "Valide o fluxo completo da carteira de contratos desde a assinatura, faturamento recorrente até o reajuste anual."}, {"id": 157, "modulo": "Serviços - Controle de Contratos*", "atividade": "Provisões de Contratos", "procedimento": "Realizar provisões financeiras do contrato", "homologado": "SIM", "dica": "Gere os títulos provisórios dos meses futuros do contrato para alimentar a visão de longo prazo do Fluxo de Caixa."}, {"id": 158, "modulo": "Serviços - Controle de Contratos*", "atividade": "Reajuste de Contratos", "procedimento": "Aplicar reajuste no contrato", "homologado": "SIM", "dica": "Execute a rotina de reajuste contratual aplicando a variação acumulada do índice (IGP-M, IPCA, etc.) na data de aniversário."}, {"id": 159, "modulo": "Serviços - Controle de Contratos*", "atividade": "Reajuste de Contratos", "procedimento": "Aplicar reajuste em serviços temporariamente bonificados e/ou suspensos no contrato", "homologado": "SIM", "dica": "Atualize o valor de tabela mesmo para itens temporariamente bonificados, garantindo o preço correto quando a bonificação expirar."}, {"id": 160, "modulo": "Serviços - Controle de Contratos*", "atividade": "Reajuste de Contratos", "procedimento": "Acompanhar contratos com pendências de reajuste", "homologado": "SIM", "dica": "Consulte mensalmente o relatório de contratos aniversariantes para não deixar passar nenhum reajuste inflacionário devido."}, {"id": 161, "modulo": "Vendas", "atividade": "Análise de desempenho de vendas", "procedimento": "Análise da lucratividade de pedidos e notas de venda", "homologado": "SIM", "dica": "Consulte a Rentabilidade do pedido antes de aprovar descontos especiais, garantindo que a margem de contribuição seja positiva."}, {"id": 162, "modulo": "Vendas", "atividade": "Análise de desempenho de vendas", "procedimento": "Análise da lucratividade das vendas (por produto ou serviço, grupo, marca, fornecedor, vendedor, cliente, região etc.)", "homologado": "SIM", "dica": "Utilize os cubos e relatórios de Gerência de Vendas para avaliar faturamento e margem por vendedor, rota, cliente e linha de café."}, {"id": 163, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Fechamento da comissão", "homologado": "SIM", "dica": "Encerre o período de apuração de comissões conferindo o extrato de vendas faturadas e recebidas de cada representante/vendedor."}, {"id": 164, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Fechamento da comissão (Validação de Regras)", "homologado": "SIM", "dica": "Confira se todas as regras de estorno por devolução ou inadimplência foram aplicadas antes de autorizar o pagamento da comissão."}, {"id": 165, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Cálculo de comissão com percentual fixo (único)", "homologado": "SIM", "dica": "Aplique a regra de percentual único sobre o faturamento/recebimento quando o vendedor possuir alíquota fixa acordada."}, {"id": 166, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Cálculo da comissão", "homologado": "SIM", "dica": "Processe o cálculo automático de comissões no Sankhya com base nas fórmulas e tabelas de comissionamento vigentes."}, {"id": 167, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Cálculo de comissão fixa", "homologado": "SIM", "dica": "Gerencie valores fixos ou prêmios de comissão parametrizados no cadastro do vendedor ou regra comercial."}, {"id": 168, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Considerar concessão de bonificações, descontos e devoluções de clientes na fórmula de comissão", "homologado": "SIM", "dica": "Garanta que a fórmula de comissão deduza devoluções de vendas e ajuste o percentual conforme o nível de desconto concedido."}, {"id": 169, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Fechamento da comissão Integração com Financeiro", "homologado": "SIM", "dica": "Gere automaticamente o título a pagar no módulo Financeiro para cada vendedor/representante ao concluir o fechamento da comissão."}, {"id": 170, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Realizar o cálculo das comissões", "homologado": "SIM", "dica": "Audite a memória de cálculo das comissões gerada pelo sistema para esclarecer rapidamente dúvidas da equipe comercial."}, {"id": 171, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Cálculo de comissão fixa (Auditoria de Fechamento)", "homologado": "SIM", "dica": "Revise os parâmetros de comissão fixa vinculados a metas ou produtos específicos na revisão mensal."}, {"id": 172, "modulo": "Vendas", "atividade": "Cálculo e fechamento da comissão", "procedimento": "Cálculo da comissão (Conferência Geral)", "homologado": "SIM", "dica": "Homologue os relatórios finais de comissionamento junto à gestão comercial antes da liberação financeira."}, {"id": 173, "modulo": "Vendas", "atividade": "Configurações Fiscais - Saida", "procedimento": "PIS/COFINS nas Saidas", "homologado": "SIM", "dica": "Verifique o destaque e alíquota de PIS/COFINS nas operações de venda tributadas ou alíquota zero conforme a NCM do produto."}, {"id": 174, "modulo": "Vendas", "atividade": "Configurações Fiscais - Saída", "procedimento": "ICMS-ST (Substituição Tributária) nas Saídas", "homologado": "SIM", "dica": "Valide o cálculo de MVA e retenção de ICMS-ST nas vendas interestaduais ou internas sujeitas à substituição tributária."}, {"id": 175, "modulo": "Vendas", "atividade": "Configurações Fiscais - Saida", "procedimento": "Apuração de Receita - Simples Nacional", "homologado": "SIM", "dica": "Caso haja operação ou filial enquadrada no Simples Nacional, valide a correta segregação de receitas e CSOSN nas saídas."}, {"id": 176, "modulo": "Vendas", "atividade": "Configurações Fiscais - Saida", "procedimento": "IPI nas Saidas", "homologado": "SIM", "dica": "Confira a incidência de IPI nas saídas de produtos industrializados ou equiparados conforme a TIPI."}, {"id": 177, "modulo": "Vendas", "atividade": "Configurações Fiscais - Saída", "procedimento": "ICMS-Normal nas Saídas", "homologado": "SIM", "dica": "Confirme a aplicação correta da alíquota interna ou interestadual de ICMS, reduções de base e DIFAL nas notas de venda."}, {"id": 178, "modulo": "Vendas", "atividade": "Configurações Fiscais - Saida", "procedimento": "ISS nas saidas", "homologado": "SIM", "dica": "Verifique a alíquota de ISS e código de serviço municipal na emissão de notas fiscais de prestação de serviços."}, {"id": 179, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Registro de Pedido Manual", "homologado": "SIM", "dica": "Lance pedidos de venda na Central de Vendas preenchendo corretamente parceiro, TOP, tabela de preço e condição comercial."}, {"id": 180, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Controle do limite de desconto dos produtos", "homologado": "SIM", "dica": "Respeite as travas de desconto máximo permitidas para o vendedor; descontos superiores exigem liberação de limite pela gerência."}, {"id": 181, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Liberação do Evento 8 (Atraso)", "homologado": "SIM", "dica": "Analise e libere (ou recuse) pedidos bloqueados pelo Evento 8 quando o cliente possuir títulos vencidos em aberto na empresa."}, {"id": 182, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Integração com parceiro AFV (Automação de Força de Vendas)", "homologado": "SIM", "dica": "Monitore a sincronização de pedidos enviados pelos vendedores externos via aplicativo de Força de Vendas para dentro do Sankhya."}, {"id": 183, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Controle do limite de crédito dos clientes", "homologado": "SIM", "dica": "Mantenha o Limite de Crédito atualizado no cadastro do cliente para que o sistema bloqueie automaticamente vendas acima do risco aprovado."}, {"id": 184, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Registro dos orçamentos de vendas", "homologado": "SIM", "dica": "Registre propostas comerciais como Orçamento de Venda (sem reservar estoque ou gerar financeiro) até o aceite formal do cliente."}, {"id": 185, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Realização do faturamento parcial ou corte de itens dos pedidos de venda", "homologado": "SIM", "dica": "Efetue o corte ou faturamento parcial do pedido quando houver indisponibilidade momentânea de algum item, gerenciando o saldo restante."}, {"id": 186, "modulo": "Vendas", "atividade": "Pré Vendas", "procedimento": "Registro e controle dos pedidos de vendas pendentes", "homologado": "SIM", "dica": "Acompanhe diariamente a carteira de pedidos aprovados e pendentes de faturamento para garantir o cumprimento dos prazos de entrega."}, {"id": 187, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Registro e emissão da NF-e de vendas, consignações, entregas futuras, simples remessas ou similares", "homologado": "SIM", "dica": "Emita a NF-e selecionando a TOP exata da operação comercial e aguarde o retorno de Autorização de Uso da SEFAZ."}, {"id": 188, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Conferência dos produtos que serão entregues de acordo com a venda registrada", "homologado": "SIM", "dica": "Realize a conferência de expedição (via coletor ou código de barras) garantindo que o físico separado corresponde exatamente à nota fiscal."}, {"id": 189, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Registro das trocas, devoluções de vendas, retornos ou similares", "homologado": "SIM", "dica": "Processe toda entrada de devolução de cliente vinculando à nota de venda original para recompor o estoque e estornar impostos."}, {"id": 190, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Compensação financeira da devolução de Vendas - automática", "homologado": "SIM", "dica": "Utilize a baixa/compensação automática na confirmação da devolução de venda para abater o valor diretamente do boleto do cliente."}, {"id": 191, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Emissão de Notas de Vendas de produtos (NFe)", "homologado": "SIM", "dica": "Fature os pedidos liberados gerando a NF-e, DANFE e enviando automaticamente o XML e boleto por e-mail ao cliente."}, {"id": 192, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Cancelamento de nota fiscal de venda", "homologado": "SIM", "dica": "Efetue o cancelamento de NF-e no Sankhya dentro do prazo legal da SEFAZ e somente antes da saída física da mercadoria."}, {"id": 193, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Devolução da venda", "homologado": "SIM", "dica": "Emita NF-e de entrada de devolução quando o cliente recusar a entrega no ato (com recusa no verso do DANFE) ou não puder emitir nota própria."}, {"id": 194, "modulo": "Vendas", "atividade": "Realização das Vendas", "procedimento": "Compensação financeira da devolução de Vendas - manual", "homologado": "SIM", "dica": "Realize a compensação manual no Contas a Receber quando o crédito de uma devolução for abatido em múltiplos títulos futuros do cliente."}];
+let responses = {};
+let timestamps = {};
+let notes = {};
+let savedCycles = [];
+let draftLoaded = false;
+
+/* ---- Armazenamento local: IndexedDB (mais robusto que localStorage) ---- */
+const DB_NAME = 'ekoa_sankhya', STORE = 'kv';
+function idb() {
+    return new Promise((ok, fail) => {
+        const r = indexedDB.open(DB_NAME, 1);
+        r.onupgradeneeded = () => r.result.createObjectStore(STORE);
+        r.onsuccess = () => ok(r.result);
+        r.onerror = () => fail(r.error);
+    });
+}
+async function idbGet(k) {
+    const db = await idb();
+    return new Promise((ok, fail) => { const q = db.transaction(STORE).objectStore(STORE).get(k); q.onsuccess = () => ok(q.result); q.onerror = () => fail(q.error); });
+}
+async function idbSet(k, v) {
+    const db = await idb();
+    return new Promise((ok, fail) => { const t = db.transaction(STORE, 'readwrite'); t.objectStore(STORE).put(v, k); t.oncomplete = ok; t.onerror = () => fail(t.error); });
+}
+function uuid() {
+    return (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2));
+}
+
+async function init() {
+    const modSelect = document.getElementById('modFilter');
+    const modSelectMobile = document.getElementById('modFilterMobile');
+    const modulos = [...new Set(DATA.map(d => d.modulo))];
+    modulos.forEach(m => {
+        const count = DATA.filter(d => d.modulo === m).length;
+        const opt1 = document.createElement('option');
+        opt1.value = m;
+        opt1.textContent = `${m} (${count})`;
+        modSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = m;
+        opt2.textContent = `${m} (${count} rotinas)`;
+        modSelectMobile.appendChild(opt2);
+    });
+
+    await loadDraft();
+    if (!document.getElementById('userDate').value) {
+        const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        document.getElementById('userDate').value = d.toISOString().slice(0, 10);
+    }
+    renderTable();
+    renderHistory();
+}
+
+function toggleMobileSidebar(forceState) {
+    const sb = document.getElementById('appSidebar');
+    const bd = document.getElementById('sidebarBackdrop');
+    const isOpen = typeof forceState === 'boolean' ? forceState : !sb.classList.contains('open');
+    sb.classList.toggle('open', isOpen);
+    bd.classList.toggle('open', isOpen);
+}
+
+function syncAndFilter(source) {
+    if (source === 'mobile') {
+        document.getElementById('modFilter').value = document.getElementById('modFilterMobile').value;
+        document.getElementById('searchFilter').value = document.getElementById('searchFilterMobile').value;
+    } else {
+        document.getElementById('modFilterMobile').value = document.getElementById('modFilter').value;
+        document.getElementById('searchFilterMobile').value = document.getElementById('searchFilter').value;
+    }
+    applyFilters();
+}
+
+function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    const modF = document.getElementById('modFilter').value;
+    const searchF = document.getElementById('searchFilter').value.toLowerCase();
+    const statusF = document.getElementById('statusFilter').value;
+
+    tbody.innerHTML = '';
+    let visibleItems = [];
+
+    DATA.forEach(item => {
+        const currentResp = responses[item.id] || '';
+        if (modF && item.modulo !== modF) return;
+        if (statusF === 'Pendente' && currentResp !== '') return;
+        if (statusF && statusF !== 'Pendente' && currentResp !== statusF) return;
+
+        const textMatch = `${item.modulo} ${item.atividade} ${item.procedimento} ${item.dica}`.toLowerCase();
+        if (searchF && !textMatch.includes(searchF)) return;
+
+        visibleItems.push(item);
+
+        const tr = document.createElement('tr');
+        const homClass = item.homologado === 'SIM' ? 'hom-sim' : 'hom-nao';
+        const stamp = timestamps[item.id] ? `<div class="stamp-tag">&#10003; Registrado em: ${timestamps[item.id]}</div>` : '';
+
+        tr.innerHTML = `
+            <td><strong>#${item.id}</strong></td>
+            <td>
+                <span class="mod-badge">${item.modulo}</span><br>
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">${item.atividade}</span>
+            </td>
+            <td>
+                <strong>${item.procedimento}</strong>
+                <span class="hom-badge ${homClass}">Homologado: ${item.homologado}</span>
+                <div class="dica-box">&#9656; <em>Contexto Sankhya:</em> ${item.dica}</div>
+                <div id="stamp_${item.id}">${stamp}</div>
+            </td>
+            <td>
+                <div class="options-cell">
+                    <label class="opt-pill conf">
+                        <input type="radio" name="resp_${item.id}" value="Confiante" ${currentResp === 'Confiante' ? 'checked' : ''} onchange="setResp(${item.id}, this.value)">
+                        Confiante
+                    </label>
+                    <label class="opt-pill apr">
+                        <input type="radio" name="resp_${item.id}" value="Preciso Aprender Mais" ${currentResp === 'Preciso Aprender Mais' ? 'checked' : ''} onchange="setResp(${item.id}, this.value)">
+                        Preciso Aprender Mais
+                    </label>
+                    <label class="opt-pill desc">
+                        <input type="radio" name="resp_${item.id}" value="Desconheço" ${currentResp === 'Desconheço' ? 'checked' : ''} onchange="setResp(${item.id}, this.value)">
+                        Desconheço
+                    </label>
+                </div>
+            </td>
+            <td>
+                <input type="text" class="obs-input" placeholder="Anote dúvidas ou plano..." value="${notes[item.id] || ''}" oninput="setNote(${item.id}, this.value)">
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    updateKPIs(visibleItems);
+}
+
+function setResp(id, val) {
+    responses[id] = val;
+    const dateInput = document.getElementById('userDate').value || new Date().toISOString().slice(0,10);
+    const cycleInput = document.getElementById('userCycle').value;
+    timestamps[id] = `${dateInput} (${cycleInput})`;
+    const stampEl = document.getElementById(`stamp_${id}`);
+    if (stampEl) {
+        stampEl.innerHTML = `<div class="stamp-tag">&#10003; Registrado em: ${timestamps[id]}</div>`;
+    }
+    saveDraft();
+    // Atualiza KPIs sem recriar toda a DOM se não houver filtro de status ativo, mantendo o scroll suave no celular
+    const statusF = document.getElementById('statusFilter').value;
+    if (statusF) {
+        applyFilters();
+    } else {
+        updateKPIs();
+    }
+}
+
+function setNote(id, val) {
+    notes[id] = val;
+    saveDraft();
+}
+
+function applyFilters() {
+    renderTable();
+}
+
+function updateKPIs(visibleList) {
+    const modF = document.getElementById('modFilter').value;
+    const searchF = document.getElementById('searchFilter').value.toLowerCase();
+    const list = visibleList || DATA.filter(item => {
+        if (modF && item.modulo !== modF) return false;
+        const textMatch = `${item.modulo} ${item.atividade} ${item.procedimento} ${item.dica}`.toLowerCase();
+        if (searchF && !textMatch.includes(searchF)) return false;
+        return true;
+    });
+
+    const total = list.length;
+    let answered = 0, conf = 0, apr = 0, desc = 0;
+
+    list.forEach(item => {
+        const v = responses[item.id];
+        if (v) {
+            answered++;
+            if (v === 'Confiante') conf++;
+            if (v === 'Preciso Aprender Mais') apr++;
+            if (v === 'Desconheço') desc++;
+        }
+    });
+
+    const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+    const progressText = `${answered} / ${total} (${pct}%)`;
+    document.getElementById('kpiProgress').textContent = progressText;
+    document.getElementById('mobileBottomProgress').textContent = progressText;
+    document.getElementById('mobileSubStatus').textContent = `Respondidas: ${answered}/${total} (${pct}%)`;
+    document.getElementById('kpiConfiante').textContent = conf;
+    document.getElementById('kpiAprender').textContent = apr;
+    document.getElementById('kpiDesconheco').textContent = desc;
+    document.getElementById('kpiSavedCycles').textContent = `${savedCycles.length} ciclos`;
+    document.getElementById('btnHistCount').textContent = savedCycles.length;
+}
+
+function saveDraft() {
+    const draft = {
+        userName: document.getElementById('userName').value,
+        userRole: document.getElementById('userRole').value,
+        userCycle: document.getElementById('userCycle').value,
+        userDate: document.getElementById('userDate').value,
+        responses,
+        timestamps,
+        notes,
+        savedCycles
+    };
+    if (!draftLoaded) return; // evita sobrescrever o rascunho antes de ele ser lido
+    idbSet('draft', draft).catch(() => {});
+}
+
+async function loadDraft() {
+    try {
+        let draft = await idbGet('draft');
+        if (!draft) { // migração única: versões anteriores gravavam no localStorage
+            const raw = localStorage.getItem('blendcoffee_ekoa_sankhya_v5') || localStorage.getItem('blendcoffee_ekoa_sankhya_v4') || localStorage.getItem('blendcoffee_ekoa_sankhya_v3');
+            if (raw) draft = JSON.parse(raw);
+        }
+        if (draft) {
+            if (draft.userName) document.getElementById('userName').value = draft.userName;
+            if (draft.userRole) document.getElementById('userRole').value = draft.userRole;
+            if (draft.userCycle) document.getElementById('userCycle').value = draft.userCycle;
+            if (draft.userDate) document.getElementById('userDate').value = draft.userDate;
+            responses = draft.responses || {};
+            timestamps = draft.timestamps || {};
+            notes = draft.notes || {};
+            savedCycles = draft.savedCycles || [];
+            // ciclos antigos (v5) já eram exportados na gravação: entram como "enviado"
+            savedCycles.forEach(c => { if (!c.id) { c.id = uuid(); c.status = 'enviado'; } });
+        }
+    } catch(e) {}
+    draftLoaded = true;
+    saveDraft();
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+}
+
+function finishAndPromptNext() {
+    const answeredItems = DATA.filter(item => responses[item.id] && responses[item.id] !== '');
+    if (answeredItems.length === 0) {
+        alert('Por favor, responda ao menos uma rotina antes de gravar o ciclo.');
+        return;
+    }
+
+    const nomeInput = document.getElementById('userName');
+    if (!nomeInput.value.trim()) {
+        const informar = prompt('Informe o nome do Colaborador Avaliado para registrar no ciclo e no arquivo CSV:');
+        if (informar === null) return;
+        nomeInput.value = informar.trim() || 'Colaborador_Avaliado';
+    }
+
+    const nome = nomeInput.value.trim() || 'Colaborador_Avaliado';
+    const setor = document.getElementById('userRole').value.trim() || (document.getElementById('modFilter').value || 'Setor Geral');
+    const ciclo = document.getElementById('userCycle').value;
+    const dataAp = document.getElementById('userDate').value;
+
+    const conf = answeredItems.filter(i => responses[i.id] === 'Confiante').length;
+    const apr = answeredItems.filter(i => responses[i.id] === 'Preciso Aprender Mais').length;
+    const desc = answeredItems.filter(i => responses[i.id] === 'Desconheço').length;
+
+    const detailedRecords = answeredItems.map(item => ({
+        data: dataAp,
+        ciclo: ciclo,
+        nome: nome,
+        setor: setor,
+        id: item.id,
+        modulo: item.modulo,
+        atividade: item.atividade,
+        procedimento: item.procedimento,
+        homologado: item.homologado,
+        sentimento: responses[item.id],
+        obs: notes[item.id] || ''
+    }));
+
+    savedCycles.push({
+        id: uuid(), status: 'pendente', criadoEm: new Date().toISOString(),
+        data: dataAp,
+        ciclo: ciclo,
+        nome: nome,
+        setor: setor,
+        totalRespondido: answeredItems.length,
+        confiante: conf,
+        aprender: apr,
+        desconheco: desc,
+        items: detailedRecords
+    });
+
+    saveDraft();
+    renderHistory();
+    updateKPIs();
+    document.getElementById('historyPanel').classList.add('active');
+
+    const pctConf = Math.round((conf / answeredItems.length) * 100);
+    document.getElementById('finishSummaryBox').innerHTML = `
+        <strong>Colaborador:</strong> ${nome} (${setor})<br>
+        <strong>Data / Ciclo:</strong> ${dataAp} • ${ciclo}<br>
+        <strong>Rotinas Gravadas (pendentes de envio):</strong> ${answeredItems.length} rotina(s)<br>
+        &#9989; Confiante: <strong>${conf}</strong> (${pctConf}%) &nbsp;|&nbsp;
+        &#9888; Preciso Aprender: <strong>${apr}</strong> &nbsp;|&nbsp;
+        &#10060; Desconheço: <strong>${desc}</strong>
+    `;
+    document.getElementById('nextPersonModal').classList.add('open');
+}
+
+/* Compartilhamento Nativo Mobile (iOS AirDrop/WhatsApp/Arquivos & Android Share) */
+async function shareOrWhatsAppSummary() {
+    const answeredItems = DATA.filter(item => responses[item.id] && responses[item.id] !== '');
+    if (answeredItems.length === 0) {
+        alert('Responda ao menos uma rotina antes de compartilhar.');
+        return;
+    }
+
+    const nome = document.getElementById('userName').value.trim() || 'Colaborador';
+    const setor = document.getElementById('userRole').value.trim() || (document.getElementById('modFilter').value || 'Geral');
+    const ciclo = document.getElementById('userCycle').value;
+    const dataAp = document.getElementById('userDate').value;
+
+    const conf = answeredItems.filter(i => responses[i.id] === 'Confiante').length;
+    const apr = answeredItems.filter(i => responses[i.id] === 'Preciso Aprender Mais').length;
+    const desc = answeredItems.filter(i => responses[i.id] === 'Desconheço').length;
+    const pctConf = Math.round((conf / answeredItems.length) * 100);
+
+    const resumoTexto = `*Validação Sankhya | Blendcoffee & Ekoa*
+` +
+        `👤 *Colaborador:* ${nome} (${setor})
+` +
+        `📅 *Data/Ciclo:* ${dataAp} - ${ciclo}
+` +
+        `📊 *Respondidas:* ${answeredItems.length} rotinas
+` +
+        `✅ *Confiante:* ${conf} (${pctConf}%)
+` +
+        `⚠️ *Preciso Aprender Mais:* ${apr}
+` +
+        `❌ *Desconheço:* ${desc}`;
+
+    // Se o celular suportar Web Share API (iOS Safari / Android Chrome), compartilha nativamente
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: `Validação Sankhya - ${nome}`,
+                text: resumoTexto
+            });
+            return;
+        } catch (e) {}
+    }
+
+    // Fallback para abrir direto no WhatsApp
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(resumoTexto)}`;
+    window.open(waUrl, '_blank');
+}
+
+function closeNextPersonModal(shouldReset) {
+    document.getElementById('nextPersonModal').classList.remove('open');
+    if (shouldReset) {
+        resetForNewPerson();
+    }
+}
+
+function promptNewPersonDirect() {
+    const answeredCount = Object.keys(responses).length;
+    if (answeredCount > 0) {
+        if (!confirm(`Existem ${answeredCount} resposta(s) marcadas na tela. Está tudo certo para limpar as respostas atuais e começar um novo questionário com outra pessoa?`)) {
+            return;
+        }
+    }
+    resetForNewPerson();
+}
+
+function resetForNewPerson() {
+    responses = {};
+    timestamps = {};
+    notes = {};
+    document.getElementById('userName').value = '';
+    document.getElementById('statusFilter').value = '';
+    saveDraft();
+    renderTable();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+        document.getElementById('userName').focus();
+    }, 250);
+}
+
+function renderHistory() {
+    const container = document.getElementById('historyList');
+    container.innerHTML = '';
+    if (savedCycles.length === 0) {
+        container.innerHTML = '<div style="font-size:0.8rem; color:var(--text-secondary);">Nenhum ciclo gravado ainda.</div>';
+        return;
+    }
+    const pend = document.getElementById('pendCount');
+    if (pend) pend.textContent = savedCycles.filter(c => c.status === 'pendente').length;
+    savedCycles.forEach((c) => {
+        const pctConf = c.totalRespondido > 0 ? Math.round((c.confiante / c.totalRespondido) * 100) : 0;
+        const card = document.createElement('div');
+        card.className = 'history-card';
+        card.innerHTML = `
+            <div style="font-weight:700; color:var(--brand-gold);">${c.data} • ${c.ciclo}</div>
+            <div style="margin:3px 0;"><strong>${c.nome}</strong> (${c.setor})</div>
+            <div style="font-size:0.78rem; color:var(--text-secondary);">
+                Respondidas: <strong>${c.totalRespondido}</strong> | Confiança: <strong>${pctConf}%</strong><br>
+                &#9989; Confiante: ${c.confiante} | &#9888; Aprender: ${c.aprender} | &#10060; Desconheço: ${c.desconheco}
+            </div>
+            <div style="margin-top:6px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <span class="hom-badge ${c.status === 'enviado' ? 'hom-sim' : 'hom-nao'}">${c.status === 'enviado' ? 'Enviado' : 'Pendente'}</span>
+                <button class="btn" style="padding:5px 9px; font-size:0.75rem;" onclick="sendCycles(['${c.id}'])">${c.status === 'enviado' ? 'Reenviar' : 'Enviar'}</button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function buildCSV(rows) {
+    let csv = '\uFEFFData_Avaliacao;Ciclo_Avaliacao;Colaborador;Setor;ID_Rotina;Modulo;Atividade;Procedimento_Sankhya;Homologado_PDF;Sentimento_Registrado;Observacoes_Plano_de_Acao\n';
+    rows.forEach(r => {
+        const obs = (r.obs || '').replace(/;/g, ',');
+        csv += `"${r.data}";"${r.ciclo}";"${r.nome}";"${r.setor}";${r.id};"${r.modulo}";"${r.atividade}";"${r.procedimento}";"${r.homologado}";"${r.sentimento}";"${obs}"\n`;
+    });
+    return csv;
+}
+
+/* Envio sob comando do usuário: compartilha o CSV (ou baixa, se o aparelho não compartilhar arquivos) e só então marca como enviado */
+async function sendCycles(ids) {
+    const list = savedCycles.filter(c => ids.includes(c.id));
+    const rows = list.flatMap(c => c.items || []);
+    if (rows.length === 0) { alert('Nada para enviar.'); return; }
+    const safe = t => String(t).replace(/\s+/g, '_');
+    const name = list.length === 1 ? `Respostas_Sankhya_${safe(list[0].nome)}_${list[0].data}.csv` : `Pendentes_Sankhya_${new Date().toISOString().slice(0, 10)}.csv`;
+    const file = new File([buildCSV(rows)], name, { type: 'text/csv' });
+    try {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: name });
+        } else {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(file); a.download = name;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        }
+    } catch (e) {
+        if (e && e.name !== 'AbortError') alert('Não foi possível enviar agora. Os dados continuam salvos no aparelho.');
+        return; // cancelou ou falhou: continua pendente, nada se perde
+    }
+    list.forEach(c => { c.status = 'enviado'; c.enviadoEm = new Date().toISOString(); });
+    saveDraft();
+    renderHistory();
+}
+function sendPending() {
+    const ids = savedCycles.filter(c => c.status === 'pendente').map(c => c.id);
+    if (ids.length === 0) { alert('Não há ciclos pendentes de envio.'); return; }
+    sendCycles(ids);
+}
+
+function clearHistory() {
+    if (confirm('Deseja limpar a lista de ciclos gravados neste dispositivo?')) {
+        savedCycles = [];
+        saveDraft();
+        renderHistory();
+        updateKPIs();
+    }
+}
+
+function toggleHistoryPanel() {
+    document.getElementById('historyPanel').classList.toggle('active');
+}
+
+function toggleTutorial() {
+    document.getElementById('tutorialModal').classList.toggle('open');
+}
+
+function exportCSV(onlyAnswered = true) {
+    const nome = document.getElementById('userName').value.trim() || 'Nao_Identificado';
+    const setor = document.getElementById('userRole').value.trim() || (document.getElementById('modFilter').value || 'Nao_Informado');
+    const ciclo = document.getElementById('userCycle').value || '1_Ciclo';
+    const dataAp = document.getElementById('userDate').value || '';
+
+    const itemsToExport = onlyAnswered
+        ? DATA.filter(item => responses[item.id] && responses[item.id] !== '')
+        : DATA;
+
+    if (itemsToExport.length === 0) {
+        alert('Nenhuma rotina foi respondida ainda para exportar.');
+        return;
+    }
+
+    let csv = '\uFEFFData_Avaliacao;Ciclo_Avaliacao;Colaborador;Setor;ID_Rotina;Modulo;Atividade;Procedimento_Sankhya;Homologado_PDF;Sentimento_Registrado;Observacoes_Plano_de_Acao\n';
+    itemsToExport.forEach(item => {
+        const resp = responses[item.id] || 'Pendente';
+        const obs = (notes[item.id] || '').replace(/;/g, ',');
+        csv += `"${dataAp}";"${ciclo}";"${nome}";"${setor}";${item.id};"${item.modulo}";"${item.atividade}";"${item.procedimento}";"${item.homologado}";"${resp}";"${obs}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const safeNome = nome.replace(/\s+/g, '_');
+    const safeSetor = setor.replace(/\s+/g, '_');
+    a.download = `Respostas_Sankhya_${safeNome}_${safeSetor}_${dataAp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+function exportAllSavedHistoryCSV() {
+    const allRows = [];
+    savedCycles.forEach(c => {
+        if (c.items && c.items.length > 0) {
+            c.items.forEach(r => allRows.push(r));
+        }
+    });
+
+    if (allRows.length === 0) {
+        alert('Ainda não há ciclos detalhados gravados para exportar.');
+        return;
+    }
+
+    let csv = '\uFEFFData_Avaliacao;Ciclo_Avaliacao;Colaborador;Setor;ID_Rotina;Modulo;Atividade;Procedimento_Sankhya;Homologado_PDF;Sentimento_Registrado;Observacoes_Plano_de_Acao\n';
+    allRows.forEach(r => {
+        const obs = (r.obs || '').replace(/;/g, ',');
+        csv += `"${r.data}";"${r.ciclo}";"${r.nome}";"${r.setor}";${r.id};"${r.modulo}";"${r.atividade}";"${r.procedimento}";"${r.homologado}";"${r.sentimento}";"${obs}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Historico_Consolidado_Equipes_Sankhya.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+init();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
