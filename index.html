@@ -865,7 +865,7 @@
             <button class="btn teal" onclick="toggleTutorial()">&#9432; Tutorial &amp; App Celular</button>
             <button class="btn" onclick="toggleHistoryPanel()">&#128197; Evolução (<span id="btnHistCount">0</span>)</button>
             <button class="btn gold" onclick="finishAndPromptNext()">&#128190; Gravar Ciclo</button>
-            <button class="btn" onclick="shareOrWhatsAppSummary()">&#128241; Compartilhar (WhatsApp/iOS)</button>
+            <button class="btn" onclick="shareOrWhatsAppSummary()">&#128221; Compartilhar Resumo (texto)</button>
             <button class="btn danger-outline" onclick="promptNewPersonDirect()">&#10227; Limpar p/ Nova Pessoa</button>
             <button class="btn" onclick="document.body.classList.toggle('dark-mode')">&#9790; Modo Escuro</button>
         </div>
@@ -942,7 +942,7 @@
         <strong id="mobileBottomProgress">0 / 194 (0%)</strong>
     </div>
     <div style="display:flex; gap:8px;">
-        <button class="btn" style="padding:10px 12px; font-size:0.8rem;" onclick="shareOrWhatsAppSummary()">&#128241; Enviar</button>
+        <button class="btn" style="padding:10px 12px; font-size:0.8rem;" onclick="sendPending()">&#10148; Enviar CSV</button>
         <button class="btn gold" style="padding:10px 14px; font-size:0.84rem;" onclick="finishAndPromptNext()">&#128190; Gravar Ciclo</button>
     </div>
 </div>
@@ -950,7 +950,7 @@
 <!-- Modal Confirmação Pós-Ciclo: Pergunta se está tudo certo para iniciar nova pessoa -->
 <div class="modal-overlay" id="nextPersonModal">
     <div class="modal-box compact">
-        <h3>&#9989; Ciclo Gravado e Arquivo Gerado!</h3>
+        <h3>&#9989; Ciclo gravado neste aparelho!</h3>
         <p style="font-size: 0.9rem; color: var(--text-secondary);">
             O ciclo foi salvo neste aparelho como <strong>pendente de envio</strong>. Para enviar o CSV, abra a Evolução e toque em <strong>Enviar</strong>.
         </p>
@@ -959,7 +959,8 @@
             Está tudo certo para limpar as respostas atuais e começar um novo questionário com outra pessoa?
         </p>
         <div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
-            <button class="btn" onclick="shareOrWhatsAppSummary()">&#128241; Compartilhar no WhatsApp / E-mail</button>
+            <button class="btn gold" onclick="sendPending()">&#10148; Enviar CSV agora</button>
+            <button class="btn" onclick="shareOrWhatsAppSummary()">&#128221; Compartilhar resumo (texto)</button>
             <button class="btn" onclick="closeNextPersonModal(false)">Manter na tela</button>
             <button class="btn gold" onclick="closeNextPersonModal(true)">&#10003; Sim, começar outra pessoa!</button>
         </div>
@@ -972,9 +973,9 @@
         <h3>&#9656; Como Usar no Celular (Android &amp; iPhone) e no Computador</h3>
         <div class="step-item">
             <strong>&#128241; No Android (Chrome / Samsung Internet) e iPhone (Safari):</strong><br>
-            • Envie este arquivo HTML por <strong>WhatsApp, E-mail, Teams ou Google Drive/OneDrive</strong>.<br>
+            • Abra o <strong>link do app</strong> no celular, uma vez com internet, e instale na tela inicial. Depois disso ele abre e grava <strong>mesmo sem internet</strong>.<br>
             • Ao tocar nele no celular, a tabela se transforma automaticamente em <strong>Cartões Touch</strong> largos, ideais para marcar com o polegar.<br>
-            • <strong>Dica de App (Tela Inicial):</strong> No Safari (iPhone), toque em <em>Compartilhar &#8594; Adicionar à Tela de Início</em>. No Chrome (Android), toque nos <em>3 pontinhos &#8594; Adicionar à tela inicial</em>. Ele ficará com ícone de aplicativo na tela do telefone!
+            • <strong>Instale antes de começar a preencher</strong> (no iPhone, o Safari e o app instalado guardam dados separados). No Safari (iPhone), toque em <em>Compartilhar &#8594; Adicionar à Tela de Início</em>. No Chrome (Android), toque nos <em>3 pontinhos &#8594; Adicionar à tela inicial</em>. Ele ficará com ícone de aplicativo na tela do telefone!
         </div>
         <div class="step-item">
             <strong>Passo 1 — Quebre o Gelo:</strong><br>
