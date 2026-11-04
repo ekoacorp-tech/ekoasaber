@@ -955,6 +955,34 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
   .pf-actions{margin-left:0;width:100%}.pf-actions .btn{flex:1}
   .panel-filters label{flex:1;min-width:140px}.panel-filters select{min-width:0;width:100%}
 }
+
+/* ===== v16: sincronização e atualização ===== */
+body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) both}
+.sync-device{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.sync-device .k{font-size:.74rem;color:var(--text-secondary)}
+.dev-name{font-size:1.25rem;font-weight:800;color:var(--text-primary);margin:2px 0}
+.sync-cols .card .btn.gold{margin-top:2px}
+.sync-note{margin-top:10px;font-size:.78rem;color:var(--text-secondary)}
+.sync-note a{color:var(--teal);font-weight:600}
+.how ol{margin:6px 0 0 18px;font-size:.88rem;line-height:1.7;color:var(--text-primary)}
+.dev-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.dev-chips button{padding:6px 12px;border-radius:99px;border:1px solid var(--border-color);background:var(--row-hover);color:var(--text-primary);font:inherit;font-size:.8rem;cursor:pointer}
+.imp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.imp-grid div{padding:10px;border-radius:12px;background:var(--row-hover);text-align:center}
+.imp-grid b{display:block;font-size:1.3rem;color:var(--text-primary)}.imp-grid span{font-size:.72rem;color:var(--text-secondary)}
+.imp-src{font-size:.86rem;line-height:1.55}
+.imp-warn{margin-top:10px;padding:9px 12px;border-radius:10px;background:rgba(194,90,51,.12);border:1px solid var(--s-desc);font-size:.82rem}
+.update-bar{display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;border-radius:14px;background:linear-gradient(90deg,#23505F,#2E6672);color:#fff;font-size:.88rem;box-shadow:0 8px 22px rgba(35,80,95,.25)}
+.update-bar.on{display:flex;animation:rise .4s var(--ease) both}
+.update-bar .btn{min-height:0;padding:7px 12px}
+.update-bar .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.notes-body{max-height:56vh;overflow:auto;margin-top:8px}
+.notes-ver{margin-top:12px}.notes-ver:first-child{margin-top:0}
+.notes-ver h4{font-size:.92rem;color:var(--copper)}.notes-ver h4 small{color:var(--text-secondary);font-weight:500}
+.notes-ver ul{margin:6px 0 0 18px;font-size:.86rem;line-height:1.55;color:var(--text-primary)}
+#toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);z-index:10001;max-width:min(92vw,460px);padding:11px 16px;border-radius:12px;background:#1c2a30;color:#fff;font-size:.86rem;box-shadow:0 10px 26px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:900px){.imp-grid{grid-template-columns:repeat(2,1fr)}}
 .hist-det{margin-top:8px;font-size:.76rem}.hist-det summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .hist-det div{padding:4px 0;border-bottom:1px dashed var(--border-color)}
 /* splash de abertura */
@@ -996,7 +1024,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label="Sankhya Sapiens"><use href="#sapiensMark"/></svg>
             <div>
                 <h2>Sankhya Sapiens</h2>
-                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão 15 beta • Sobre</a></p>
+                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão <span class="app-ver">16</span> beta • Sobre</a></p>
             </div>
         </div>
 
@@ -1005,6 +1033,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
             <button data-nav="form" onclick="goView('form')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6M8 4H6a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-2"/><path d="M9 11l2 2 4-4M9 17h6"/></svg><span>Questionário</span></button>
             <button data-nav="edit" onclick="goView('edit')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg><span>Editar</span><b class="nav-count" id="navEditCount">0</b></button>
             <button data-nav="panel" onclick="goView('panel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Painel</span></button>
+            <button data-nav="sync" onclick="goView('sync')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13l-3-3M20 15H7l3 3"/></svg><span>Sincronizar</span></button>
         </nav>
 
         <div class="filter-group">
@@ -1045,6 +1074,53 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
 </aside>
 
 <main class="main-content">
+
+    <div class="update-bar" id="updateBar" role="status"></div>
+
+    <!-- ===== SINCRONIZAR ===== -->
+    <section class="view" id="viewSync" aria-label="Sincronizar dispositivos">
+        <div class="view-head">
+            <button class="btn icon-btn" onclick="goView('home')" aria-label="Voltar ao início"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></button>
+            <div><h2>Sincronizar dispositivos</h2><p>Leve os ciclos de um aparelho para outro por arquivo. Funciona nos dois sentidos.</p></div>
+        </div>
+        <div class="card sync-device">
+            <div>
+                <div class="k">Este dispositivo</div>
+                <div class="dev-name" id="syncDevName">Sem nome</div>
+                <div class="who" id="syncDevMeta"></div>
+            </div>
+            <button class="btn" onclick="openDeviceModal()">Renomear</button>
+        </div>
+        <div class="two-col sync-cols">
+            <div class="card">
+                <h3>Exportar deste dispositivo</h3>
+                <p class="cap">Gera um arquivo com todos os ciclos gravados aqui. Envie para você mesmo (WhatsApp, e-mail, Drive) e importe no outro aparelho.</p>
+                <button class="btn gold" onclick="exportSync()">Exportar dados</button>
+                <p class="sync-note">O arquivo contém dados de colaboradores. Envie só por canais confiáveis e apague a cópia depois de importar.</p>
+            </div>
+            <div class="card">
+                <h3>Importar para este dispositivo</h3>
+                <p class="cap">Escolha um arquivo exportado de outro aparelho. Antes de aplicar, você vê o que vai entrar ou mudar. Nada é apagado: a versão mais nova de cada ciclo prevalece.</p>
+                <button class="btn gold" onclick="document.getElementById('importFile').click()">Importar arquivo</button>
+                <input type="file" id="importFile" accept=".json,application/json" hidden onchange="onImportFile(this)">
+                <p class="sync-note" id="undoBox"></p>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Últimos registros</h3>
+            <p class="cap">As duas últimas exportações e as duas últimas importações deste dispositivo.</p>
+            <div id="syncLog"></div>
+        </div>
+        <div class="card how">
+            <h3>Como usar nos dois sentidos</h3>
+            <ol>
+                <li><b>No celular:</b> Exportar dados e enviar o arquivo para você.</li>
+                <li><b>No computador:</b> Importar arquivo e escolher o que chegou. Pronto: o Painel passa a mostrar os dois aparelhos.</li>
+                <li><b>Na volta:</b> depois de trabalhar no computador, exporte de lá e importe no celular.</li>
+            </ol>
+        </div>
+    </section>
+
     <!-- ===== INÍCIO ===== -->
     <section class="view" id="viewHome" aria-label="Início">
         <div class="home-hero">
@@ -1074,6 +1150,11 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
                 <span class="hc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
                 <span class="hc-t">Painel</span>
                 <span class="hc-d">Quem respondeu, auditoria das etapas e plano de ação</span>
+            </button>
+            <button class="home-card" onclick="goView('sync')">
+                <span class="hc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13l-3-3M20 15H7l3 3"/></svg></span>
+                <span class="hc-t">Sincronizar</span>
+                <span class="hc-d" id="cardSyncTxt">Levar os dados de um dispositivo para outro</span>
             </button>
         </div>
         <div class="home-pend" id="homePend"></div>
@@ -1241,20 +1322,60 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
 </div>
 
 <!-- Modal Tutorial Passo a Passo + Como Instalar no Android e iPhone -->
+
+<div class="modal-overlay" id="deviceModal">
+    <div class="modal-box compact">
+        <h3>Como chamamos este dispositivo?</h3>
+        <p style="font-size:.88rem;color:var(--text-secondary);margin:6px 0 12px">O nome aparece nas exportações e importações e mostra de onde veio cada dado.</p>
+        <input type="text" id="deviceNameInput" class="view-search" style="max-width:none" maxlength="40" placeholder="Ex.: Celular do Andres">
+        <div class="dev-chips" id="deviceChips"></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;flex-wrap:wrap">
+            <button class="btn" onclick="closeDeviceModal(false)">Agora não</button>
+            <button class="btn gold" onclick="closeDeviceModal(true)">Salvar nome</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="importModal">
+    <div class="modal-box compact">
+        <h3>Prévia da importação</h3>
+        <div id="importPreview"></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;flex-wrap:wrap">
+            <button class="btn" onclick="cancelImport()">Cancelar</button>
+            <button class="btn gold" id="importApplyBtn" onclick="applyImport()">Importar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="notesModal" onclick="if(event.target===this)closeNotes()">
+    <div class="modal-box compact">
+        <h3 id="notesTitle">Novidades</h3>
+        <div id="notesBody" class="notes-body"></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;flex-wrap:wrap" id="notesActions"></div>
+    </div>
+</div>
+
+<div id="toast" role="status"></div>
+
 <div class="modal-overlay" id="aboutModal" onclick="if(event.target===this)toggleAbout()">
     <div class="modal-box compact">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label=""><use href="#sapiensMark"/></svg>
-            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão 15 beta</div></div>
+            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão <span class="app-ver">16</span> beta</div></div>
         </div>
         <div class="about-list">
             <div><b>Base</b><span>FAP 26511 &bull; 194 rotinas datadas</span></div>
             <div><b>Dispositivos</b><span>Android, iPhone (iOS) e computador</span></div>
             <div><b>Fluxo</b><span>Gravar ciclo &rarr; Enviar (CSV) &rarr; Limpar para nova pessoa</span></div>
             <div><b>Offline</b><span>Os ciclos ficam salvos neste aparelho até o envio</span></div>
+            <div><b>Dispositivo</b><span id="aboutDevice">Sem nome</span></div>
             <div><b>Desenvolvido por</b><span>Ekoa Tech &bull; para Blendcoffee</span></div>
         </div>
-        <div style="text-align:right;margin-top:14px;"><button class="btn gold" onclick="toggleAbout()">Fechar</button></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;flex-wrap:wrap">
+            <button class="btn" onclick="toggleAbout();showNotes(null)">Novidades da versão</button>
+            <button class="btn" onclick="checkUpdates(true)">Verificar atualizações</button>
+            <button class="btn gold" onclick="toggleAbout()">Fechar</button>
+        </div>
     </div>
 </div>
 
@@ -1262,6 +1383,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
     <div class="modal-box">
         <h3>&#9656; Como Usar no Celular (Android &amp; iPhone) e no Computador</h3>
         <div class="step-item"><strong>&#8962; Tela inicial:</strong><br>• <strong>Novo questionário</strong> abre um preenchimento em branco. <strong>Continuar</strong> aparece quando há respostas ainda não gravadas.<br>• <strong>Editar questionário</strong> lista os ciclos gravados. <strong>Painel</strong> mostra quem respondeu, o auditor das etapas e o plano de ação, que pode ser exportado.</div>
+        <div class="step-item"><strong>&#8644; Vários dispositivos:</strong><br>• Em <strong>Sincronizar</strong>, exporte os dados de um aparelho e importe no outro. Antes de aplicar, o app mostra o que muda; a versão mais nova de cada ciclo prevalece, e dá para desfazer a última importação.<br>• Quando sair uma versão nova, o app avisa, mostra as novidades e atualiza <strong>sem perder dados</strong>.</div>
         <div class="step-item"><strong>&#9998; Revisar um ciclo:</strong><br>• Ao editar, a lista mostra <strong>só as rotinas já respondidas</strong> naquele ciclo. Use <strong>Incluir outras rotinas</strong> no aviso de edição para acrescentar novas.<br>• Em <strong>Evolução</strong>, toque em <strong>Editar</strong> no ciclo. Enquanto estiver <strong>pendente</strong>, você pode alterar à vontade e gravar de novo.<br>• Se o ciclo <strong>já foi enviado</strong>, o app avisa: depois de editar, é preciso <strong>reenviar</strong>, e a versão reenviada passa a ser a <strong>final</strong>.</div>
         <div class="step-item">
             <strong>&#128241; No Android (Chrome / Samsung Internet) e iPhone (Safari):</strong><br>
@@ -1572,7 +1694,7 @@ function finishAndPromptNext() {
     }));
 
     const cycleObj = {
-        id: uuid(), status: 'pendente', criadoEm: new Date().toISOString(), versao: 1,
+        id: uuid(), status: 'pendente', criadoEm: new Date().toISOString(), versao: 1, origem: deviceRef(),
         data: dataAp,
         ciclo: ciclo,
         nome: nome,
@@ -1586,7 +1708,7 @@ function finishAndPromptNext() {
     const prevCycle = editingId ? savedCycles.find(x => x.id === editingId) : null;
     const reenvio = !!(prevCycle && prevCycle.status === 'enviado');
     if (prevCycle) {
-        Object.assign(prevCycle, cycleObj, { id: prevCycle.id, criadoEm: prevCycle.criadoEm, versao: (prevCycle.versao || 1) + 1, editadoEm: new Date().toISOString(), reenvio });
+        Object.assign(prevCycle, cycleObj, { id: prevCycle.id, criadoEm: prevCycle.criadoEm, origem: prevCycle.origem || cycleObj.origem, editadoNo: deviceRef(), versao: (prevCycle.versao || 1) + 1, editadoEm: new Date().toISOString(), reenvio });
     } else {
         savedCycles.push(cycleObj);
     }
@@ -1715,8 +1837,8 @@ function renderHistory() {
         const card = document.createElement('div');
         card.className = 'history-card';
         card.innerHTML = `
-            <div style="font-weight:700; color:var(--brand-gold);">${c.data} • ${c.ciclo}</div>
-            <div style="margin:3px 0;"><strong>${c.nome}</strong> (${c.setor})</div>
+            <div style="font-weight:700; color:var(--brand-gold);">${esc(c.data)} • ${esc(c.ciclo)}</div>
+            <div style="margin:3px 0;"><strong>${esc(c.nome)}</strong> (${esc(c.setor)})${c.origem && c.origem.nome ? ` <span class="who">• ${esc(c.origem.nome)}</span>` : ''}</div>
             <div style="font-size:0.78rem; color:var(--text-secondary);">
                 Respondidas: <strong>${c.totalRespondido}</strong> | Confiança: <strong>${pctConf}%</strong><br>
                 &#9989; Confiante: ${c.confiante} | &#9888; Aprender: ${c.aprender} | &#10060; Desconheço: ${c.desconheco}
@@ -1797,6 +1919,7 @@ function goView(v) {
     if (v === 'home') renderHome();
     if (v === 'edit') renderEditList();
     if (v === 'panel') renderPanel();
+    if (v === 'sync') renderSync();
     if (v === 'form') { renderTable(); updateKPIs(); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1833,6 +1956,11 @@ function renderHome() {
     }
     updateNavCounts();
     refreshInstallUI();
+    const cs = document.getElementById('cardSyncTxt');
+    if (cs && typeof syncMeta !== 'undefined') {
+        const last = [...(syncMeta.exports || []).map(x => ({ t: 'Exportado', em: x.em })), ...(syncMeta.imports || []).map(x => ({ t: 'Importado', em: x.em }))].sort((a, b) => String(b.em).localeCompare(String(a.em)))[0];
+        cs.textContent = last ? `${last.t} em ${fmtDT(last.em)}` : 'Levar os dados de um dispositivo para outro';
+    }
 }
 function updateNavCounts() {
     const e = document.getElementById('navEditCount'); if (e) e.textContent = savedCycles.length;
@@ -1855,7 +1983,7 @@ function renderEditList() {
         <div class="edit-row">
             <div>
                 <h4>${esc(c.nome)} <span class="who">(${esc(c.setor)})</span></h4>
-                <div class="meta">${esc(c.data)} • ${esc(c.ciclo)} • ${c.totalRespondido} rotina(s)${c.versao > 1 ? ' • v' + c.versao : ''}</div>
+                <div class="meta">${esc(c.data)} • ${esc(c.ciclo)} • ${c.totalRespondido} rotina(s)${c.versao > 1 ? ' • v' + c.versao : ''}${c.origem && c.origem.nome ? ' • origem: ' + esc(c.origem.nome) : ''}</div>
                 <div style="margin-top:6px">${statusChip(c)}${editingId === c.id ? ' <span class="chip">Em edição</span>' : ''}</div>
             </div>
             <div class="acts">
@@ -1914,8 +2042,8 @@ function renderPanel() {
     }
     const { all, current, fc } = panelData();
     document.getElementById('panelScope').textContent = fc
-        ? `Mostrando o ${fc}. Dados dos ciclos gravados neste aparelho.`
-        : 'Situação atual: último ciclo de cada colaborador. Dados dos ciclos gravados neste aparelho.';
+        ? `Mostrando o ${fc}. Dados deste aparelho, inclusive os importados.`
+        : 'Situação atual: último ciclo de cada colaborador. Dados deste aparelho, inclusive os importados.';
     const items = current.flatMap(c => (c.items || []).map(i => ({ ...i, _c: c })));
     const tot = countSent(items);
     const pessoas = new Set(current.map(personKey)).size;
@@ -2072,6 +2200,339 @@ async function installApp() {
     refreshInstallUI();
 }
 
+
+/* ===================== v16: versão, sincronização e atualização ===================== */
+const APP_VERSION = 16;
+const RELEASE_NOTES = {
+    16: { data: '2026-11-04', titulo: 'Sincronização entre dispositivos', itens: [
+        'Nova tela Sincronizar: exporte os ciclos de um aparelho e importe em outro, nos dois sentidos.',
+        'Prévia antes de importar: você vê o que entra, o que muda e o que fica como está.',
+        'A versão mais nova de cada ciclo prevalece, nada é apagado, e é possível desfazer a última importação.',
+        'Histórico das duas últimas exportações e das duas últimas importações.',
+        'Nome do dispositivo: cada ciclo registra onde foi criado.',
+        'Aviso de nova versão com as novidades, e atualização sem perder dados.' ] },
+    15: { data: '2026-11-04', titulo: 'Instalação e edição', itens: [
+        'Convite de instalação próprio (Android, computador e instruções no iPhone).',
+        'Ao editar um ciclo, a lista mostra só as rotinas já respondidas.' ] },
+    14: { data: '2026-11-04', titulo: 'Tela inicial e Painel', itens: [
+        'Tela inicial com Novo questionário, Editar questionário e Painel.',
+        'Painel com quem respondeu, auditor das etapas e plano de ação exportável.' ] },
+    13: { data: '2026-11-04', titulo: 'Mais espaço de tela', itens: ['Menu lateral que se recolhe após a seleção.'] },
+    12: { data: '2026-11-03', titulo: 'Nova identidade', itens: ['Logo Sankhya Sapiens alinhada à identidade Ekoa.'] }
+};
+document.querySelectorAll('.app-ver').forEach(e => e.textContent = APP_VERSION);
+
+let syncMeta = { device: null, exports: [], imports: [], lastSeenVersion: null };
+async function loadSyncMeta() {
+    try { const m = await idbGet('syncMeta'); if (m) syncMeta = Object.assign(syncMeta, m); } catch (e) {}
+    syncMeta.exports = (syncMeta.exports || []).slice(0, 2);
+    syncMeta.imports = (syncMeta.imports || []).slice(0, 2);
+}
+function saveSyncMeta() { idbSet('syncMeta', syncMeta).catch(() => {}); }
+function deviceRef() { return syncMeta.device ? { id: syncMeta.device.id, nome: syncMeta.device.nome } : null; }
+const fmtDT = iso => { if (!iso) return '—'; const d = new Date(iso); if (isNaN(d)) return '—'; return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
+function showToast(msg) {
+    const t = document.getElementById('toast'); if (!t) return;
+    t.textContent = msg; t.classList.add('on');
+    clearTimeout(showToast._t); showToast._t = setTimeout(() => t.classList.remove('on'), 3800);
+}
+
+/* ---------- Nome do dispositivo ---------- */
+let afterDevice = null;
+function openDeviceModal(then) {
+    afterDevice = then || null;
+    const mob = window.innerWidth <= 900 || /android|iphone|ipad/i.test(navigator.userAgent);
+    const sug = mob ? ['Celular', 'Tablet', 'Celular do escritório'] : ['Notebook', 'PC do escritório', 'Computador de casa'];
+    const inp = document.getElementById('deviceNameInput');
+    inp.value = syncMeta.device ? syncMeta.device.nome : '';
+    document.getElementById('deviceChips').innerHTML = sug.map(x => `<button type="button" onclick="document.getElementById('deviceNameInput').value=this.textContent">${x}</button>`).join('');
+    document.getElementById('deviceModal').classList.add('open');
+    setTimeout(() => inp.focus(), 250);
+}
+function closeDeviceModal(save) {
+    const nome = document.getElementById('deviceNameInput').value.trim().slice(0, 40);
+    if (save) {
+        if (!nome) { alert('Informe um nome para o dispositivo.'); return; }
+        if (syncMeta.device) syncMeta.device.nome = nome;
+        else syncMeta.device = { id: uuid(), nome, criadoEm: new Date().toISOString() };
+        // ciclos criados aqui antes de existir um nome passam a ter esta origem
+        savedCycles.forEach(c => { if (!c.origem) c.origem = deviceRef(); });
+        saveSyncMeta(); saveDraft();
+    } else {
+        syncMeta.deviceSkipped = true; saveSyncMeta();
+    }
+    document.getElementById('deviceModal').classList.remove('open');
+    refreshDeviceUI();
+    const next = afterDevice; afterDevice = null;
+    // salvou: segue o fluxo (ex.: exportar). Pulou: só continua se era o aviso de novidades da abertura.
+    if (typeof next === 'function' && (save || next === showPendingNotes)) next();
+}
+function refreshDeviceUI() {
+    const n = syncMeta.device ? syncMeta.device.nome : 'Sem nome';
+    const a = document.getElementById('aboutDevice'); if (a) a.textContent = n;
+    if (currentView === 'sync') renderSync();
+}
+
+/* ---------- Exportar ---------- */
+function slug(t) { return String(t || 'dispositivo').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '_').replace(/^_|_$/g, '') || 'dispositivo'; }
+async function exportSync() {
+    if (!syncMeta.device) { openDeviceModal(exportSync); return; }
+    if (!savedCycles.length) { alert('Ainda não há ciclos gravados neste dispositivo para exportar.'); return; }
+    if (inProgressCount() > 0 && !editingId) {
+        if (!confirm('Há respostas na tela que ainda não foram gravadas. Elas NÃO entram na exportação (só ciclos gravados entram). Exportar mesmo assim?')) return;
+    }
+    const agora = new Date();
+    const pkg = {
+        app: 'sankhya-sapiens', formato: 1, versaoApp: APP_VERSION, exportadoEm: agora.toISOString(),
+        dispositivo: deviceRef(),
+        resumo: { ciclos: savedCycles.length, pessoas: new Set(savedCycles.map(personKey)).size, pendentes: savedCycles.filter(c => c.status === 'pendente').length },
+        ciclos: savedCycles
+    };
+    const stamp = agora.toISOString().slice(0, 16).replace('T', '_').replace(':', 'h');
+    const name = `Sapiens_${slug(syncMeta.device.nome)}_${stamp}.json`;
+    const file = new File([JSON.stringify(pkg)], name, { type: 'application/json' });
+    try {
+        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: name });
+        else { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+    } catch (e) {
+        if (e && e.name === 'AbortError') return; // usuário cancelou: não registra
+        alert('Não foi possível exportar agora. Seus dados continuam salvos neste dispositivo.'); return;
+    }
+    syncMeta.exports.unshift({ em: agora.toISOString(), arquivo: name, dispositivo: syncMeta.device.nome, ciclos: pkg.resumo.ciclos, pessoas: pkg.resumo.pessoas, pendentes: pkg.resumo.pendentes });
+    syncMeta.exports = syncMeta.exports.slice(0, 2);
+    saveSyncMeta(); renderSync();
+    showToast(`Exportação pronta: ${pkg.resumo.ciclos} ciclo(s) de ${pkg.resumo.pessoas} pessoa(s).`);
+}
+
+/* ---------- Importar ---------- */
+const SENT_OK = ['Confiante', 'Preciso Aprender Mais', 'Desconheço'];
+const ID_OK = /^[A-Za-z0-9_-]{6,64}$/;
+const str = (v, max) => String(v == null ? '' : v).slice(0, max || 200);
+function sanitizeCycle(c) {
+    if (!c || typeof c !== 'object' || !ID_OK.test(String(c.id || ''))) return null;
+    if (!Array.isArray(c.items)) return null;
+    const items = c.items.filter(i => i && SENT_OK.includes(i.sentimento) && /^\d{1,6}$/.test(String(i.id))).map(i => ({
+        data: str(i.data, 10), ciclo: str(i.ciclo, 80), nome: str(i.nome, 120), setor: str(i.setor, 120), id: Number(i.id),
+        modulo: str(i.modulo, 120), atividade: str(i.atividade, 200), procedimento: str(i.procedimento, 300), homologado: str(i.homologado, 10),
+        sentimento: i.sentimento, obs: str(i.obs, 500) }));
+    if (!items.length) return null;
+    const cnt = k => items.filter(i => i.sentimento === k).length;
+    const ori = o => (o && ID_OK.test(String(o.id || ''))) ? { id: String(o.id), nome: str(o.nome, 40) } : null;
+    const iso = v => (v && !isNaN(new Date(v))) ? new Date(v).toISOString() : undefined;
+    const out = {
+        id: String(c.id), status: c.status === 'enviado' ? 'enviado' : 'pendente', criadoEm: iso(c.criadoEm) || new Date().toISOString(),
+        versao: Math.max(1, parseInt(c.versao, 10) || 1), data: str(c.data, 10), ciclo: str(c.ciclo, 80), nome: str(c.nome, 120) || 'Sem nome', setor: str(c.setor, 120),
+        totalRespondido: items.length, confiante: cnt('Confiante'), aprender: cnt('Preciso Aprender Mais'), desconheco: cnt('Desconheço'), items,
+        origem: ori(c.origem), reenvio: !!c.reenvio
+    };
+    ['editadoEm', 'enviadoEm'].forEach(k => { const v = iso(c[k]); if (v) out[k] = v; });
+    const en = ori(c.editadoNo); if (en) out.editadoNo = en;
+    return out;
+}
+const sig = c => JSON.stringify([c.nome, c.setor, c.ciclo, c.data, (c.items || []).map(i => [i.id, i.sentimento, i.obs || ''])]);
+const stamp = c => c.editadoEm || c.criadoEm || '';
+let pendingImport = null;
+function planImport(pkg) {
+    const plan = { novos: [], atualizados: [], status: [], iguais: [], locais: [], conflitosImp: [], conflitosLoc: [], invalidos: 0 };
+    const seen = new Set();
+    (pkg.ciclos || []).forEach(raw => {
+        const inc = sanitizeCycle(raw);
+        if (!inc || seen.has(inc.id)) { plan.invalidos++; return; }
+        seen.add(inc.id);
+        const loc = savedCycles.find(x => x.id === inc.id);
+        if (!loc) { if (!inc.origem) inc.origem = pkg.dispositivo ? { id: pkg.dispositivo.id, nome: pkg.dispositivo.nome } : null; plan.novos.push(inc); return; }
+        const lv = loc.versao || 1;
+        if (inc.versao > lv) plan.atualizados.push(inc);
+        else if (inc.versao < lv) plan.locais.push(inc);
+        else if (sig(inc) === sig(loc)) {
+            if (inc.status === 'enviado' && loc.status !== 'enviado') plan.status.push(inc); else plan.iguais.push(inc);
+        } else if (stamp(inc) > stamp(loc)) plan.conflitosImp.push(inc);
+        else plan.conflitosLoc.push(inc);
+    });
+    return plan;
+}
+function onImportFile(input) {
+    const f = input.files && input.files[0]; input.value = '';
+    if (!f) return;
+    if (editingId) { alert('Termine ou cancele a edição em andamento antes de importar.'); return; }
+    if (f.size > 15 * 1024 * 1024) { alert('Arquivo grande demais para ser uma exportação do Sankhya Sapiens.'); return; }
+    const r = new FileReader();
+    r.onload = () => {
+        let pkg;
+        try { pkg = JSON.parse(r.result); } catch (e) { alert('Este arquivo não é uma exportação válida do Sankhya Sapiens.'); return; }
+        if (!pkg || pkg.app !== 'sankhya-sapiens' || !Array.isArray(pkg.ciclos)) { alert('Este arquivo não é uma exportação do Sankhya Sapiens.'); return; }
+        if (pkg.formato !== 1) { alert('Este arquivo foi gerado por uma versão do app com outro formato. Atualize os dois dispositivos para a mesma versão e exporte de novo.'); return; }
+        pkg.dispositivo = (pkg.dispositivo && ID_OK.test(String(pkg.dispositivo.id || ''))) ? { id: String(pkg.dispositivo.id), nome: str(pkg.dispositivo.nome, 40) || 'Dispositivo sem nome' } : null;
+        const plan = planImport(pkg);
+        pendingImport = { pkg, plan, arquivo: str(f.name, 120) };
+        renderImportPreview();
+    };
+    r.onerror = () => alert('Não foi possível ler o arquivo.');
+    r.readAsText(f);
+}
+function renderImportPreview() {
+    const { pkg, plan } = pendingImport;
+    const entra = plan.novos.length + plan.atualizados.length + plan.status.length + plan.conflitosImp.length;
+    const cf = plan.conflitosImp.length + plan.conflitosLoc.length;
+    const names = arr => esc([...new Set(arr.map(c => c.nome))].slice(0, 6).join(', ')) + (arr.length > 6 ? '…' : '');
+    let warn = '';
+    if (pkg.dispositivo && syncMeta.device && pkg.dispositivo.id === syncMeta.device.id) warn += '<div class="imp-warn">Este arquivo foi exportado <b>deste mesmo dispositivo</b>. Normalmente não há nada a importar.</div>';
+    if (pkg.versaoApp > APP_VERSION) warn += `<div class="imp-warn">O arquivo veio da versão ${esc(pkg.versaoApp)} e este dispositivo está na ${APP_VERSION}. Recomendo atualizar este dispositivo.</div>`;
+    if (cf) warn += `<div class="imp-warn"><b>${cf}</b> ciclo(s) foram editados nos dois dispositivos com a mesma versão. Vale o mais recente: ${plan.conflitosImp.length} do arquivo, ${plan.conflitosLoc.length} deste dispositivo.</div>`;
+    if (plan.invalidos) warn += `<div class="imp-warn">${plan.invalidos} registro(s) inválido(s) ou repetido(s) no arquivo serão ignorados.</div>`;
+    document.getElementById('importPreview').innerHTML = `
+        <div class="imp-src">De: <b>${esc(pkg.dispositivo ? pkg.dispositivo.nome : 'Dispositivo sem nome')}</b><br>Exportado em: ${fmtDT(pkg.exportadoEm)} • versão ${esc(pkg.versaoApp || '?')}<br>Para: <b>${esc(syncMeta.device ? syncMeta.device.nome : 'este dispositivo')}</b></div>
+        <div class="imp-grid">
+            <div><b>${plan.novos.length}</b><span>novos</span></div>
+            <div><b>${plan.atualizados.length + plan.conflitosImp.length}</b><span>atualizados</span></div>
+            <div><b>${plan.status.length}</b><span>marcados como enviados</span></div>
+            <div><b>${plan.iguais.length}</b><span>já iguais</span></div>
+            <div><b>${plan.locais.length + plan.conflitosLoc.length}</b><span>mantidos daqui (mais novos)</span></div>
+            <div><b>${savedCycles.length}</b><span>ciclos aqui hoje</span></div>
+        </div>
+        ${plan.novos.length ? `<div class="who">Novos: ${names(plan.novos)}</div>` : ''}
+        ${warn}
+        ${entra ? '' : '<div class="imp-warn">Nada a mudar: este dispositivo já tem tudo o que está no arquivo.</div>'}`;
+    document.getElementById('importApplyBtn').style.display = entra ? '' : 'none';
+    document.getElementById('importModal').classList.add('open');
+}
+function cancelImport() { pendingImport = null; document.getElementById('importModal').classList.remove('open'); }
+async function applyImport() {
+    if (!pendingImport) return;
+    const { pkg, plan, arquivo } = pendingImport;
+    try { await idbSet('backupPreImport', { em: new Date().toISOString(), de: pkg.dispositivo ? pkg.dispositivo.nome : null, savedCycles: JSON.parse(JSON.stringify(savedCycles)) }); }
+    catch (e) { alert('Não foi possível criar a cópia de segurança. A importação foi cancelada para proteger seus dados.'); return; }
+    const replace = inc => { const k = savedCycles.findIndex(x => x.id === inc.id); if (k >= 0) savedCycles[k] = inc; };
+    plan.novos.forEach(c => savedCycles.push(c));
+    plan.atualizados.forEach(replace);
+    plan.conflitosImp.forEach(replace);
+    plan.status.forEach(inc => { const loc = savedCycles.find(x => x.id === inc.id); if (loc) { loc.status = 'enviado'; loc.reenvio = false; if (inc.enviadoEm) loc.enviadoEm = inc.enviadoEm; } });
+    saveDraft();
+    syncMeta.imports.unshift({ em: new Date().toISOString(), arquivo, de: pkg.dispositivo ? pkg.dispositivo.nome : 'Dispositivo sem nome', exportadoEm: pkg.exportadoEm || null,
+        novos: plan.novos.length, atualizados: plan.atualizados.length + plan.conflitosImp.length, enviados: plan.status.length,
+        iguais: plan.iguais.length, mantidos: plan.locais.length + plan.conflitosLoc.length, conflitos: plan.conflitosImp.length + plan.conflitosLoc.length });
+    syncMeta.imports = syncMeta.imports.slice(0, 2);
+    saveSyncMeta();
+    pendingImport = null;
+    document.getElementById('importModal').classList.remove('open');
+    renderHistory(); renderSync();
+    showToast(`Importação concluída: ${syncMeta.imports[0].novos} novo(s), ${syncMeta.imports[0].atualizados} atualizado(s).`);
+}
+async function undoImport() {
+    let b = null; try { b = await idbGet('backupPreImport'); } catch (e) {}
+    if (!b || !Array.isArray(b.savedCycles)) { alert('Não há importação para desfazer.'); return; }
+    if (editingId) { alert('Termine ou cancele a edição em andamento antes de desfazer.'); return; }
+    if (!confirm(`Desfazer a importação de ${fmtDT(b.em)}${b.de ? ' (vinda de ' + b.de + ')' : ''}?\n\nOs ciclos voltam a ser exatamente como estavam antes dela. O que foi gravado aqui depois disso também volta ao estado anterior.`)) return;
+    savedCycles = b.savedCycles;
+    saveDraft();
+    try { await idbSet('backupPreImport', null); } catch (e) {}
+    if (syncMeta.imports[0]) { syncMeta.imports[0].desfeita = true; saveSyncMeta(); }
+    renderHistory(); renderSync();
+    showToast('Importação desfeita. Os ciclos voltaram ao estado anterior.');
+}
+async function renderSync() {
+    const nm = document.getElementById('syncDevName'); if (!nm) return;
+    nm.textContent = syncMeta.device ? syncMeta.device.nome : 'Sem nome';
+    const pes = new Set(savedCycles.map(personKey)).size;
+    document.getElementById('syncDevMeta').textContent = (syncMeta.device ? `ID ${syncMeta.device.id.slice(-6)} • ` : 'Dê um nome para identificar as exportações • ') + `${savedCycles.length} ciclo(s) de ${pes} pessoa(s) gravado(s) aqui`;
+    let b = null; try { b = await idbGet('backupPreImport'); } catch (e) {}
+    document.getElementById('undoBox').innerHTML = (b && b.savedCycles) ? `Última importação em ${fmtDT(b.em)}. <a href="#" onclick="undoImport();return false;">Desfazer última importação</a>` : '';
+    const rows = [
+        ...syncMeta.exports.map(x => ({ t: 'Exportação', em: x.em, onde: `de <b>${esc(x.dispositivo)}</b>`, res: `${x.ciclos} ciclo(s) • ${x.pessoas} pessoa(s) • ${x.pendentes} pendente(s)` })),
+        ...syncMeta.imports.map(x => ({ t: 'Importação' + (x.desfeita ? ' (desfeita)' : ''), em: x.em, onde: `de <b>${esc(x.de)}</b>${x.exportadoEm ? ' • exportado em ' + fmtDT(x.exportadoEm) : ''}`,
+            res: `${x.novos} novo(s) • ${x.atualizados} atualizado(s) • ${x.enviados} marcado(s) como enviado • ${x.iguais} igual(is) • ${x.mantidos} mantido(s)${x.conflitos ? ' • ' + x.conflitos + ' conflito(s) resolvido(s)' : ''}` }))
+    ].sort((a, b) => String(b.em).localeCompare(String(a.em)));
+    document.getElementById('syncLog').innerHTML = rows.length ? `<div class="tbl-wrap"><table class="tbl narrow"><thead><tr><th>Registro</th><th>Quando</th><th>Origem e resumo</th></tr></thead><tbody>
+        ${rows.map(r => `<tr><td><span class="chip ${r.t.startsWith('Exp') ? 'ok' : 'wait'}">${r.t}</span></td><td class="who" style="white-space:nowrap">${fmtDT(r.em)}</td><td>${r.onde}<div class="who">${r.res}</div></td></tr>`).join('')}
+        </tbody></table></div>` : '<div class="empty">Nenhuma exportação ou importação ainda.</div>';
+}
+
+/* ---------- Novidades da versão ---------- */
+function notesHtml(map, fromV, toV) {
+    const vs = Object.keys(map).map(Number).filter(v => (fromV == null || v > fromV) && v <= toV).sort((a, b) => b - a);
+    return vs.map(v => { const n = map[v]; return `<div class="notes-ver"><h4>Versão ${v} beta • ${esc(n.titulo || '')} <small>${fmtD(n.data)}</small></h4><ul>${(n.itens || []).map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>`; }).join('');
+}
+function showNotes(fromV) {
+    const from = fromV == null ? APP_VERSION - 1 : fromV;
+    document.getElementById('notesTitle').textContent = fromV == null ? `Novidades da versão ${APP_VERSION} beta` : `Atualizado para a versão ${APP_VERSION} beta`;
+    document.getElementById('notesBody').innerHTML = (fromV != null ? '<p class="who" style="margin-bottom:8px">Seus ciclos e respostas foram mantidos. Veja o que mudou:</p>' : '') + (notesHtml(RELEASE_NOTES, fromV == null ? null : from, APP_VERSION) || '<p class="who">Sem notas para esta versão.</p>');
+    document.getElementById('notesActions').innerHTML = '<button class="btn gold" onclick="closeNotes()">Entendi</button>';
+    document.getElementById('notesModal').classList.add('open');
+}
+function closeNotes() { document.getElementById('notesModal').classList.remove('open'); }
+function showPendingNotes() {
+    const last = syncMeta.lastSeenVersion;
+    const usado = savedCycles.length > 0 || inProgressCount() > 0;
+    syncMeta.lastSeenVersion = APP_VERSION; saveSyncMeta();
+    if (last != null && last < APP_VERSION) showNotes(last);
+    else if (last == null && usado) showNotes(15); // quem já usava antes do aviso de versões
+}
+
+/* ---------- Verificação de atualização (version.json no GitHub) ---------- */
+let remoteInfo = null, lastCheck = 0;
+async function checkUpdates(manual) {
+    if (!location.protocol.startsWith('http')) { if (manual) alert('A verificação funciona no app publicado (link do GitHub).'); return; }
+    if (!manual && (!navigator.onLine || Date.now() - lastCheck < 30 * 60 * 1000)) return;
+    lastCheck = Date.now();
+    try {
+        const r = await fetch('version.json?ts=' + Date.now(), { cache: 'no-store' });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const j = await r.json();
+        const v = parseInt(j.versao, 10);
+        if (v > APP_VERSION) { remoteInfo = j; showUpdateBar(); if (manual) toggleAbout(); }
+        else if (manual) alert(`Você já está na versão mais recente (${APP_VERSION} beta).`);
+    } catch (e) {
+        if (manual) alert('Não foi possível verificar agora. Confira a conexão com a internet e tente de novo.');
+    }
+}
+function showUpdateBar() {
+    const bar = document.getElementById('updateBar'); if (!bar || !remoteInfo) return;
+    bar.innerHTML = `<span><b>Nova versão ${esc(remoteInfo.versao)} beta disponível.</b> ${esc(remoteInfo.titulo || '')}</span>
+        <span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" onclick="showRemoteNotes()">Ver novidades</button><button class="btn gold" onclick="applyUpdate()">Atualizar agora</button></span>`;
+    bar.classList.add('on');
+}
+function showRemoteNotes() {
+    if (!remoteInfo) return;
+    document.getElementById('notesTitle').textContent = `Versão ${remoteInfo.versao} beta disponível`;
+    const map = remoteInfo.notas && typeof remoteInfo.notas === 'object' ? remoteInfo.notas : {};
+    document.getElementById('notesBody').innerHTML = '<p class="who" style="margin-bottom:8px">O que muda em relação à sua versão (' + APP_VERSION + ' beta). Seus dados são mantidos na atualização.</p>' + (notesHtml(map, APP_VERSION, parseInt(remoteInfo.versao, 10)) || '<p class="who">Sem notas publicadas.</p>');
+    document.getElementById('notesActions').innerHTML = '<button class="btn" onclick="closeNotes()">Depois</button><button class="btn gold" onclick="closeNotes();applyUpdate()">Atualizar agora</button>';
+    document.getElementById('notesModal').classList.add('open');
+}
+async function applyUpdate() {
+    const bar = document.getElementById('updateBar');
+    if (bar) bar.innerHTML = '<span><b>Atualizando…</b> seus dados permanecem salvos neste dispositivo.</span>';
+    try {
+        saveDraft();
+        await idbSet('backupPreUpdate', { em: new Date().toISOString(), versaoAnterior: APP_VERSION, savedCycles: JSON.parse(JSON.stringify(savedCycles)) });
+        if ('caches' in window) {
+            const names = await caches.keys();
+            const urls = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/logo-blend.png'];
+            const fresh = await Promise.all(urls.map(u => fetch(u, { cache: 'reload' }).then(r => { if (!r.ok) throw new Error(u); return [u, r]; })));
+            for (const n of names) { const c = await caches.open(n); for (const [u, r] of fresh) await c.put(u, r.clone()); }
+        }
+        if ('serviceWorker' in navigator) { const reg = await navigator.serviceWorker.getRegistration(); if (reg) { try { await reg.update(); } catch (e) {} } }
+        location.reload();
+    } catch (e) {
+        if (bar) showUpdateBar();
+        alert('Não foi possível atualizar agora (verifique a internet). Nada foi alterado nos seus dados.');
+    }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUpdates(false); });
+
+/* ---------- Inicialização v16 ---------- */
+async function afterStartup() {
+    await loadSyncMeta();
+    savedCycles.forEach(c => { if (!c.origem && syncMeta.device) c.origem = deviceRef(); });
+    refreshDeviceUI();
+    renderHome();
+    setTimeout(() => {
+        if (!syncMeta.device && !syncMeta.deviceSkipped) openDeviceModal(showPendingNotes);
+        else showPendingNotes();
+        checkUpdates(false);
+    }, 900);
+}
+
 function toggleSidebarDesk(collapse) {
     const c = typeof collapse === 'boolean' ? collapse : !document.body.classList.contains('sb-collapsed');
     document.body.classList.toggle('sb-collapsed', c);
@@ -2219,7 +2680,7 @@ function exportAllSavedHistoryCSV() {
     document.body.removeChild(a);
 }
 
-init().then(() => goView('home'));
+init().then(() => { goView('home'); afterStartup(); });
 window.addEventListener('load', () => setTimeout(() => { const sp = document.getElementById('splash'); if (sp) sp.classList.add('hide'); }, 600));
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
