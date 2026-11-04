@@ -1,9 +1,16 @@
 {
-  "versao": 17,
-  "rotulo": "17 beta",
+  "versao": 18,
+  "rotulo": "18 beta",
   "data": "2026-11-04",
-  "titulo": "Novo nome Ekoa Saber e relatório em PDF",
+  "titulo": "Ajuste do nome na tela de abertura",
   "notas": {
+    "18": {
+      "data": "2026-11-04",
+      "titulo": "Ajuste do nome",
+      "itens": [
+        "A tela de abertura agora mostra o nome Ekoa Saber."
+      ]
+    },
     "17": {
       "data": "2026-11-04",
       "titulo": "Novo nome e relatório em PDF",
