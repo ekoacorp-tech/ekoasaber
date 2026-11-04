@@ -1,9 +1,20 @@
 {
-  "versao": 16,
-  "rotulo": "16 beta",
+  "versao": 17,
+  "rotulo": "17 beta",
   "data": "2026-11-04",
-  "titulo": "Sincronização entre dispositivos",
+  "titulo": "Novo nome Ekoa Saber e relatório em PDF",
   "notas": {
+    "17": {
+      "data": "2026-11-04",
+      "titulo": "Novo nome e relatório em PDF",
+      "itens": [
+        "O app agora se chama Ekoa Saber. A logo continua a mesma, e todos os seus dados foram mantidos.",
+        "Relatório em PDF no Painel: por setor, por colaborador ou geral.",
+        "Relatório do colaborador com radar de evolução entre os 2 últimos ciclos, por módulo.",
+        "Índice de conhecimento de 0 a 100 por pessoa, setor e módulo.",
+        "Base de dados no relatório: ciclos usados, datas, versões e dispositivos de origem e de edição."
+      ]
+    },
     "16": {
       "data": "2026-11-04",
       "titulo": "Sincronização entre dispositivos",
