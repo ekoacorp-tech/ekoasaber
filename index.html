@@ -800,28 +800,46 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!im
 .blend-slot{display:inline-flex;align-items:center;justify-content:center;height:48px;min-width:48px;padding:4px;border-radius:14px;background:#FBF7F1;box-shadow:0 4px 14px rgba(0,0,0,.25);flex-shrink:0}
 .blend-slot.sm{height:38px;min-width:38px;border-radius:11px;padding:3px}
 .blend-slot img{height:100%;max-width:132px;object-fit:contain}
-.blend-fb{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;border-radius:10px;background:#111827;line-height:1.1}
+.blend-fb{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;border-radius:10px;background:#111827;line-height:1.1}
 .blend-fb b{color:#C9922E;font-size:9px;letter-spacing:.05em}.blend-fb i{color:#cbd5e1;font-size:7px;font-style:normal;letter-spacing:.12em}
 .ekoa-mark{width:36px;height:36px;border-radius:10px;background:#FBF7F1;padding:2px;object-fit:contain;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,.25)}
 .beta{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:99px;background:var(--gold);color:#fff;font-size:.62rem;letter-spacing:.08em;vertical-align:middle;-webkit-text-fill-color:#fff}
+.app-mark{width:48px;height:48px;object-fit:contain;flex-shrink:0;background:#FBF7F1;border-radius:14px;padding:4px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.app-mark.sm{width:38px;height:38px;border-radius:11px;padding:3px}
+.about-link{color:#cfe3e6;text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.45)}
+.client-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#cbbfae}
+.count-pill{display:inline-block;min-width:20px;padding:0 6px;margin-left:4px;border-radius:99px;background:var(--teal);color:#fff;font-size:.72rem;line-height:20px;text-align:center}
+.topbar{position:relative;z-index:30}
+.more-wrap{position:relative}
+.more-menu{display:none;position:absolute;right:0;top:calc(100% + 8px);z-index:60;min-width:230px;padding:6px;border-radius:14px;background:var(--bg-surface);border:1px solid var(--border-color);box-shadow:0 14px 34px rgba(60,40,25,.22)}
+.more-menu.open{display:block;animation:pop .22s var(--ease) both}
+.more-menu button{display:block;width:100%;text-align:left;padding:11px 12px;border:0;border-radius:9px;background:none;color:var(--text-primary);font:inherit;font-size:.88rem;cursor:pointer}
+.more-menu button:hover{background:var(--row-hover)}.more-menu button.danger{color:#b4442f}
+.about-list div{display:flex;gap:12px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:.86rem}
+.about-list b{min-width:104px;color:var(--copper);font-weight:600}.about-list span{color:var(--text-primary)}
+.edit-banner{display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;border-radius:12px;background:rgba(201,146,46,.16);border:1px solid var(--gold);font-size:.86rem}
+.edit-banner.on{display:flex}
+.badge-warn{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.7rem;font-weight:700;background:#fde8c8;color:#8a4b0f}
+body.dark-mode .badge-warn{background:#5a3a14;color:#ffd9a0}
 .hist-det{margin-top:8px;font-size:.76rem}.hist-det summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .hist-det div{padding:4px 0;border-bottom:1px dashed var(--border-color)}
 /* splash de abertura */
 #splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(160deg,#EFE6DA,#DCE6E6 55%,#E9D3C0);transition:opacity .5s var(--ease),visibility .5s}
 #splash.hide{opacity:0;visibility:hidden}
-#splash img{width:230px;height:auto;border-radius:20px;box-shadow:0 14px 40px rgba(35,80,95,.22);animation:pop .7s var(--ease) both}
+#splash img{width:132px;height:auto;animation:pop .7s var(--ease) both;filter:drop-shadow(0 12px 24px rgba(35,80,95,.25))}
+#splash img.by{width:84px;margin-top:18px;opacity:.9;filter:none}
 #splash b{font:700 1.4rem Georgia,serif;color:#23505F;letter-spacing:.02em}
 #splash span{font:600 .72rem system-ui,sans-serif;letter-spacing:.2em;color:#C0714A}
 </style>
 </head>
 <body>
-<div id="splash"><img src="icons/ekoa-logo.png" alt="Ekoa"><b>Sankhya Sapiens</b><span>EKOA TECH</span></div>
+<div id="splash"><img src="icons/sapiens-mark.png" alt="Sankhya Sapiens"><b>Sankhya Sapiens</b><span>CONHECIMENTO SANKHYA</span><img class="by" src="icons/ekoa-logo.png" alt="Ekoa Tech"></div>
 
 <!-- Cabeçalho Fixo Mobile (Android & iOS) -->
 <header class="mobile-header">
     <div class="mobile-header-left">
         <button class="drawer-toggle-btn" onclick="toggleMobileSidebar()" aria-label="Abrir Menu e Filtros">&#9776;</button>
-        <span class="blend-slot sm"><img src="icons/logo-blend.png" alt="Blendcoffee" onerror="this.remove()"><span class="blend-fb"><b>BLEND</b><i>COFFEE</i></span></span>
+        <img class="app-mark sm" src="icons/sapiens-mark.png" alt="Sankhya Sapiens">
         <div>
             <div style="font-weight:700; font-size:0.9rem; line-height:1.1;">Sankhya Sapiens</div>
             <div style="font-size:0.7rem; color:#cbd5e1;" id="mobileSubStatus">Toque em &#9776; p/ Filtros e KPIs</div>
@@ -839,10 +857,10 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!im
 <aside class="sidebar" id="appSidebar">
     <div>
         <div class="logo-blend">
-            <span class="blend-slot"><img src="icons/logo-blend.png" alt="Blendcoffee" onerror="this.remove()"><span class="blend-fb"><b>BLEND</b><i>COFFEE</i></span></span>
+            <img class="app-mark" src="icons/sapiens-mark.png" alt="Sankhya Sapiens">
             <div>
                 <h2>Sankhya Sapiens</h2>
-                <p class="sub">FAP 26511 • 194 Rotinas Datadas</p>
+                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão 11 beta • Sobre</a></p>
             </div>
         </div>
 
@@ -893,30 +911,37 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!im
     </div>
 
     <div class="ekoa-footer">
-        <img class="ekoa-mark" src="icons/icon-192.png" alt="Ekoa">
+        <img class="ekoa-mark" src="icons/ekoa-mark.png" alt="Ekoa">
         <div>
             <div class="ekoa-text">EKOA TECH</div>
             <div style="font-size: 0.7rem; color: #94a3b8;">Processos • Tecnologia • Resultado</div>
         </div>
     </div>
+    <div class="client-row"><span>Cliente</span><span class="blend-slot sm"><img src="icons/logo-blend.png" alt="Blendcoffee" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="blend-fb"><b>BLEND</b><i>COFFEE</i></span></span></div>
 </aside>
 
 <main class="main-content">
     <div class="topbar">
         <div>
             <h1 style="font-size: 1.3rem;">Sankhya Sapiens <span class="brand-tag">Conhecimento Sankhya • Ekoa Tech <b class="beta">BETA</b></span></h1>
-            <p style="font-size: 0.83rem; color: var(--text-secondary);">Compatível com Android, iPhone (iOS) e Computador • Grava Ciclo &#8594; Envia (CSV) &#8594; Limpa p/ Nova Pessoa</p>
         </div>
         <div class="topbar-actions">
-            <button class="btn teal" onclick="toggleTutorial()">&#9432; Tutorial &amp; App Celular</button>
-            <button class="btn" onclick="toggleHistoryPanel()">&#128197; Evolução (<span id="btnHistCount">0</span>)</button>
-            <button class="btn gold" onclick="finishAndPromptNext()">&#128190; Gravar Ciclo</button>
-            <button class="btn" onclick="shareOrWhatsAppSummary()">&#128221; Compartilhar Resumo (texto)</button>
-            <button class="btn danger-outline" onclick="promptNewPersonDirect()">&#10227; Limpar p/ Nova Pessoa</button>
-            <button class="btn" onclick="document.body.classList.toggle('dark-mode')">&#9790; Modo Escuro</button>
+            <button class="btn" onclick="toggleHistoryPanel()">Evolução <span class="count-pill" id="btnHistCount">0</span></button>
+            <button class="btn gold" onclick="finishAndPromptNext()">Gravar Ciclo</button>
+            <div class="more-wrap">
+                <button class="btn" id="moreBtn" onclick="toggleMore(event)" aria-label="Mais opções">&#8943;</button>
+                <div class="more-menu" id="moreMenu">
+                    <button onclick="toggleTutorial();toggleMore()">Tutorial &amp; App Celular</button>
+                    <button onclick="toggleAbout();toggleMore()">Sobre esta versão</button>
+                    <button onclick="shareOrWhatsAppSummary();toggleMore()">Compartilhar resumo (texto)</button>
+                    <button onclick="document.body.classList.toggle('dark-mode');toggleMore()">Modo escuro</button>
+                    <button class="danger" onclick="promptNewPersonDirect();toggleMore()">Limpar p/ nova pessoa</button>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="edit-banner" id="editBanner"><span id="editBannerText"></span><button class="btn" style="padding:6px 12px;font-size:.8rem;" onclick="cancelEdit()">Cancelar edição</button></div>
     <!-- Barra de Identificação & Ciclo Evolutivo -->
     <div class="user-bar">
         <div>
@@ -988,8 +1013,8 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!im
         <strong id="mobileBottomProgress">0 / 194 (0%)</strong>
     </div>
     <div style="display:flex; gap:8px;">
-        <button class="btn" style="padding:10px 12px; font-size:0.8rem;" onclick="sendPending()">&#10148; Enviar CSV</button>
-        <button class="btn gold" style="padding:10px 14px; font-size:0.84rem;" onclick="finishAndPromptNext()">&#128190; Gravar Ciclo</button>
+        <button class="btn" style="padding:10px 12px; font-size:0.8rem;" onclick="sendPending()">Enviar CSV</button>
+        <button class="btn gold" style="padding:10px 14px; font-size:0.84rem;" onclick="finishAndPromptNext()">Gravar Ciclo</button>
     </div>
 </div>
 
@@ -997,7 +1022,7 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!im
 <div class="modal-overlay" id="nextPersonModal">
     <div class="modal-box compact">
         <h3>&#9989; Ciclo gravado neste aparelho!</h3>
-        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+        <p style="font-size: 0.9rem; color: var(--text-secondary);" id="finishNote">
             O ciclo foi salvo neste aparelho como <strong>pendente de envio</strong>. Para enviar o CSV, abra a Evolução e toque em <strong>Enviar</strong>.
         </p>
         <div class="summary-banner" id="finishSummaryBox"></div>
@@ -1014,9 +1039,27 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!im
 </div>
 
 <!-- Modal Tutorial Passo a Passo + Como Instalar no Android e iPhone -->
+<div class="modal-overlay" id="aboutModal" onclick="if(event.target===this)toggleAbout()">
+    <div class="modal-box compact">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+            <img class="app-mark" src="icons/sapiens-mark.png" alt="">
+            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão 11 beta</div></div>
+        </div>
+        <div class="about-list">
+            <div><b>Base</b><span>FAP 26511 &bull; 194 rotinas datadas</span></div>
+            <div><b>Dispositivos</b><span>Android, iPhone (iOS) e computador</span></div>
+            <div><b>Fluxo</b><span>Gravar ciclo &rarr; Enviar (CSV) &rarr; Limpar para nova pessoa</span></div>
+            <div><b>Offline</b><span>Os ciclos ficam salvos neste aparelho até o envio</span></div>
+            <div><b>Desenvolvido por</b><span>Ekoa Tech &bull; para Blendcoffee</span></div>
+        </div>
+        <div style="text-align:right;margin-top:14px;"><button class="btn gold" onclick="toggleAbout()">Fechar</button></div>
+    </div>
+</div>
+
 <div class="modal-overlay" id="tutorialModal">
     <div class="modal-box">
         <h3>&#9656; Como Usar no Celular (Android &amp; iPhone) e no Computador</h3>
+        <div class="step-item"><strong>&#9998; Revisar um ciclo:</strong><br>• Em <strong>Evolução</strong>, toque em <strong>Editar</strong> no ciclo. Enquanto estiver <strong>pendente</strong>, você pode alterar à vontade e gravar de novo.<br>• Se o ciclo <strong>já foi enviado</strong>, o app avisa: depois de editar, é preciso <strong>reenviar</strong>, e a versão reenviada passa a ser a <strong>final</strong>.</div>
         <div class="step-item">
             <strong>&#128241; No Android (Chrome / Samsung Internet) e iPhone (Safari):</strong><br>
             • Abra o <strong>link do app</strong> no celular, uma vez com internet, e instale na tela inicial. Depois disso ele abre e grava <strong>mesmo sem internet</strong>.<br>
@@ -1048,6 +1091,7 @@ let timestamps = {};
 let notes = {};
 let savedCycles = [];
 let draftLoaded = false;
+let editingId = null;
 
 /* ---- Armazenamento local: IndexedDB (mais robusto que localStorage) ---- */
 const DB_NAME = 'ekoa_sankhya', STORE = 'kv';
@@ -1255,7 +1299,8 @@ function saveDraft() {
         responses,
         timestamps,
         notes,
-        savedCycles
+        savedCycles,
+        editingId
     };
     if (!draftLoaded) return; // evita sobrescrever o rascunho antes de ele ser lido
     idbSet('draft', draft).catch(() => {});
@@ -1277,12 +1322,15 @@ async function loadDraft() {
             timestamps = draft.timestamps || {};
             notes = draft.notes || {};
             savedCycles = draft.savedCycles || [];
+            editingId = draft.editingId || null;
+            if (editingId && !savedCycles.some(c => c.id === editingId)) editingId = null;
             // ciclos antigos (v5) já eram exportados na gravação: entram como "enviado"
             savedCycles.forEach(c => { if (!c.id) { c.id = uuid(); c.status = 'enviado'; } });
         }
     } catch(e) {}
     draftLoaded = true;
     saveDraft();
+    updateEditBanner();
     if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 }
 
@@ -1323,8 +1371,8 @@ function finishAndPromptNext() {
         obs: notes[item.id] || ''
     }));
 
-    savedCycles.push({
-        id: uuid(), status: 'pendente', criadoEm: new Date().toISOString(),
+    const cycleObj = {
+        id: uuid(), status: 'pendente', criadoEm: new Date().toISOString(), versao: 1,
         data: dataAp,
         ciclo: ciclo,
         nome: nome,
@@ -1334,7 +1382,16 @@ function finishAndPromptNext() {
         aprender: apr,
         desconheco: desc,
         items: detailedRecords
-    });
+    };
+    const prevCycle = editingId ? savedCycles.find(x => x.id === editingId) : null;
+    const reenvio = !!(prevCycle && prevCycle.status === 'enviado');
+    if (prevCycle) {
+        Object.assign(prevCycle, cycleObj, { id: prevCycle.id, criadoEm: prevCycle.criadoEm, versao: (prevCycle.versao || 1) + 1, editadoEm: new Date().toISOString(), reenvio });
+    } else {
+        savedCycles.push(cycleObj);
+    }
+    editingId = null;
+    updateEditBanner();
 
     saveDraft();
     renderHistory();
@@ -1350,6 +1407,11 @@ function finishAndPromptNext() {
         &#9888; Preciso Aprender: <strong>${apr}</strong> &nbsp;|&nbsp;
         &#10060; Desconheço: <strong>${desc}</strong>
     `;
+    const note = document.getElementById('finishNote');
+    if (note) note.innerHTML = prevCycle
+        ? (reenvio ? '<strong>Este ciclo já havia sido enviado.</strong> Ele voltou para <strong>pendente</strong>: faça o <strong>reenvio</strong>. A versão reenviada será a <strong>versão final</strong> deste ciclo.'
+                   : 'Ciclo <strong>atualizado</strong> neste aparelho e ainda <strong>pendente de envio</strong>.')
+        : 'O ciclo foi salvo neste aparelho como <strong>pendente de envio</strong>. Para enviar o CSV, abra a Evolução e toque em <strong>Enviar</strong>.';
     document.getElementById('nextPersonModal').classList.add('open');
 }
 
@@ -1419,6 +1481,8 @@ function promptNewPersonDirect() {
 }
 
 function resetForNewPerson() {
+    editingId = null;
+    updateEditBanner();
     responses = {};
     timestamps = {};
     notes = {};
@@ -1456,7 +1520,10 @@ function renderHistory() {
                 &#9989; Confiante: ${c.confiante} | &#9888; Aprender: ${c.aprender} | &#10060; Desconheço: ${c.desconheco}
             </div>
             <div style="margin-top:6px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                <span class="hom-badge ${c.status === 'enviado' ? 'hom-sim' : 'hom-nao'}">${c.status === 'enviado' ? 'Enviado' : 'Pendente'}</span>
+                <span class="hom-badge ${c.status === 'enviado' ? 'hom-sim' : 'hom-nao'}">${c.status === 'enviado' ? (c.versao > 1 ? 'Enviado • versão final' : 'Enviado') : 'Pendente'}</span>
+                ${c.versao > 1 ? `<span class="badge-warn" style="background:var(--row-hover);color:var(--text-secondary);">v${c.versao}</span>` : ''}
+                ${c.reenvio && c.status === 'pendente' ? '<span class="badge-warn">Reenvio necessário</span>' : ''}
+                <button class="btn" style="padding:5px 9px; font-size:0.75rem;" ${editingId === c.id ? 'disabled' : ''} onclick="editCycle('${c.id}')">${editingId === c.id ? 'Em edição' : 'Editar'}</button>
                 <button class="btn" style="padding:5px 9px; font-size:0.75rem;" onclick="sendCycles(['${c.id}'])">${c.status === 'enviado' ? 'Reenviar' : 'Enviar'}</button>
             </div>
             <details class="hist-det"><summary>Ver o que foi preenchido (${(c.items || []).length})</summary>
@@ -1468,10 +1535,10 @@ function renderHistory() {
 }
 
 function buildCSV(rows) {
-    let csv = '\uFEFFData_Avaliacao;Ciclo_Avaliacao;Colaborador;Setor;ID_Rotina;Modulo;Atividade;Procedimento_Sankhya;Homologado_PDF;Sentimento_Registrado;Observacoes_Plano_de_Acao\n';
+    let csv = '\uFEFFData_Avaliacao;Ciclo_Avaliacao;Colaborador;Setor;ID_Rotina;Modulo;Atividade;Procedimento_Sankhya;Homologado_PDF;Sentimento_Registrado;Observacoes_Plano_de_Acao;ID_Ciclo;Versao_Ciclo\n';
     rows.forEach(r => {
         const obs = (r.obs || '').replace(/;/g, ',');
-        csv += `"${r.data}";"${r.ciclo}";"${r.nome}";"${r.setor}";${r.id};"${r.modulo}";"${r.atividade}";"${r.procedimento}";"${r.homologado}";"${r.sentimento}";"${obs}"\n`;
+        csv += `"${r.data}";"${r.ciclo}";"${r.nome}";"${r.setor}";${r.id};"${r.modulo}";"${r.atividade}";"${r.procedimento}";"${r.homologado}";"${r.sentimento}";"${obs}";"${r._cid || ''}";${r._v || 1}\n`;
     });
     return csv;
 }
@@ -1479,7 +1546,7 @@ function buildCSV(rows) {
 /* Envio sob comando do usuário: compartilha o CSV (ou baixa, se o aparelho não compartilhar arquivos) e só então marca como enviado */
 async function sendCycles(ids) {
     const list = savedCycles.filter(c => ids.includes(c.id));
-    const rows = list.flatMap(c => c.items || []);
+    const rows = list.flatMap(c => (c.items || []).map(r => ({ ...r, _cid: c.id, _v: c.versao || 1 })));
     if (rows.length === 0) { alert('Nada para enviar.'); return; }
     const safe = t => String(t).replace(/\s+/g, '_');
     const name = list.length === 1 ? `Respostas_Sankhya_${safe(list[0].nome)}_${list[0].data}.csv` : `Pendentes_Sankhya_${new Date().toISOString().slice(0, 10)}.csv`;
@@ -1496,9 +1563,11 @@ async function sendCycles(ids) {
         if (e && e.name !== 'AbortError') alert('Não foi possível enviar agora. Os dados continuam salvos no aparelho.');
         return; // cancelou ou falhou: continua pendente, nada se perde
     }
-    list.forEach(c => { c.status = 'enviado'; c.enviadoEm = new Date().toISOString(); });
+    const eraReenvio = list.some(c => c.reenvio);
+    list.forEach(c => { c.status = 'enviado'; c.enviadoEm = new Date().toISOString(); c.reenvio = false; });
     saveDraft();
     renderHistory();
+    if (eraReenvio) setTimeout(() => alert('Reenvio concluído. A versão enviada agora é a versão FINAL deste ciclo.'), 150);
 }
 function sendPending() {
     const ids = savedCycles.filter(c => c.status === 'pendente').map(c => c.id);
@@ -1513,6 +1582,59 @@ function clearHistory() {
         renderHistory();
         updateKPIs();
     }
+}
+
+function toggleAbout() { document.getElementById('aboutModal').classList.toggle('open'); }
+function toggleMore(ev) {
+    if (ev) ev.stopPropagation();
+    document.getElementById('moreMenu').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+    const mm = document.getElementById('moreMenu');
+    if (mm && mm.classList.contains('open') && !e.target.closest('.more-wrap')) mm.classList.remove('open');
+});
+
+function updateEditBanner() {
+    const b = document.getElementById('editBanner'); if (!b) return;
+    const c = editingId ? savedCycles.find(x => x.id === editingId) : null;
+    if (!c) { b.classList.remove('on'); renderHistory(); return; }
+    document.getElementById('editBannerText').innerHTML = `&#9998; Editando <strong>${esc(c.nome)}</strong> &bull; ${esc(c.ciclo)} &bull; ${c.status === 'enviado' ? 'já enviado: será preciso reenviar' : 'pendente'}`;
+    b.classList.add('on');
+    renderHistory();
+}
+
+function editCycle(id) {
+    const c = savedCycles.find(x => x.id === id); if (!c) return;
+    if (c.status === 'enviado') {
+        if (!confirm('Este ciclo JÁ FOI ENVIADO.\n\nSe você editar, será necessário REENVIAR, e a versão reenviada passa a ser a versão FINAL deste ciclo.\n\nDeseja editar mesmo assim?')) return;
+    }
+    if (editingId !== id && Object.keys(responses).length > 0) {
+        if (!confirm('Há respostas na tela que ainda não foram gravadas. Elas serão substituídas pelas respostas do ciclo escolhido. Continuar?')) return;
+    }
+    responses = {}; notes = {}; timestamps = {};
+    (c.items || []).forEach(r => {
+        responses[r.id] = r.sentimento;
+        if (r.obs) notes[r.id] = r.obs;
+        timestamps[r.id] = `${c.data} (${c.ciclo})`;
+    });
+    document.getElementById('userName').value = c.nome || '';
+    document.getElementById('userRole').value = c.setor || '';
+    document.getElementById('userCycle').value = c.ciclo || document.getElementById('userCycle').value;
+    document.getElementById('userDate').value = c.data || '';
+    document.getElementById('statusFilter').value = '';
+    editingId = id;
+    saveDraft();
+    renderTable();
+    updateKPIs();
+    updateEditBanner();
+    document.getElementById('historyPanel').classList.remove('active');
+    if (window.innerWidth <= 900) toggleMobileSidebar(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+    if (!confirm('Cancelar a edição? As alterações feitas na tela e ainda não gravadas serão descartadas. O ciclo original continua salvo como estava.')) return;
+    resetForNewPerson();
 }
 
 function toggleHistoryPanel() {
