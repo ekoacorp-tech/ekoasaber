@@ -1072,7 +1072,7 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
 <body data-view="home">
 <svg id="svgSprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs> <linearGradient id="sxT" x1="0" y1="0" x2="1" y2="1"> <stop offset="0" stop-color="#46A9AC"/><stop offset=".55" stop-color="#1E7480"/><stop offset="1" stop-color="#0E4E5E"/> </linearGradient> <linearGradient id="sxC" x1="0" y1="0" x2="1" y2="1"> <stop offset="0" stop-color="#F2A869"/><stop offset=".5" stop-color="#D07A43"/><stop offset="1" stop-color="#9A4420"/> </linearGradient> <linearGradient id="sxH" x1="0" y1="0" x2="1" y2="0"> <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/> </linearGradient> </defs><symbol id="sapiensMark" viewBox="0 0 200 200"> <path fill="url(#sxT)" d="M154 64 C146 12 50 6 38 58 C30 94 66 110 122 112 L112 92 C88 88 64 82 66 64 C70 42 126 40 154 64 Z"/> <path fill="url(#sxC)" stroke="#FBF7F1" stroke-width="3.5" stroke-linejoin="round" d="M56 88 C122 82 170 108 164 150 C158 194 74 202 42 166 C36 154 46 146 58 154 C86 174 130 172 136 148 C142 120 112 102 56 88 Z"/> <path fill="none" stroke="url(#sxH)" stroke-width="3" stroke-linecap="round" d="M98 94 C136 100 156 120 152 148"/> <path fill="#C9922E" d="M166 24 L170 38 L184 42 L170 46 L166 60 L162 46 L148 42 L162 38 Z"/> <circle cx="183" cy="64" r="3.2" fill="#C9922E" opacity=".75"/> </symbol></svg>
 <div id="vizTip" role="tooltip"></div>
-<div id="splash"><svg class="sp-mark" viewBox="0 0 200 200" role="img" aria-label="Ekoa Saber"><use href="#sapiensMark"/></svg><b>SANKHYA SAPIENS</b><span>GESTÃO DO CONHECIMENTO</span><em>by <strong>EKOA TECH</strong></em></div>
+<div id="splash"><svg class="sp-mark" viewBox="0 0 200 200" role="img" aria-label="Ekoa Saber"><use href="#sapiensMark"/></svg><b>EKOA SABER</b><span>GESTÃO DO CONHECIMENTO</span><em>by <strong>EKOA TECH</strong></em></div>
 
 <!-- Cabeçalho Fixo Mobile (Android & iOS) -->
 <header class="mobile-header">
@@ -1099,7 +1099,7 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label="Ekoa Saber"><use href="#sapiensMark"/></svg>
             <div>
                 <h2>Ekoa Saber</h2>
-                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão <span class="app-ver">17</span> beta • Sobre</a></p>
+                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão <span class="app-ver">18</span> beta • Sobre</a></p>
             </div>
         </div>
 
@@ -1458,7 +1458,7 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
     <div class="modal-box compact">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label=""><use href="#sapiensMark"/></svg>
-            <div><h3 style="margin:0;">Ekoa Saber</h3><div style="font-size:.78rem;color:var(--text-secondary);">Gestão do conhecimento &bull; versão <span class="app-ver">17</span> beta</div></div>
+            <div><h3 style="margin:0;">Ekoa Saber</h3><div style="font-size:.78rem;color:var(--text-secondary);">Gestão do conhecimento &bull; versão <span class="app-ver">18</span> beta</div></div>
         </div>
         <div class="about-list">
             <div><b>Base</b><span>FAP 26511 &bull; 194 rotinas datadas</span></div>
@@ -2299,8 +2299,9 @@ async function installApp() {
 
 
 /* ===================== v16: versão, sincronização e atualização ===================== */
-const APP_VERSION = 17;
+const APP_VERSION = 18;
 const RELEASE_NOTES = {
+    18: { data: '2026-11-04', titulo: 'Ajuste do nome', itens: ['A tela de abertura agora mostra o nome Ekoa Saber.'] },
     17: { data: '2026-11-04', titulo: 'Novo nome e relatório em PDF', itens: [
         'O app agora se chama Ekoa Saber. A logo continua a mesma, e todos os seus dados foram mantidos.',
         'Relatório em PDF no Painel: por setor, por colaborador ou geral.',

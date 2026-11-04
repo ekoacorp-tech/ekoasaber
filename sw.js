@@ -1,6 +1,6 @@
 /* Service Worker — cache do app para uso offline.
    Ao publicar uma nova versão, troque o número em V e atualize o version.json. */
-const V = 'ekoa-sankhya-v17';
+const V = 'ekoa-sankhya-v18';
 const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/logo-blend.png'];
 
 self.addEventListener('install', e => {
