@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#23505F">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <title>Sankhya Sapiens | Conhecimento Sankhya • Ekoa Tech</title>
+    <title>Ekoa Saber | Gestão do conhecimento • Ekoa Tech</title>
     <style>
         :root {
             --bg-body: #EFE6DA;
@@ -765,7 +765,7 @@
     </style>
 
 <style>
-/* ===== Identidade Sankhya Sapiens — paleta Ekoa (petróleo, ouro, cobre, café, sálvia, areia) ===== */
+/* ===== Identidade Ekoa Saber — paleta Ekoa (petróleo, ouro, cobre, café, sálvia, areia) ===== */
 :root{--petrol:#23505F;--teal:#3B8A97;--sage:#8FB8A0;--gold:#C9922E;--copper:#C0714A;--coffee:#6B4A32;--ease:cubic-bezier(.22,.8,.3,1)}
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 body{background:radial-gradient(1200px 600px at 85% -10%,rgba(201,146,46,.14),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(59,138,151,.14),transparent 60%),var(--bg-body)}
@@ -983,6 +983,81 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
 #toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);z-index:10001;max-width:min(92vw,460px);padding:11px 16px;border-radius:12px;background:#1c2a30;color:#fff;font-size:.86rem;box-shadow:0 10px 26px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 @media (max-width:900px){.imp-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== v17: relatório em PDF ===== */
+.rm-types{display:flex;flex-direction:column;gap:8px}
+.rm-types label{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border-color);border-radius:12px;cursor:pointer;background:var(--bg-surface)}
+.rm-types label:has(input:checked){border-color:var(--teal);box-shadow:0 0 0 3px rgba(59,138,151,.15)}
+.rm-types input{margin-top:3px;accent-color:var(--teal)}
+.rm-types span{display:flex;flex-direction:column;font-size:.8rem;color:var(--text-secondary)}.rm-types b{font-size:.92rem;color:var(--text-primary)}
+.rm-sel{display:flex;flex-direction:column;gap:4px;margin-top:12px;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-secondary)}
+.rm-sel select{padding:10px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-primary);font:inherit;font-size:.92rem;text-transform:none}
+#printArea{display:none}
+/* --- folha do relatório (cores fixas: o relatório é sempre claro) --- */
+.rp{--rp-ink:#2B211B;--rp-mut:#6E5D52;--rp-line:#E4D9CB;--rp-soft:#F7F1E8;--rp-c:#2A7480;--rp-a:#C4B9AA;--rp-d:#C25A33;--rp-prev:#8C7F70;
+    color:var(--rp-ink);font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:10.5pt;line-height:1.4;background:#fff}
+.rp *{box-sizing:border-box}
+.rp-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;border-radius:14px;background:linear-gradient(120deg,#1E4652,#2E6672 55%,#6B4A32);color:#fff}
+.rp-brand{display:flex;align-items:center;gap:12px}
+.rp-brand svg{width:46px;height:46px;background:#FBF7F1;border-radius:12px;padding:4px}
+.rp-brand b{display:block;font-size:15pt;letter-spacing:.02em}.rp-brand span{font-size:8.5pt;letter-spacing:.14em;text-transform:uppercase;color:#F0C77A}
+.rp-client{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:7.5pt;letter-spacing:.12em;text-transform:uppercase;color:#d9e6e8}
+.rp-client img{height:34px;background:#FBF7F1;border-radius:8px;padding:3px 6px}
+.rp-title{margin:16px 0 4px;font-size:17pt;font-weight:800;color:#13234A}
+.rp-sub{font-size:9pt;color:var(--rp-mut)}
+.rp-meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin:10px 0 14px;padding:9px 12px;border-radius:10px;background:var(--rp-soft);font-size:8.5pt;color:var(--rp-mut)}
+.rp-meta b{color:var(--rp-ink)}
+.rp-tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.rp-tile{padding:9px 10px;border:1px solid var(--rp-line);border-radius:10px}
+.rp-tile .k{font-size:7.5pt;color:var(--rp-mut)}.rp-tile .v{font-size:15pt;font-weight:800;font-variant-numeric:tabular-nums}
+.rp-tile .s{font-size:7.5pt;color:var(--rp-mut)}
+.rp-sec{margin-top:14px;break-inside:avoid;page-break-inside:avoid}
+.rp-sec.flow{break-inside:auto;page-break-inside:auto}
+.rp-sec h2{font-size:11.5pt;color:#13234A;margin-bottom:2px;padding-bottom:4px;border-bottom:2px solid #C9922E;display:inline-block}
+.rp-cap{font-size:8.5pt;color:var(--rp-mut);margin:3px 0 8px}
+.rp-sec h2,.rp-cap,.rp-legend{break-after:avoid;page-break-after:avoid}
+.rp-sec.flow h2{break-before:auto}
+.rp-sec.flow .rp-tbl tbody tr:first-child{break-before:avoid}
+.rp-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:8pt;color:var(--rp-mut);margin-bottom:6px}
+.rp-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.rp-bar{display:flex;gap:2px;height:12px;border-radius:3px;overflow:hidden;background:var(--rp-soft);min-width:70px}
+.rp-bar.big{height:20px}
+.rp-bar span{display:block;height:100%}.rp-bar .c{background:var(--rp-c)}.rp-bar .a{background:var(--rp-a)}.rp-bar .d{background:var(--rp-d)}
+.rp-tbl{width:100%;border-collapse:collapse;font-size:8.8pt}
+.rp-tbl th{text-align:left;font-size:7.3pt;letter-spacing:.05em;text-transform:uppercase;color:var(--rp-mut);font-weight:700;padding:5px 6px;border-bottom:1.5px solid var(--rp-line)}
+.rp-tbl td{padding:6px;border-bottom:1px solid var(--rp-line);vertical-align:middle}
+.rp-tbl td.n,.rp-tbl th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rp-tbl tr{break-inside:avoid;page-break-inside:avoid}
+.rp-tbl thead{display:table-header-group}
+/* a página A4 (~794px) cai na regra de celular (<900px) que transforma tabelas em cartões: neutraliza no relatório */
+.rp-tbl{display:table!important}
+.rp-tbl thead{display:table-header-group!important}.rp-tbl tbody{display:table-row-group!important}
+.rp-tbl tr,.rp-tbl thead tr{display:table-row!important;background:none!important;border:0!important;border-radius:0!important;margin:0!important;padding:0!important;box-shadow:none!important}
+.rp-tbl th,.rp-tbl td,.rp-tbl tbody td:first-child{display:table-cell!important;background:none!important;color:inherit!important;border-radius:0!important;margin:0!important;font-size:8.8pt!important;padding:6px!important;border-bottom:1px solid #E4D9CB!important}
+.rp-tbl th{font-size:7.3pt!important;color:#6E5D52!important;border-bottom:1.5px solid #E4D9CB!important}
+.rp-tbl th,.rp-tbl td,.rp-tbl tbody td:first-child{width:auto}
+.rp-mut{color:var(--rp-mut);font-size:8pt}
+.rp-up{color:var(--rp-c);font-weight:700}.rp-dn{color:var(--rp-d);font-weight:700}
+.rp-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.rp-radar{display:flex;flex-direction:column;align-items:center}
+.rp-radar svg{width:100%;max-width:330px;height:auto}
+.rp-pill{display:inline-block;padding:1px 7px;border-radius:99px;font-size:7.3pt;font-weight:700;border:1px solid var(--rp-line);color:var(--rp-mut)}
+.rp-pill.alta{background:#f6d6c8;color:#7a2c12;border-color:#f6d6c8}.rp-pill.media{background:#f3e3c2;color:#6b4a0c;border-color:#f3e3c2}
+.rp-pill.ok{border-color:var(--rp-c);color:var(--rp-c)}
+.rp-person{break-inside:avoid;page-break-inside:avoid;margin-top:8px;padding:9px 11px;border:1px solid var(--rp-line);border-radius:10px}
+.rp-person h4{font-size:10pt}.rp-person .row{display:flex;gap:12px;align-items:center;margin-top:5px}
+.rp-person .row .rp-bar{flex:1}
+.rp-note{margin-top:14px;padding:9px 12px;border-left:3px solid #C9922E;background:var(--rp-soft);font-size:8pt;color:var(--rp-mut);break-inside:avoid}
+.rp-foot{margin-top:16px;padding-top:8px;border-top:1px solid var(--rp-line);display:flex;justify-content:space-between;gap:12px;font-size:7.5pt;color:var(--rp-mut)}
+.rp-break{break-before:page;page-break-before:always}
+@media print{
+  @page{size:A4;margin:12mm 11mm 14mm}
+  @page{@bottom-right{content:"Página " counter(page) " de " counter(pages);font-size:8pt;color:#8C7F70}}
+  body.printing{background:#fff!important;display:block!important;min-height:0!important}
+  body.printing>*:not(#printArea):not(#svgSprite){display:none!important}
+  body.printing #printArea{display:block!important}
+  body.printing *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 .hist-det{margin-top:8px;font-size:.76rem}.hist-det summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .hist-det div{padding:4px 0;border-bottom:1px dashed var(--border-color)}
 /* splash de abertura */
@@ -995,17 +1070,17 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
 </style>
 </head>
 <body data-view="home">
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs> <linearGradient id="sxT" x1="0" y1="0" x2="1" y2="1"> <stop offset="0" stop-color="#46A9AC"/><stop offset=".55" stop-color="#1E7480"/><stop offset="1" stop-color="#0E4E5E"/> </linearGradient> <linearGradient id="sxC" x1="0" y1="0" x2="1" y2="1"> <stop offset="0" stop-color="#F2A869"/><stop offset=".5" stop-color="#D07A43"/><stop offset="1" stop-color="#9A4420"/> </linearGradient> <linearGradient id="sxH" x1="0" y1="0" x2="1" y2="0"> <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/> </linearGradient> </defs><symbol id="sapiensMark" viewBox="0 0 200 200"> <path fill="url(#sxT)" d="M154 64 C146 12 50 6 38 58 C30 94 66 110 122 112 L112 92 C88 88 64 82 66 64 C70 42 126 40 154 64 Z"/> <path fill="url(#sxC)" stroke="#FBF7F1" stroke-width="3.5" stroke-linejoin="round" d="M56 88 C122 82 170 108 164 150 C158 194 74 202 42 166 C36 154 46 146 58 154 C86 174 130 172 136 148 C142 120 112 102 56 88 Z"/> <path fill="none" stroke="url(#sxH)" stroke-width="3" stroke-linecap="round" d="M98 94 C136 100 156 120 152 148"/> <path fill="#C9922E" d="M166 24 L170 38 L184 42 L170 46 L166 60 L162 46 L148 42 L162 38 Z"/> <circle cx="183" cy="64" r="3.2" fill="#C9922E" opacity=".75"/> </symbol></svg>
+<svg id="svgSprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs> <linearGradient id="sxT" x1="0" y1="0" x2="1" y2="1"> <stop offset="0" stop-color="#46A9AC"/><stop offset=".55" stop-color="#1E7480"/><stop offset="1" stop-color="#0E4E5E"/> </linearGradient> <linearGradient id="sxC" x1="0" y1="0" x2="1" y2="1"> <stop offset="0" stop-color="#F2A869"/><stop offset=".5" stop-color="#D07A43"/><stop offset="1" stop-color="#9A4420"/> </linearGradient> <linearGradient id="sxH" x1="0" y1="0" x2="1" y2="0"> <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/> </linearGradient> </defs><symbol id="sapiensMark" viewBox="0 0 200 200"> <path fill="url(#sxT)" d="M154 64 C146 12 50 6 38 58 C30 94 66 110 122 112 L112 92 C88 88 64 82 66 64 C70 42 126 40 154 64 Z"/> <path fill="url(#sxC)" stroke="#FBF7F1" stroke-width="3.5" stroke-linejoin="round" d="M56 88 C122 82 170 108 164 150 C158 194 74 202 42 166 C36 154 46 146 58 154 C86 174 130 172 136 148 C142 120 112 102 56 88 Z"/> <path fill="none" stroke="url(#sxH)" stroke-width="3" stroke-linecap="round" d="M98 94 C136 100 156 120 152 148"/> <path fill="#C9922E" d="M166 24 L170 38 L184 42 L170 46 L166 60 L162 46 L148 42 L162 38 Z"/> <circle cx="183" cy="64" r="3.2" fill="#C9922E" opacity=".75"/> </symbol></svg>
 <div id="vizTip" role="tooltip"></div>
-<div id="splash"><svg class="sp-mark" viewBox="0 0 200 200" role="img" aria-label="Sankhya Sapiens"><use href="#sapiensMark"/></svg><b>SANKHYA SAPIENS</b><span>CONHECIMENTO SANKHYA</span><em>by <strong>EKOA TECH</strong></em></div>
+<div id="splash"><svg class="sp-mark" viewBox="0 0 200 200" role="img" aria-label="Ekoa Saber"><use href="#sapiensMark"/></svg><b>SANKHYA SAPIENS</b><span>GESTÃO DO CONHECIMENTO</span><em>by <strong>EKOA TECH</strong></em></div>
 
 <!-- Cabeçalho Fixo Mobile (Android & iOS) -->
 <header class="mobile-header">
     <div class="mobile-header-left">
         <button class="drawer-toggle-btn" onclick="toggleMobileSidebar()" aria-label="Abrir Menu e Filtros">&#9776;</button>
-        <svg class="app-mark sm" viewBox="0 0 200 200" role="img" aria-label="Sankhya Sapiens - Início" onclick="goView('home')" style="cursor:pointer"><use href="#sapiensMark"/></svg>
+        <svg class="app-mark sm" viewBox="0 0 200 200" role="img" aria-label="Ekoa Saber - Início" onclick="goView('home')" style="cursor:pointer"><use href="#sapiensMark"/></svg>
         <div>
-            <div style="font-weight:700; font-size:0.9rem; line-height:1.1;">Sankhya Sapiens</div>
+            <div style="font-weight:700; font-size:0.9rem; line-height:1.1;">Ekoa Saber</div>
             <div style="font-size:0.7rem; color:#cbd5e1;" id="mobileSubStatus">Toque em &#9776; p/ Filtros e KPIs</div>
         </div>
     </div>
@@ -1021,10 +1096,10 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
 <aside class="sidebar" id="appSidebar">
     <div>
         <div class="logo-blend">
-            <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label="Sankhya Sapiens"><use href="#sapiensMark"/></svg>
+            <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label="Ekoa Saber"><use href="#sapiensMark"/></svg>
             <div>
-                <h2>Sankhya Sapiens</h2>
-                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão <span class="app-ver">16</span> beta • Sobre</a></p>
+                <h2>Ekoa Saber</h2>
+                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão <span class="app-ver">17</span> beta • Sobre</a></p>
             </div>
         </div>
 
@@ -1126,8 +1201,8 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
         <div class="home-hero">
             <svg class="home-mark" viewBox="0 0 200 200" aria-hidden="true"><use href="#sapiensMark"/></svg>
             <div>
-                <h1 class="home-title">Sankhya Sapiens</h1>
-                <p class="home-sub">Conhecimento Sankhya &bull; Ekoa Tech <b class="beta">BETA</b></p>
+                <h1 class="home-title">Ekoa Saber</h1>
+                <p class="home-sub">Gestão do conhecimento &bull; Ekoa Tech <b class="beta">BETA</b></p>
             </div>
         </div>
         <div class="home-grid">
@@ -1159,7 +1234,7 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
         </div>
         <div class="home-pend" id="homePend"></div>
         <div class="install-box" id="installBox">
-            <div class="ib-txt"><strong>Instale o Sankhya Sapiens</strong><span id="installHint">Tenha o app na tela inicial e use mesmo sem internet.</span></div>
+            <div class="ib-txt"><strong>Instale o Ekoa Saber</strong><span id="installHint">Tenha o app na tela inicial e use mesmo sem internet.</span></div>
             <button class="btn gold" id="installBtn" onclick="installApp()">Instalar app</button>
         </div>
         <div class="home-links">
@@ -1190,7 +1265,8 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
             <label>Setor<select id="pfSetor" onchange="renderPanel()"></select></label>
             <label>Colaborador<select id="pfPessoa" onchange="renderPanel()"></select></label>
             <div class="pf-actions">
-                <button class="btn gold" onclick="exportActionPlan()">Exportar plano de ação</button>
+                <button class="btn gold" onclick="openReportModal()">Relatório em PDF</button>
+                <button class="btn" onclick="exportActionPlan()">Exportar plano de ação</button>
                 <button class="btn" onclick="exportPanelAnswers()">Exportar respostas</button>
             </div>
         </div>
@@ -1202,7 +1278,7 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
             <button class="btn icon-btn" onclick="goView('home')" aria-label="Início" title="Início"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></button>
             <button class="btn sb-toggle" onclick="toggleSidebarDesk()" aria-label="Mostrar ou ocultar o menu" title="Mostrar/ocultar menu">&#9776;</button>
             <div>
-            <h1 style="font-size: 1.3rem;">Sankhya Sapiens <span class="brand-tag">Conhecimento Sankhya • Ekoa Tech <b class="beta">BETA</b></span></h1>
+            <h1 style="font-size: 1.3rem;">Ekoa Saber <span class="brand-tag">Gestão do conhecimento • Ekoa Tech <b class="beta">BETA</b></span></h1>
             </div>
             <span class="top-progress" id="topProgress" onclick="toggleSidebarDesk(false)" title="Abrir menu com filtros e indicadores"></span>
         </div>
@@ -1357,11 +1433,32 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
 
 <div id="toast" role="status"></div>
 
+
+<div class="modal-overlay" id="reportModal" onclick="if(event.target===this)closeReportModal()">
+    <div class="modal-box compact">
+        <h3>Relatório em PDF</h3>
+        <p style="font-size:.86rem;color:var(--text-secondary);margin:4px 0 12px">Escolha o recorte. O relatório segue o filtro de ciclo do Painel: <b id="rmScope"></b>.</p>
+        <div class="rm-types">
+            <label><input type="radio" name="rmType" value="setor" checked onchange="rmSync()"><span><b>Setor</b>Conhecimento do setor e de cada pessoa que pertence a ele</span></label>
+            <label><input type="radio" name="rmType" value="pessoa" onchange="rmSync()"><span><b>Colaborador</b>Conhecimento individual e evolução entre os 2 últimos ciclos (radar)</span></label>
+            <label><input type="radio" name="rmType" value="geral" onchange="rmSync()"><span><b>Geral</b>Todos os setores e colaboradores deste aparelho</span></label>
+        </div>
+        <label class="rm-sel" id="rmSetorBox">Setor<select id="rmSetor"></select></label>
+        <label class="rm-sel" id="rmPessoaBox">Colaborador<select id="rmPessoa"></select></label>
+        <p class="who" style="margin-top:10px">Na janela que abrir, escolha <b>Salvar como PDF</b>. No iPhone, se o app instalado não abrir a impressão, gere pelo Safari.</p>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;flex-wrap:wrap">
+            <button class="btn" onclick="closeReportModal()">Cancelar</button>
+            <button class="btn gold" onclick="generateReport()">Gerar PDF</button>
+        </div>
+    </div>
+</div>
+<div id="printArea" aria-hidden="true"></div>
+
 <div class="modal-overlay" id="aboutModal" onclick="if(event.target===this)toggleAbout()">
     <div class="modal-box compact">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label=""><use href="#sapiensMark"/></svg>
-            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão <span class="app-ver">16</span> beta</div></div>
+            <div><h3 style="margin:0;">Ekoa Saber</h3><div style="font-size:.78rem;color:var(--text-secondary);">Gestão do conhecimento &bull; versão <span class="app-ver">17</span> beta</div></div>
         </div>
         <div class="about-list">
             <div><b>Base</b><span>FAP 26511 &bull; 194 rotinas datadas</span></div>
@@ -1873,7 +1970,7 @@ async function sendCycles(ids) {
     const rows = list.flatMap(c => (c.items || []).map(r => ({ ...r, _cid: c.id, _v: c.versao || 1 })));
     if (rows.length === 0) { alert('Nada para enviar.'); return; }
     const safe = t => String(t).replace(/\s+/g, '_');
-    const name = list.length === 1 ? `Respostas_Sankhya_${safe(list[0].nome)}_${list[0].data}.csv` : `Pendentes_Sankhya_${new Date().toISOString().slice(0, 10)}.csv`;
+    const name = list.length === 1 ? `EkoaSaber_Respostas_${safe(list[0].nome)}_${list[0].data}.csv` : `EkoaSaber_Pendentes_${new Date().toISOString().slice(0, 10)}.csv`;
     const file = new File([buildCSV(rows)], name, { type: 'text/csv' });
     try {
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -2155,13 +2252,13 @@ function exportActionPlan() {
     if (!rows.length) { alert('Nenhuma lacuna no filtro atual: não há itens para o plano de ação.'); return; }
     let csv = '﻿Prioridade;Modulo;ID_Rotina;Atividade;Procedimento_Sankhya;Colaborador;Setor;Ciclo;Data_Avaliacao;Sentimento;Observacao;Acao_Sugerida;Responsavel;Prazo;Status_Acao\n';
     rows.forEach(r => { csv += [r.prioridade, r.modulo, r.rotinaId, r.atividade, r.procedimento, r.nome, r.setor, r.ciclo, r.data, r.sentimento, r.obs, r.acao, '', '', 'A iniciar'].map(q).join(';') + '\n'; });
-    downloadCSV(`Plano_de_Acao_Sankhya_${new Date().toISOString().slice(0, 10)}.csv`, csv);
+    downloadCSV(`EkoaSaber_Plano_de_Acao_${new Date().toISOString().slice(0, 10)}.csv`, csv);
 }
 function exportPanelAnswers() {
     if (!savedCycles.length) { alert('Ainda não há ciclos gravados.'); return; }
     const { current } = panelData();
     const rows = current.flatMap(c => (c.items || []).map(r => ({ ...r, _cid: c.id, _v: c.versao || 1 })));
-    downloadCSV(`Respostas_Painel_Sankhya_${new Date().toISOString().slice(0, 10)}.csv`, buildCSV(rows));
+    downloadCSV(`EkoaSaber_Respostas_Painel_${new Date().toISOString().slice(0, 10)}.csv`, buildCSV(rows));
 }
 /* tooltip das barras */
 (function () {
@@ -2202,8 +2299,14 @@ async function installApp() {
 
 
 /* ===================== v16: versão, sincronização e atualização ===================== */
-const APP_VERSION = 16;
+const APP_VERSION = 17;
 const RELEASE_NOTES = {
+    17: { data: '2026-11-04', titulo: 'Novo nome e relatório em PDF', itens: [
+        'O app agora se chama Ekoa Saber. A logo continua a mesma, e todos os seus dados foram mantidos.',
+        'Relatório em PDF no Painel: por setor, por colaborador ou geral.',
+        'Relatório do colaborador com radar de evolução entre os 2 últimos ciclos, por módulo.',
+        'Índice de conhecimento de 0 a 100 por pessoa, setor e módulo.',
+        'Base de dados no relatório: ciclos usados, datas, versões e dispositivos de origem e de edição.' ] },
     16: { data: '2026-11-04', titulo: 'Sincronização entre dispositivos', itens: [
         'Nova tela Sincronizar: exporte os ciclos de um aparelho e importe em outro, nos dois sentidos.',
         'Prévia antes de importar: você vê o que entra, o que muda e o que fica como está.',
@@ -2218,7 +2321,7 @@ const RELEASE_NOTES = {
         'Tela inicial com Novo questionário, Editar questionário e Painel.',
         'Painel com quem respondeu, auditor das etapas e plano de ação exportável.' ] },
     13: { data: '2026-11-04', titulo: 'Mais espaço de tela', itens: ['Menu lateral que se recolhe após a seleção.'] },
-    12: { data: '2026-11-03', titulo: 'Nova identidade', itens: ['Logo Sankhya Sapiens alinhada à identidade Ekoa.'] }
+    12: { data: '2026-11-03', titulo: 'Nova identidade', itens: ['Logo própria do app, alinhada à identidade Ekoa.'] }
 };
 document.querySelectorAll('.app-ver').forEach(e => e.textContent = APP_VERSION);
 
@@ -2289,7 +2392,7 @@ async function exportSync() {
         ciclos: savedCycles
     };
     const stamp = agora.toISOString().slice(0, 16).replace('T', '_').replace(':', 'h');
-    const name = `Sapiens_${slug(syncMeta.device.nome)}_${stamp}.json`;
+    const name = `EkoaSaber_${slug(syncMeta.device.nome)}_${stamp}.json`;
     const file = new File([JSON.stringify(pkg)], name, { type: 'application/json' });
     try {
         if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: name });
@@ -2355,12 +2458,12 @@ function onImportFile(input) {
     const f = input.files && input.files[0]; input.value = '';
     if (!f) return;
     if (editingId) { alert('Termine ou cancele a edição em andamento antes de importar.'); return; }
-    if (f.size > 15 * 1024 * 1024) { alert('Arquivo grande demais para ser uma exportação do Sankhya Sapiens.'); return; }
+    if (f.size > 15 * 1024 * 1024) { alert('Arquivo grande demais para ser uma exportação do Ekoa Saber.'); return; }
     const r = new FileReader();
     r.onload = () => {
         let pkg;
-        try { pkg = JSON.parse(r.result); } catch (e) { alert('Este arquivo não é uma exportação válida do Sankhya Sapiens.'); return; }
-        if (!pkg || pkg.app !== 'sankhya-sapiens' || !Array.isArray(pkg.ciclos)) { alert('Este arquivo não é uma exportação do Sankhya Sapiens.'); return; }
+        try { pkg = JSON.parse(r.result); } catch (e) { alert('Este arquivo não é uma exportação válida do Ekoa Saber.'); return; }
+        if (!pkg || pkg.app !== 'sankhya-sapiens' || !Array.isArray(pkg.ciclos)) { alert('Este arquivo não é uma exportação do Ekoa Saber.'); return; }
         if (pkg.formato !== 1) { alert('Este arquivo foi gerado por uma versão do app com outro formato. Atualize os dois dispositivos para a mesma versão e exporte de novo.'); return; }
         pkg.dispositivo = (pkg.dispositivo && ID_OK.test(String(pkg.dispositivo.id || ''))) ? { id: String(pkg.dispositivo.id), nome: str(pkg.dispositivo.nome, 40) || 'Dispositivo sem nome' } : null;
         const plan = planImport(pkg);
@@ -2533,6 +2636,184 @@ async function afterStartup() {
     }, 900);
 }
 
+
+/* ===================== v17: relatório em PDF ===================== */
+const SCORE = { 'Confiante': 100, 'Preciso Aprender Mais': 50, 'Desconheço': 0 };
+const idx = items => { const v = (items || []).filter(i => i.sentimento in SCORE); return v.length ? Math.round(v.reduce((a, i) => a + SCORE[i.sentimento], 0) / v.length) : null; };
+function byModule(items) {
+    const m = {}; (items || []).forEach(i => { (m[i.modulo] = m[i.modulo] || []).push(i); });
+    return Object.fromEntries(Object.entries(m).map(([k, arr]) => [k, { r: countSent(arr), ix: idx(arr) }]));
+}
+function personCycles(nome) { return savedCycles.filter(c => personKey(c) === String(nome).trim().toLowerCase()).sort((a, b) => -cycleSort(a, b)); }
+function scopeLabel() { const fc = document.getElementById('pfCiclo').value; return fc ? fc : 'situação atual (último ciclo de cada colaborador)'; }
+function openReportModal() {
+    if (!savedCycles.length) { alert('Ainda não há ciclos gravados para gerar relatório.'); return; }
+    const setores = [...new Set(savedCycles.map(c => c.setor || 'Sem setor'))].sort();
+    const pessoas = [...new Set(savedCycles.map(c => c.nome))].sort();
+    document.getElementById('rmSetor').innerHTML = setores.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    document.getElementById('rmPessoa').innerHTML = pessoas.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    const fs = document.getElementById('pfSetor').value, fp = document.getElementById('pfPessoa').value;
+    if (fs) document.getElementById('rmSetor').value = fs;
+    if (fp) document.getElementById('rmPessoa').value = fp;
+    document.querySelector(`input[name=rmType][value=${fp ? 'pessoa' : 'setor'}]`).checked = true;
+    document.getElementById('rmScope').textContent = scopeLabel();
+    rmSync();
+    document.getElementById('reportModal').classList.add('open');
+}
+function closeReportModal() { document.getElementById('reportModal').classList.remove('open'); }
+function rmSync() {
+    const t = document.querySelector('input[name=rmType]:checked').value;
+    document.getElementById('rmSetorBox').style.display = t === 'setor' ? '' : 'none';
+    document.getElementById('rmPessoaBox').style.display = t === 'pessoa' ? '' : 'none';
+}
+function scopeCycles(list) {
+    const fc = document.getElementById('pfCiclo').value;
+    if (fc) return list.filter(c => c.ciclo === fc);
+    const last = {}; list.slice().sort(cycleSort).forEach(c => { const k = personKey(c); if (!last[k]) last[k] = c; });
+    return Object.values(last);
+}
+function rpBar(r, big) {
+    const seg = (k, cls) => r[k] ? `<span class="${cls}" style="flex:${r[k]}"></span>` : '';
+    return `<div class="rp-bar${big ? ' big' : ''}">${seg('c', 'c')}${seg('a', 'a')}${seg('d', 'd')}</div>`;
+}
+const RP_LEGEND = '<div class="rp-legend"><span><i style="background:#2A7480"></i>Confiante</span><span><i style="background:#C4B9AA"></i>Preciso aprender mais</span><span><i style="background:#C25A33"></i>Desconheço</span></div>';
+const dev = o => o && o.nome ? esc(o.nome) : '<span class="rp-mut">não registrado</span>';
+const shortId = id => esc(String(id || '').slice(-6));
+function delta(a, b, unit) { if (a == null || b == null) return '<span class="rp-mut">—</span>'; const d = b - a; return d > 0 ? `<span class="rp-up">+${d}${unit}</span>` : d < 0 ? `<span class="rp-dn">${d}${unit}</span>` : '<span class="rp-mut">estável</span>'; }
+function prevOf(c) { const h = personCycles(c.nome); const i = h.findIndex(x => x.id === c.id); return i > 0 ? h[i - 1] : null; }
+
+/* radar de/para: eixos = módulos avaliados nos dois ciclos */
+function radarSVG(axes, prev, cur) {
+    const N = axes.length, W = 340, H = 300, cx = W / 2, cy = 150, R = 100;
+    const pt = (i, v) => { const a = -Math.PI / 2 + 2 * Math.PI * i / N; return [cx + Math.cos(a) * R * v / 100, cy + Math.sin(a) * R * v / 100]; };
+    let g = '';
+    [25, 50, 75, 100].forEach(l => { g += `<polygon points="${axes.map((_, i) => pt(i, l).join(',')).join(' ')}" fill="none" stroke="#E4D9CB" stroke-width="1"/>`; });
+    axes.forEach((m, i) => {
+        const [x, y] = pt(i, 100); g += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E4D9CB" stroke-width="1"/>`;
+        const [lx, ly] = pt(i, 122); const anc = Math.abs(lx - cx) < 8 ? 'middle' : lx > cx ? 'start' : 'end';
+        const label = m.length > 22 ? m.slice(0, 21) + '…' : m;
+        g += `<text x="${lx.toFixed(1)}" y="${(ly + 3).toFixed(1)}" font-size="8.5" fill="#6E5D52" text-anchor="${anc}">${esc(label)}</text>`;
+    });
+    [50, 100].forEach(l => { const [x, y] = pt(0, l); g += `<text x="${x + 3}" y="${y + 3}" font-size="7" fill="#A99C8C">${l}</text>`; });
+    const poly = (vals, fill, stroke, dash) => `<polygon points="${vals.map((v, i) => pt(i, v).join(',')).join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="2" ${dash ? 'stroke-dasharray="5 4"' : ''} stroke-linejoin="round"/>`
+        + vals.map((v, i) => { const [x, y] = pt(i, v); return `<circle cx="${x}" cy="${y}" r="3.2" fill="${stroke}" stroke="#fff" stroke-width="1.5"/>`; }).join('');
+    g += poly(prev, 'rgba(140,127,112,.14)', '#8C7F70', true) + poly(cur, 'rgba(42,116,128,.20)', '#2A7480', false);
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Radar de evolução por módulo">${g}</svg>`;
+}
+function evolutionBlock(nome) {
+    const h = personCycles(nome);
+    if (h.length < 2) return `<div class="rp-sec"><h2>Evolução</h2><p class="rp-cap">Há apenas um ciclo registrado para esta pessoa. A comparação aparece a partir do segundo ciclo aplicado.</p></div>`;
+    const cur = h[h.length - 1], prev = h[h.length - 2];
+    const mc = byModule(cur.items), mp = byModule(prev.items);
+    const common = Object.keys(mc).filter(m => mp[m]).sort();
+    const all = [...new Set([...Object.keys(mc), ...Object.keys(mp)])].sort();
+    const legend = `<div class="rp-legend"><span><i style="background:#8C7F70"></i>Anterior: ${esc(prev.ciclo)} • ${fmtD(prev.data)} (tracejado)</span><span><i style="background:#2A7480"></i>Atual: ${esc(cur.ciclo)} • ${fmtD(cur.data)}</span></div>`;
+    let chart;
+    if (common.length >= 3) chart = `<div class="rp-radar">${radarSVG(common, common.map(m => mp[m].ix), common.map(m => mc[m].ix))}</div>`;
+    else chart = `<p class="rp-cap">Os dois ciclos têm ${common.length} módulo(s) em comum; o radar precisa de pelo menos 3. A comparação segue na tabela ao lado.</p>`;
+    const rows = all.map(m => `<tr><td>${esc(m)}</td><td class="n">${mp[m] ? mp[m].ix : '—'}</td><td class="n"><b>${mc[m] ? mc[m].ix : '—'}</b></td><td class="n">${mp[m] && mc[m] ? delta(mp[m].ix, mc[m].ix, '') : '<span class="rp-mut">só em um ciclo</span>'}</td></tr>`).join('');
+    return `<div class="rp-sec"><h2>Evolução entre os 2 últimos ciclos</h2>
+        <p class="rp-cap">Índice de conhecimento por módulo (0 a 100). Índice geral: <b>${idx(prev.items)}</b> → <b>${idx(cur.items)}</b> (${delta(idx(prev.items), idx(cur.items), ' pts')}).</p>${legend}
+        <div class="rp-two">${chart}<table class="rp-tbl"><thead><tr><th>Módulo</th><th class="n">Anterior</th><th class="n">Atual</th><th class="n">Variação</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+function baseBlock(cycles) {
+    const rows = cycles.slice().sort(cycleSort).map(c => `<tr><td><b>${esc(c.nome)}</b><div class="rp-mut">${esc(c.setor || 'Sem setor')}</div></td><td>${esc(c.ciclo)}<div class="rp-mut">avaliado em ${fmtD(c.data)}</div></td>
+        <td class="n">v${c.versao || 1}</td><td>${dev(c.origem)}<div class="rp-mut">${fmtDT(c.criadoEm)}</div></td><td>${c.editadoEm ? dev(c.editadoNo || c.origem) + `<div class="rp-mut">${fmtDT(c.editadoEm)}</div>` : '<span class="rp-mut">sem edição</span>'}</td>
+        <td>${c.status === 'enviado' ? `Enviado<div class="rp-mut">${fmtDT(c.enviadoEm)}</div>` : (c.reenvio ? 'Reenvio pendente' : 'Pendente')}</td><td class="n rp-mut">${shortId(c.id)}</td></tr>`).join('');
+    const devs = [...new Set(cycles.map(c => c.origem && c.origem.nome).filter(Boolean))];
+    return `<div class="rp-sec flow rp-break"><h2>Base de dados do relatório</h2>
+        <p class="rp-cap">Ciclos usados neste relatório, com a data da avaliação, a versão, o dispositivo onde cada ciclo foi criado e onde foi editado pela última vez. Dispositivos de origem: <b>${devs.length ? esc(devs.join(', ')) : 'não registrados'}</b>.</p>
+        <table class="rp-tbl"><thead><tr><th>Colaborador</th><th>Ciclo</th><th class="n">Versão</th><th>Criado em (dispositivo)</th><th>Última edição</th><th>Envio</th><th class="n">ID</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function rpPlan(cycles, max) {
+    const plan = actionPlanRows(cycles); const by = {};
+    plan.forEach(r => { (by[r.rotinaId] = by[r.rotinaId] || { r, d: [], a: [], obs: [] })[r.sentimento === SENT.d ? 'd' : 'a'].push(r.nome); if (r.obs) by[r.rotinaId].obs.push(r.nome + ': ' + r.obs); });
+    const top = Object.values(by).sort((x, y) => (y.d.length * 2 + y.a.length) - (x.d.length * 2 + x.a.length)).slice(0, max);
+    if (!top.length) return '<div class="rp-sec"><h2>Rotinas prioritárias</h2><p class="rp-cap">Nenhuma lacuna: todas as rotinas avaliadas estão como Confiante.</p></div>';
+    return `<div class="rp-sec flow"><h2>Rotinas prioritárias para treinamento</h2><p class="rp-cap">${plan.length} ponto(s) de lacuna. Prioridade Alta = Desconheço; Média = Preciso aprender mais.</p>
+        <table class="rp-tbl"><thead><tr><th>Prioridade</th><th>Rotina</th><th class="n">Desconheço</th><th class="n">Aprender</th><th>Quem</th></tr></thead><tbody>
+        ${top.map(x => `<tr><td><span class="rp-pill ${x.d.length ? 'alta' : 'media'}">${x.d.length ? 'ALTA' : 'MÉDIA'}</span></td><td><b>${esc(x.r.atividade)}</b><div class="rp-mut">${esc(x.r.modulo)} • ${esc(x.r.procedimento)}</div>${x.obs.length ? `<div class="rp-mut">Obs.: ${esc(x.obs.join(' | '))}</div>` : ''}</td><td class="n">${x.d.length}</td><td class="n">${x.a.length}</td><td class="rp-mut">${esc([...x.d, ...x.a].join(', '))}</td></tr>`).join('')}
+        </tbody></table></div>`;
+}
+function modulesBlock(items, title) {
+    const bm = byModule(items);
+    const rows = Object.entries(bm).sort((a, b) => a[1].ix - b[1].ix || b[1].r.t - a[1].r.t)
+        .map(([m, x]) => `<tr><td>${esc(m)}</td><td style="width:34%">${rpBar(x.r)}</td><td class="n">${x.r.t}</td><td class="n">${pct(x.r.c, x.r.t)}%</td><td class="n"><b>${x.ix}</b></td></tr>`).join('');
+    return `<div class="rp-sec"><h2>${title}</h2><p class="rp-cap">Ordenado do menor para o maior índice: o topo da lista é onde treinar primeiro.</p>${RP_LEGEND}
+        <table class="rp-tbl"><thead><tr><th>Módulo</th><th>Distribuição</th><th class="n">Respostas</th><th class="n">Confiante</th><th class="n">Índice</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function tilesBlock(cycles, items) {
+    const r = countSent(items); const pend = cycles.filter(c => c.status !== 'enviado').length;
+    return `<div class="rp-tiles">
+        <div class="rp-tile"><div class="k">Colaboradores</div><div class="v">${new Set(cycles.map(personKey)).size}</div><div class="s">${cycles.length} ciclo(s)</div></div>
+        <div class="rp-tile"><div class="k">Respostas</div><div class="v">${r.t}</div><div class="s">rotinas avaliadas</div></div>
+        <div class="rp-tile"><div class="k">Índice de conhecimento</div><div class="v">${idx(items) ?? '—'}</div><div class="s">escala 0 a 100</div></div>
+        <div class="rp-tile"><div class="k">Domínio (Confiante)</div><div class="v">${pct(r.c, r.t)}%</div><div class="s">${r.c} de ${r.t}</div></div>
+        <div class="rp-tile"><div class="k">Lacuna</div><div class="v">${pct(r.a + r.d, r.t)}%</div><div class="s">${pend} ciclo(s) não enviado(s)</div></div>
+    </div>${RP_LEGEND}${rpBar(r, true)}
+    <p class="rp-mut" style="margin-top:5px">Confiante ${r.c} (${pct(r.c, r.t)}%) • Preciso aprender ${r.a} (${pct(r.a, r.t)}%) • Desconheço ${r.d} (${pct(r.d, r.t)}%)</p>`;
+}
+function peopleBlock(cycles) {
+    return `<div class="rp-sec flow"><h2>Colaboradores</h2><p class="rp-cap">Cada pessoa com o ciclo considerado e a variação do índice em relação ao ciclo anterior dela.</p>
+        ${cycles.slice().sort((a, b) => (idx(a.items) - idx(b.items)) || String(a.nome).localeCompare(b.nome)).map(c => { const r = countSent(c.items); const pv = prevOf(c);
+            return `<div class="rp-person"><h4>${esc(c.nome)} <span class="rp-mut">• ${esc(c.setor || 'Sem setor')} • ${esc(c.ciclo)} • ${fmtD(c.data)} • origem: ${dev(c.origem)}</span></h4>
+            <div class="row">${rpBar(r)}<span class="rp-mut" style="white-space:nowrap">${r.t} rotina(s)</span><span style="white-space:nowrap">Índice <b>${idx(c.items)}</b></span><span style="white-space:nowrap">${pv ? 'vs. ciclo anterior ' + delta(idx(pv.items), idx(c.items), ' pts') : '<span class="rp-mut">primeiro ciclo</span>'}</span></div></div>`; }).join('')}</div>`;
+}
+function setoresBlock(cycles) {
+    const by = {}; cycles.forEach(c => { const k = c.setor || 'Sem setor'; (by[k] = by[k] || []).push(c); });
+    const rows = Object.entries(by).map(([k, cs]) => { const it = cs.flatMap(c => c.items || []); return { k, cs, it, ix: idx(it), r: countSent(it) }; }).sort((a, b) => a.ix - b.ix);
+    return `<div class="rp-sec"><h2>Por setor</h2>${RP_LEGEND}<table class="rp-tbl"><thead><tr><th>Setor</th><th>Distribuição</th><th class="n">Pessoas</th><th class="n">Respostas</th><th class="n">Índice</th></tr></thead><tbody>
+        ${rows.map(x => `<tr><td>${esc(x.k)}</td><td style="width:34%">${rpBar(x.r)}</td><td class="n">${new Set(x.cs.map(personKey)).size}</td><td class="n">${x.r.t}</td><td class="n"><b>${x.ix}</b></td></tr>`).join('')}</tbody></table></div>`;
+}
+function reportShell(title, sub, filtros, body) {
+    const now = new Date();
+    return `<div class="rp">
+        <div class="rp-head"><div class="rp-brand"><svg viewBox="0 0 200 200"><use href="#sapiensMark"/></svg><div><b>Ekoa Saber</b><span>Relatório de conhecimento</span></div></div>
+        <div class="rp-client">Cliente<img src="icons/logo-blend.png" alt="Blendcoffee"></div></div>
+        <div class="rp-title">${title}</div><div class="rp-sub">${sub}</div>
+        <div class="rp-meta"><span>Recorte: <b>${filtros}</b></span><span>Ciclos: <b>${esc(scopeLabel())}</b></span><span>Gerado em <b>${fmtDT(now.toISOString())}</b></span><span>Dispositivo: <b>${esc(syncMeta.device ? syncMeta.device.nome : 'sem nome')}</b></span><span>Versão do app: <b>${APP_VERSION} beta</b></span></div>
+        ${body}
+        <div class="rp-note"><b>Como ler:</b> o índice de conhecimento vai de 0 a 100 e é a média das respostas, com Confiante = 100, Preciso aprender mais = 50 e Desconheço = 0. A lacuna é a soma de Preciso aprender mais e Desconheço. O relatório usa apenas os ciclos gravados neste dispositivo, inclusive os importados de outros dispositivos. A rastreabilidade de cada ciclo está na seção Base de dados.</div>
+        <div class="rp-foot"><span>Ekoa Saber • Ekoa Tech • Processos • Tecnologia • Resultado</span><span>Documento interno: contém dados de colaboradores (LGPD).</span></div>
+    </div>`;
+}
+function generateReport() {
+    const t = document.querySelector('input[name=rmType]:checked').value;
+    let html;
+    if (t === 'pessoa') {
+        const nome = document.getElementById('rmPessoa').value;
+        const h = personCycles(nome); if (!h.length) { alert('Sem ciclos para este colaborador.'); return; }
+        const fc = document.getElementById('pfCiclo').value;
+        const cur = fc ? (h.filter(c => c.ciclo === fc).pop()) : h[h.length - 1];
+        if (!cur) { alert(`${nome} não tem ciclo no filtro "${fc}". Ajuste o filtro de ciclo do Painel.`); return; }
+        const items = cur.items || [];
+        const hist = `<div class="rp-sec"><h2>Histórico de ciclos</h2><table class="rp-tbl"><thead><tr><th>Ciclo</th><th>Data</th><th>Distribuição</th><th class="n">Rotinas</th><th class="n">Índice</th><th>Origem</th></tr></thead><tbody>
+            ${h.map(c => `<tr><td>${esc(c.ciclo)}${c.id === cur.id ? ' <span class="rp-pill ok">base</span>' : ''}</td><td>${fmtD(c.data)}</td><td style="width:30%">${rpBar(countSent(c.items))}</td><td class="n">${c.totalRespondido}</td><td class="n"><b>${idx(c.items)}</b></td><td>${dev(c.origem)}</td></tr>`).join('')}</tbody></table></div>`;
+        html = reportShell(`Colaborador: ${esc(cur.nome)}`, `${esc(cur.setor || 'Sem setor')} • base: ${esc(cur.ciclo)} (${fmtD(cur.data)}) • ${h.length} ciclo(s) registrado(s)`, 'colaborador',
+            tilesBlock([cur], items) + evolutionBlock(nome) + modulesBlock(items, 'Conhecimento por módulo (ciclo base)') + hist + rpPlan([cur], 15) + baseBlock(h));
+    } else {
+        const setor = t === 'setor' ? document.getElementById('rmSetor').value : null;
+        const list = setor ? savedCycles.filter(c => (c.setor || 'Sem setor') === setor) : savedCycles.slice();
+        const cycles = scopeCycles(list);
+        if (!cycles.length) { alert('Nenhum ciclo no recorte escolhido. Ajuste o filtro de ciclo do Painel.'); return; }
+        const items = cycles.flatMap(c => c.items || []);
+        html = reportShell(setor ? `Setor: ${esc(setor)}` : 'Relatório geral', setor ? `Conhecimento do setor e de cada colaborador que pertence a ele` : 'Todos os setores e colaboradores', setor ? 'setor' : 'geral',
+            tilesBlock(cycles, items) + (setor ? '' : setoresBlock(cycles)) + modulesBlock(items, setor ? 'Conhecimento do setor por módulo' : 'Conhecimento por módulo') + peopleBlock(cycles) + rpPlan(cycles, 15) + baseBlock(cycles));
+    }
+    const area = document.getElementById('printArea');
+    area.innerHTML = html;
+    closeReportModal();
+    const prevTitle = document.title;
+    document.title = 'EkoaSaber_Relatorio_' + new Date().toISOString().slice(0, 10);
+    document.body.classList.add('printing');
+    const done = () => { document.body.classList.remove('printing'); document.title = prevTitle; window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done);
+    const img = area.querySelector('img');
+    let fired = false;
+    const go = () => { if (fired) return; fired = true; setTimeout(() => { try { window.print(); } catch (e) { done(); alert('Não foi possível abrir a impressão neste aparelho.'); } setTimeout(() => { if (!window.matchMedia('print').matches) done(); }, 1500); }, 80); };
+    if (img && !img.complete) { img.onload = go; img.onerror = go; } else go();
+}
+
 function toggleSidebarDesk(collapse) {
     const c = typeof collapse === 'boolean' ? collapse : !document.body.classList.contains('sb-collapsed');
     document.body.classList.toggle('sb-collapsed', c);
@@ -2645,7 +2926,7 @@ function exportCSV(onlyAnswered = true) {
     a.href = url;
     const safeNome = nome.replace(/\s+/g, '_');
     const safeSetor = setor.replace(/\s+/g, '_');
-    a.download = `Respostas_Sankhya_${safeNome}_${safeSetor}_${dataAp}.csv`;
+    a.download = `EkoaSaber_Respostas_${safeNome}_${safeSetor}_${dataAp}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -2674,7 +2955,7 @@ function exportAllSavedHistoryCSV() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Historico_Consolidado_Equipes_Sankhya.csv`;
+    a.download = `EkoaSaber_Historico_Consolidado.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
