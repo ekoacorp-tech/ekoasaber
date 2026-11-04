@@ -1058,6 +1058,16 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
   body.printing #printArea{display:block!important}
   body.printing *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* ===== v19: exclusão, lixeira e sincronização mais segura ===== */
+.trash{margin-top:16px}
+.trash summary{cursor:pointer;font-size:.95rem;color:var(--text-primary)}
+.trash-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px dashed var(--border-color);font-size:.86rem}
+.trash-row:last-child{border-bottom:0}
+#toast .t-act{margin-left:12px;color:#F0C77A;font-weight:700;text-decoration:underline;cursor:pointer;background:none;border:0;font:inherit;pointer-events:auto}
+#toast.on{pointer-events:auto}
+.sync-pend{margin-top:8px;padding:9px 12px;border-radius:10px;background:rgba(201,146,46,.14);border:1px solid var(--gold);font-size:.84rem}
+.imp-ok{margin-top:10px;padding:9px 12px;border-radius:10px;background:rgba(42,116,128,.10);border:1px solid var(--s-conf);font-size:.82rem}
 .hist-det{margin-top:8px;font-size:.76rem}.hist-det summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .hist-det div{padding:4px 0;border-bottom:1px dashed var(--border-color)}
 /* splash de abertura */
@@ -1099,7 +1109,7 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label="Ekoa Saber"><use href="#sapiensMark"/></svg>
             <div>
                 <h2>Ekoa Saber</h2>
-                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão <span class="app-ver">18</span> beta • Sobre</a></p>
+                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão <span class="app-ver">19</span> beta • Sobre</a></p>
             </div>
         </div>
 
@@ -1248,10 +1258,15 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
     <section class="view" id="viewEdit" aria-label="Editar questionário">
         <div class="view-head">
             <button class="btn icon-btn" onclick="goView('home')" aria-label="Voltar ao início"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></button>
-            <div><h2>Editar questionário</h2><p>Escolha um ciclo gravado para revisar. Ciclos já enviados precisarão ser reenviados.</p></div>
+            <div><h2>Editar questionário</h2><p>Escolha um ciclo gravado para revisar ou excluir. Ciclos já exportados precisarão ser exportados de novo.</p></div>
         </div>
         <input type="search" class="view-search" id="editSearch" placeholder="Buscar por colaborador ou setor..." oninput="renderEditList()">
         <div id="editList" class="edit-list"></div>
+        <details class="card trash" id="trashBox">
+            <summary><b>Lixeira</b> <span class="who" id="trashCount"></span></summary>
+            <p class="cap">Questionários excluídos ficam aqui e podem ser restaurados. Esvaziar a lixeira apaga de vez os dados neste dispositivo.</p>
+            <div id="trashList"></div>
+        </details>
     </section>
 
     <!-- ===== PAINEL ===== -->
@@ -1339,9 +1354,8 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
             <strong>&#128200; Linha do Tempo de Avaliações Gravadas neste Dispositivo</strong>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button class="btn gold" style="padding:6px 10px; font-size:0.78rem;" onclick="sendPending()">&#10148; Enviar pendentes (<span id="pendCount">0</span>)</button>
-                <button class="btn teal" style="padding:6px 10px; font-size:0.78rem;" onclick="exportAllSavedHistoryCSV()">&#8635; Baixar Histórico Consolidado</button>
-                <button class="btn" style="padding:6px 10px; font-size:0.78rem;" onclick="clearHistory()">Limpar Histórico</button>
+                <button class="btn gold" style="padding:6px 10px; font-size:0.78rem;" onclick="goView('sync')">Sincronizar (<span id="pendCount">0</span> não exportado(s))</button>
+                <button class="btn" style="padding:6px 10px; font-size:0.78rem;" onclick="goView('edit')">Editar ou excluir</button>
             </div>
         </div>
         <p style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;">Cada vez que você conclui um questionário, a fotografia daquela pessoa fica salva abaixo e o formulário é preparado para o próximo colaborador.</p>
@@ -1371,7 +1385,6 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
         <strong id="mobileBottomProgress">0 / 194 (0%)</strong>
     </div>
     <div style="display:flex; gap:8px;">
-        <button class="btn" style="padding:10px 12px; font-size:0.8rem;" onclick="sendPending()">Enviar CSV</button>
         <button class="btn gold" style="padding:10px 14px; font-size:0.84rem;" onclick="finishAndPromptNext()">Gravar Ciclo</button>
     </div>
 </div>
@@ -1381,14 +1394,14 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
     <div class="modal-box compact">
         <h3>&#9989; Ciclo gravado neste aparelho!</h3>
         <p style="font-size: 0.9rem; color: var(--text-secondary);" id="finishNote">
-            O ciclo foi salvo neste aparelho como <strong>pendente de envio</strong>. Para enviar o CSV, abra a Evolução e toque em <strong>Enviar</strong>.
+            O ciclo foi salvo neste aparelho e ainda <strong>não foi exportado</strong>. Para levar os dados a outro dispositivo, use <strong>Sincronizar &rarr; Exportar dados</strong>.
         </p>
         <div class="summary-banner" id="finishSummaryBox"></div>
         <p style="font-size: 0.92rem; font-weight: 700; margin-bottom: 14px;">
             Está tudo certo para limpar as respostas atuais e começar um novo questionário com outra pessoa?
         </p>
         <div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
-            <button class="btn gold" onclick="sendPending()">&#10148; Enviar CSV agora</button>
+            <button class="btn" onclick="closeNextPersonModal(false); exportSync()">Exportar agora</button>
             <button class="btn" onclick="shareOrWhatsAppSummary()">&#128221; Compartilhar resumo (texto)</button>
             <button class="btn" onclick="closeNextPersonModal(false)">Manter na tela</button>
             <button class="btn" onclick="closeNextPersonModal(false); goView('panel')">Ver no painel</button>
@@ -1458,13 +1471,13 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
     <div class="modal-box compact">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label=""><use href="#sapiensMark"/></svg>
-            <div><h3 style="margin:0;">Ekoa Saber</h3><div style="font-size:.78rem;color:var(--text-secondary);">Gestão do conhecimento &bull; versão <span class="app-ver">18</span> beta</div></div>
+            <div><h3 style="margin:0;">Ekoa Saber</h3><div style="font-size:.78rem;color:var(--text-secondary);">Gestão do conhecimento &bull; versão <span class="app-ver">19</span> beta</div></div>
         </div>
         <div class="about-list">
             <div><b>Base</b><span>FAP 26511 &bull; 194 rotinas datadas</span></div>
             <div><b>Dispositivos</b><span>Android, iPhone (iOS) e computador</span></div>
-            <div><b>Fluxo</b><span>Gravar ciclo &rarr; Enviar (CSV) &rarr; Limpar para nova pessoa</span></div>
-            <div><b>Offline</b><span>Os ciclos ficam salvos neste aparelho até o envio</span></div>
+            <div><b>Fluxo</b><span>Gravar ciclo &rarr; Sincronizar (exportar e importar) &rarr; Painel e relatório em PDF</span></div>
+            <div><b>Offline</b><span>Os ciclos ficam salvos neste aparelho; a sincronização leva a outros</span></div>
             <div><b>Dispositivo</b><span id="aboutDevice">Sem nome</span></div>
             <div><b>Desenvolvido por</b><span>Ekoa Tech &bull; para Blendcoffee</span></div>
         </div>
@@ -1481,7 +1494,7 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
         <h3>&#9656; Como Usar no Celular (Android &amp; iPhone) e no Computador</h3>
         <div class="step-item"><strong>&#8962; Tela inicial:</strong><br>• <strong>Novo questionário</strong> abre um preenchimento em branco. <strong>Continuar</strong> aparece quando há respostas ainda não gravadas.<br>• <strong>Editar questionário</strong> lista os ciclos gravados. <strong>Painel</strong> mostra quem respondeu, o auditor das etapas e o plano de ação, que pode ser exportado.</div>
         <div class="step-item"><strong>&#8644; Vários dispositivos:</strong><br>• Em <strong>Sincronizar</strong>, exporte os dados de um aparelho e importe no outro. Antes de aplicar, o app mostra o que muda; a versão mais nova de cada ciclo prevalece, e dá para desfazer a última importação.<br>• Quando sair uma versão nova, o app avisa, mostra as novidades e atualiza <strong>sem perder dados</strong>.</div>
-        <div class="step-item"><strong>&#9998; Revisar um ciclo:</strong><br>• Ao editar, a lista mostra <strong>só as rotinas já respondidas</strong> naquele ciclo. Use <strong>Incluir outras rotinas</strong> no aviso de edição para acrescentar novas.<br>• Em <strong>Evolução</strong>, toque em <strong>Editar</strong> no ciclo. Enquanto estiver <strong>pendente</strong>, você pode alterar à vontade e gravar de novo.<br>• Se o ciclo <strong>já foi enviado</strong>, o app avisa: depois de editar, é preciso <strong>reenviar</strong>, e a versão reenviada passa a ser a <strong>final</strong>.</div>
+        <div class="step-item"><strong>&#9998; Revisar um ciclo:</strong><br>• Ao editar, a lista mostra <strong>só as rotinas já respondidas</strong> naquele ciclo. Use <strong>Incluir outras rotinas</strong> no aviso de edição para acrescentar novas.<br>• Em <strong>Evolução</strong>, toque em <strong>Editar</strong> no ciclo. Enquanto estiver <strong>pendente</strong>, você pode alterar à vontade e gravar de novo.<br>• Se o ciclo <strong>já foi exportado</strong>, o app avisa: depois de editar, é preciso <strong>exportar de novo</strong>, e a versão reexportada passa a ser a <strong>final</strong>.<br>• Para <strong>excluir</strong>, use Editar &rarr; Excluir. O questionário vai para a <strong>Lixeira</strong>, de onde pode ser restaurado, e a exclusão é levada aos outros dispositivos na sincronização.</div>
         <div class="step-item">
             <strong>&#128241; No Android (Chrome / Samsung Internet) e iPhone (Safari):</strong><br>
             • Abra o <strong>link do app</strong> no celular, uma vez com internet, e instale na tela inicial. Depois disso ele abre e grava <strong>mesmo sem internet</strong>.<br>
@@ -1497,8 +1510,8 @@ body[data-view="sync"] #viewSync{display:block;animation:rise .4s var(--ease) bo
             No celular, use a caixa <strong>"Filtro Rápido de Módulo"</strong> logo abaixo do nome (ou toque no menu &#9776; no canto superior esquerdo) para mostrar apenas o setor entrevistado.
         </div>
         <div class="step-item">
-            <strong>Passo 3 — Gravar &#8594; Enviar quando quiser &#8594; Próxima Pessoa:</strong><br>
-            Ao terminar, toque no botão dourado <strong>"Gravar Ciclo"</strong> na barra inferior do celular. Ele guarda o ciclo no aparelho, mesmo sem internet; o envio do CSV é feito depois, em Evolução &#8594; Enviar. Ele guarda apenas o que foi respondido (ou permite enviar direto no WhatsApp/AirDrop/E-mail) e pergunta se pode limpar a tela para a próxima pessoa!
+            <strong>Passo 3 — Gravar &#8594; Exportar quando quiser &#8594; Próxima Pessoa:</strong><br>
+            Ao terminar, toque no botão dourado <strong>"Gravar Ciclo"</strong> na barra inferior do celular. Ele guarda o ciclo no aparelho, mesmo sem internet; a exportação é feita depois, em Sincronizar &#8594; Exportar dados. Ele guarda apenas o que foi respondido (ou permite enviar direto no WhatsApp/AirDrop/E-mail) e pergunta se pode limpar a tela para a próxima pessoa!
         </div>
         <div style="text-align: right; margin-top: 16px;">
             <button class="btn primary" onclick="toggleTutorial()">Entendi, Vamos Começar!</button>
@@ -1514,6 +1527,8 @@ let notes = {};
 let savedCycles = [];
 let draftLoaded = false;
 let editingId = null;
+let lixeira = [];      // ciclos excluídos, restauráveis
+let excluidos = [];    // registro de exclusão (id, data, dispositivo), levado na sincronização
 
 /* ---- Armazenamento local: IndexedDB (mais robusto que localStorage) ---- */
 const DB_NAME = 'ekoa_sankhya', STORE = 'kv';
@@ -1719,7 +1734,9 @@ function saveDraft() {
         timestamps,
         notes,
         savedCycles,
-        editingId
+        editingId,
+        lixeira,
+        excluidos
     };
     if (!draftLoaded) return; // evita sobrescrever o rascunho antes de ele ser lido
     idbSet('draft', draft).catch(() => {});
@@ -1741,6 +1758,8 @@ async function loadDraft() {
             timestamps = draft.timestamps || {};
             notes = draft.notes || {};
             savedCycles = draft.savedCycles || [];
+            lixeira = Array.isArray(draft.lixeira) ? draft.lixeira : [];
+            excluidos = Array.isArray(draft.excluidos) ? draft.excluidos : [];
             editingId = draft.editingId || null;
             if (editingId && !savedCycles.some(c => c.id === editingId)) editingId = null;
             // ciclos antigos (v5) já eram exportados na gravação: entram como "enviado"
@@ -1821,16 +1840,16 @@ function finishAndPromptNext() {
     document.getElementById('finishSummaryBox').innerHTML = `
         <strong>Colaborador:</strong> ${nome} (${setor})<br>
         <strong>Data / Ciclo:</strong> ${dataAp} • ${ciclo}<br>
-        <strong>Rotinas Gravadas (pendentes de envio):</strong> ${answeredItems.length} rotina(s)<br>
+        <strong>Rotinas gravadas (ainda não exportadas):</strong> ${answeredItems.length} rotina(s)<br>
         &#9989; Confiante: <strong>${conf}</strong> (${pctConf}%) &nbsp;|&nbsp;
         &#9888; Preciso Aprender: <strong>${apr}</strong> &nbsp;|&nbsp;
         &#10060; Desconheço: <strong>${desc}</strong>
     `;
     const note = document.getElementById('finishNote');
     if (note) note.innerHTML = prevCycle
-        ? (reenvio ? '<strong>Este ciclo já havia sido enviado.</strong> Ele voltou para <strong>pendente</strong>: faça o <strong>reenvio</strong>. A versão reenviada será a <strong>versão final</strong> deste ciclo.'
-                   : 'Ciclo <strong>atualizado</strong> neste aparelho e ainda <strong>pendente de envio</strong>.')
-        : 'O ciclo foi salvo neste aparelho como <strong>pendente de envio</strong>. Para enviar o CSV, abra a Evolução e toque em <strong>Enviar</strong>.';
+        ? (reenvio ? '<strong>Este ciclo já havia sido exportado.</strong> Ele voltou para <strong>não exportado</strong>: exporte de novo na Sincronização. A versão reexportada será a <strong>versão final</strong> deste ciclo.'
+                   : 'Ciclo <strong>atualizado</strong> neste aparelho e ainda <strong>não exportado</strong>.')
+        : 'O ciclo foi salvo neste aparelho e ainda <strong>não foi exportado</strong>. Para levar os dados a outro dispositivo, use <strong>Sincronizar &rarr; Exportar dados</strong>.';
     document.getElementById('nextPersonModal').classList.add('open');
 }
 
@@ -1941,11 +1960,11 @@ function renderHistory() {
                 &#9989; Confiante: ${c.confiante} | &#9888; Aprender: ${c.aprender} | &#10060; Desconheço: ${c.desconheco}
             </div>
             <div style="margin-top:6px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                <span class="hom-badge ${c.status === 'enviado' ? 'hom-sim' : 'hom-nao'}">${c.status === 'enviado' ? (c.versao > 1 ? 'Enviado • versão final' : 'Enviado') : 'Pendente'}</span>
+                <span class="hom-badge ${c.status === 'enviado' ? 'hom-sim' : 'hom-nao'}">${c.status === 'enviado' ? (c.versao > 1 ? 'Exportado • versão final' : 'Exportado') : 'Não exportado'}</span>
                 ${c.versao > 1 ? `<span class="badge-warn" style="background:var(--row-hover);color:var(--text-secondary);">v${c.versao}</span>` : ''}
-                ${c.reenvio && c.status === 'pendente' ? '<span class="badge-warn">Reenvio necessário</span>' : ''}
+                ${c.reenvio && c.status === 'pendente' ? '<span class="badge-warn">Exportar de novo</span>' : ''}
                 <button class="btn" style="padding:5px 9px; font-size:0.75rem;" ${editingId === c.id ? 'disabled' : ''} onclick="editCycle('${c.id}')">${editingId === c.id ? 'Em edição' : 'Editar'}</button>
-                <button class="btn" style="padding:5px 9px; font-size:0.75rem;" onclick="sendCycles(['${c.id}'])">${c.status === 'enviado' ? 'Reenviar' : 'Enviar'}</button>
+                <button class="btn danger-outline" style="padding:5px 9px; font-size:0.75rem;" onclick="deleteCycle('${c.id}')">Excluir</button>
             </div>
             <details class="hist-det"><summary>Ver o que foi preenchido (${(c.items || []).length})</summary>
                 ${(c.items || []).map(r => `<div><strong>#${esc(r.id)}</strong> ${esc(r.atividade)} &mdash; <em>${esc(r.sentimento)}</em>${r.obs ? ' (' + esc(r.obs) + ')' : ''}</div>`).join('')}
@@ -2014,7 +2033,7 @@ function goView(v) {
     document.querySelectorAll('.side-nav button').forEach(b => b.classList.toggle('on', b.dataset.nav === v));
     if (window.innerWidth <= 900) toggleMobileSidebar(false);
     if (v === 'home') renderHome();
-    if (v === 'edit') renderEditList();
+    if (v === 'edit') { renderEditList(); renderTrash(); }
     if (v === 'panel') renderPanel();
     if (v === 'sync') renderSync();
     if (v === 'form') { renderTable(); updateKPIs(); }
@@ -2049,7 +2068,7 @@ function renderHome() {
     const hp = document.getElementById('homePend');
     if (hp) {
         hp.classList.toggle('on', pend > 0);
-        hp.innerHTML = pend ? `<span><strong>${pend}</strong> ciclo(s) gravado(s) aguardando envio.</span><button class="btn gold" onclick="sendPending()">Enviar agora</button>` : '';
+        hp.innerHTML = pend ? `<span><strong>${pend}</strong> ciclo(s) gravado(s) ainda não exportado(s).</span><button class="btn gold" onclick="exportSync()">Exportar agora</button>` : '';
     }
     updateNavCounts();
     refreshInstallUI();
@@ -2066,11 +2085,12 @@ function updateNavCounts() {
 /* ---------- Editar ---------- */
 function cycleSort(a, b) { return String(b.data).localeCompare(String(a.data)) || String(b.criadoEm || '').localeCompare(String(a.criadoEm || '')); }
 function statusChip(c) {
-    if (c.status === 'enviado') return `<span class="chip ok">${c.versao > 1 ? 'Enviado • versão final' : 'Enviado'}</span>`;
-    if (c.reenvio) return '<span class="chip warn">Reenvio necessário</span>';
-    return '<span class="chip wait">Pendente de envio</span>';
+    if (c.status === 'enviado') return `<span class="chip ok">${c.versao > 1 ? 'Exportado • versão final' : 'Exportado'}</span>`;
+    if (c.reenvio) return '<span class="chip warn">Exportar de novo</span>';
+    return '<span class="chip wait">Não exportado</span>';
 }
 function renderEditList() {
+    renderTrash();
     const box = document.getElementById('editList'); if (!box) return;
     const q = (document.getElementById('editSearch').value || '').toLowerCase().trim();
     const list = savedCycles.slice().sort(cycleSort).filter(c => !q || `${c.nome} ${c.setor}`.toLowerCase().includes(q));
@@ -2085,7 +2105,7 @@ function renderEditList() {
             </div>
             <div class="acts">
                 <button class="btn gold" onclick="editFromList('${c.id}')">Editar</button>
-                <button class="btn" onclick="sendCycles(['${c.id}']).then(renderEditList)">${c.status === 'enviado' ? 'Reenviar' : 'Enviar'}</button>
+                <button class="btn danger-outline" onclick="deleteCycle('${c.id}')">Excluir</button>
             </div>
         </div>`).join('');
 }
@@ -2152,7 +2172,7 @@ function renderPanel() {
         <div class="tile"><div class="k">Respostas registradas</div><div class="v">${tot.t}</div><div class="s">rotinas avaliadas</div></div>
         <div class="tile"><div class="k">Domínio (Confiante)</div><div class="v">${pct(tot.c, tot.t)}%</div><div class="s">${tot.c} de ${tot.t}</div></div>
         <div class="tile"><div class="k">Lacuna (aprender + desconheço)</div><div class="v">${pct(tot.a + tot.d, tot.t)}%</div><div class="s">${tot.a + tot.d} rotina(s) a tratar</div></div>
-        <div class="tile"><div class="k">Pendentes de envio</div><div class="v">${pend}</div><div class="s">${pend ? 'enviar pelo Início ou Editar' : 'tudo enviado'}</div></div>
+        <div class="tile"><div class="k">Não exportados</div><div class="v">${pend}</div><div class="s">${pend ? 'exportar em Sincronizar' : 'tudo exportado'}</div></div>
     </div>`;
 
     const dist = `<div class="card"><h3>Distribuição geral do conhecimento</h3><p class="cap">Todas as respostas do filtro atual.</p>${LEGEND}${sbar(tot, true)}
@@ -2192,7 +2212,7 @@ function renderPanel() {
             `<span class="step done">Preenchido • ${c.totalRespondido}/${universe} (${cov}%)</span>`,
             `<span class="step done">Gravado • ${fmtD(c.data)}</span>`,
             c.versao > 1 ? `<span class="step ${sent ? 'done' : 'alert'}">Editado • v${c.versao}</span>` : '',
-            sent ? `<span class="step done">Enviado • ${fmtD(c.enviadoEm)}</span>` : `<span class="step ${c.reenvio ? 'alert' : 'todo'}">${c.reenvio ? 'Reenvio pendente' : 'Envio pendente'}</span>`
+            sent ? `<span class="step done">Exportado • ${fmtD(c.enviadoEm)}</span>` : `<span class="step ${c.reenvio ? 'alert' : 'todo'}">${c.reenvio ? 'Exportar de novo' : 'Exportação pendente'}</span>`
         ].filter(Boolean).join('<span class="step-sep">&rsaquo;</span>');
         return `<tr><td><b>${esc(c.nome)}</b><div class="who">${esc(c.ciclo)}</div></td><td><div class="steps">${st}</div></td></tr>`;
     }).join('');
@@ -2217,9 +2237,9 @@ function auditFindings(list) {
     const pendOld = list.filter(c => c.status === 'pendente' && !c.reenvio && daysSince(c.editadoEm || c.criadoEm) >= 3);
     const reenv = list.filter(c => c.status === 'pendente' && c.reenvio);
     const pendNew = list.filter(c => c.status === 'pendente' && !c.reenvio && !pendOld.includes(c));
-    if (reenv.length) f.push({ lvl: 'alta', txt: `<b>${reenv.length}</b> ciclo(s) editado(s) após o envio aguardam <b>reenvio</b>: ${esc(reenv.map(c => c.nome).join(', '))}. A versão reenviada será a final.` });
-    if (pendOld.length) f.push({ lvl: 'alta', txt: `<b>${pendOld.length}</b> ciclo(s) gravado(s) há 3 dias ou mais ainda não foram enviados: ${esc(pendOld.map(c => c.nome).join(', '))}. Os dados só existem neste aparelho.` });
-    if (pendNew.length) f.push({ lvl: 'media', txt: `<b>${pendNew.length}</b> ciclo(s) recente(s) pendente(s) de envio.` });
+    if (reenv.length) f.push({ lvl: 'alta', txt: `<b>${reenv.length}</b> ciclo(s) editado(s) depois de exportado(s) precisam ser <b>exportados de novo</b>: ${esc(reenv.map(c => c.nome).join(', '))}. A versão reexportada será a final.` });
+    if (pendOld.length) f.push({ lvl: 'alta', txt: `<b>${pendOld.length}</b> ciclo(s) gravado(s) há 3 dias ou mais ainda não foram exportados: ${esc(pendOld.map(c => c.nome).join(', '))}. Os dados só existem neste aparelho.` });
+    if (pendNew.length) f.push({ lvl: 'media', txt: `<b>${pendNew.length}</b> ciclo(s) recente(s) ainda não exportado(s).` });
     const lowCov = list.filter(c => { const m = new Set((c.items || []).map(i => i.modulo)); const u = DATA.filter(d => m.has(d.modulo)).length; return pct(c.totalRespondido, u) < 50; });
     if (lowCov.length) f.push({ lvl: 'media', txt: `<b>${lowCov.length}</b> ciclo(s) com cobertura abaixo de 50% dos módulos respondidos: ${esc(lowCov.map(c => c.nome).join(', '))}. Pode faltar parte da avaliação.` });
     const semSetor = list.filter(c => !c.setor || /Setor Geral|Nao_Informado/i.test(c.setor));
@@ -2227,7 +2247,7 @@ function auditFindings(list) {
     const dup = {}; list.forEach(c => { const k = personKey(c) + '|' + c.ciclo; dup[k] = (dup[k] || 0) + 1; });
     const dups = Object.entries(dup).filter(([, n]) => n > 1).map(([k]) => k.split('|'));
     if (dups.length) f.push({ lvl: 'media', txt: `Há colaborador com mais de um registro no mesmo ciclo (${esc(dups.map(d => d[0] + ' • ' + d[1]).join('; '))}). Confirme qual é o válido ou edite o existente em vez de criar outro.` });
-    if (!f.length) f.push({ lvl: 'ok', txt: 'Nenhuma pendência: todos os ciclos do filtro estão gravados, enviados e com boa cobertura.' });
+    if (!f.length) f.push({ lvl: 'ok', txt: 'Nenhuma pendência: todos os ciclos do filtro estão gravados, exportados e com boa cobertura.' });
     return f;
 }
 function actionPlanRows(cycles) {
@@ -2299,8 +2319,14 @@ async function installApp() {
 
 
 /* ===================== v16: versão, sincronização e atualização ===================== */
-const APP_VERSION = 18;
+const APP_VERSION = 19;
 const RELEASE_NOTES = {
+    19: { data: '2026-11-04', titulo: 'Exclusão com lixeira e sincronização mais segura', itens: [
+        'O envio por CSV de cada questionário foi aposentado: agora "exportar" na Sincronização é o envio, e o ciclo passa a "Exportado".',
+        'Excluir questionário: em Editar ou no histórico. Vai para a Lixeira, pode ser restaurado, e a exclusão chega aos outros dispositivos na sincronização.',
+        'Importação mais segura: avisa se o arquivo é um PDF ou CSV por engano, se já foi importado, se é mais antigo que outro já importado, e confere a integridade do arquivo.',
+        'O botão "Limpar histórico", que apagava tudo sem volta, foi removido.',
+        'O CSV continua disponível no Painel (Exportar respostas) para abrir no Excel.' ] },
     18: { data: '2026-11-04', titulo: 'Ajuste do nome', itens: ['A tela de abertura agora mostra o nome Ekoa Saber.'] },
     17: { data: '2026-11-04', titulo: 'Novo nome e relatório em PDF', itens: [
         'O app agora se chama Ekoa Saber. A logo continua a mesma, e todos os seus dados foram mantidos.',
@@ -2382,16 +2408,20 @@ function slug(t) { return String(t || 'dispositivo').normalize('NFD').replace(/[
 async function exportSync() {
     if (!syncMeta.device) { openDeviceModal(exportSync); return; }
     if (!savedCycles.length) { alert('Ainda não há ciclos gravados neste dispositivo para exportar.'); return; }
-    if (inProgressCount() > 0 && !editingId) {
+    if (editingId) {
+        if (!confirm('Há uma EDIÇÃO em andamento que ainda não foi gravada. A exportação leva a versão gravada anterior desse ciclo, sem as alterações da tela. Exportar mesmo assim?')) return;
+    } else if (inProgressCount() > 0) {
         if (!confirm('Há respostas na tela que ainda não foram gravadas. Elas NÃO entram na exportação (só ciclos gravados entram). Exportar mesmo assim?')) return;
     }
     const agora = new Date();
     const pkg = {
-        app: 'sankhya-sapiens', formato: 1, versaoApp: APP_VERSION, exportadoEm: agora.toISOString(),
+        app: 'sankhya-sapiens', formato: 2, versaoApp: APP_VERSION, exportadoEm: agora.toISOString(), exportId: uuid(),
         dispositivo: deviceRef(),
-        resumo: { ciclos: savedCycles.length, pessoas: new Set(savedCycles.map(personKey)).size, pendentes: savedCycles.filter(c => c.status === 'pendente').length },
-        ciclos: savedCycles
+        resumo: { ciclos: savedCycles.length, pessoas: new Set(savedCycles.map(personKey)).size, pendentes: savedCycles.filter(c => c.status === 'pendente').length, excluidos: excluidos.length },
+        ciclos: savedCycles,
+        excluidos: excluidos
     };
+    pkg.integridade = await sha256(payloadOf(pkg));
     const stamp = agora.toISOString().slice(0, 16).replace('T', '_').replace(':', 'h');
     const name = `EkoaSaber_${slug(syncMeta.device.nome)}_${stamp}.json`;
     const file = new File([JSON.stringify(pkg)], name, { type: 'application/json' });
@@ -2402,7 +2432,10 @@ async function exportSync() {
         if (e && e.name === 'AbortError') return; // usuário cancelou: não registra
         alert('Não foi possível exportar agora. Seus dados continuam salvos neste dispositivo.'); return;
     }
-    syncMeta.exports.unshift({ em: agora.toISOString(), arquivo: name, dispositivo: syncMeta.device.nome, ciclos: pkg.resumo.ciclos, pessoas: pkg.resumo.pessoas, pendentes: pkg.resumo.pendentes });
+    // exportar = enviar: os ciclos levados no arquivo passam a "Exportado"
+    savedCycles.forEach(c => { c.status = 'enviado'; c.enviadoEm = agora.toISOString(); c.reenvio = false; });
+    saveDraft(); renderHistory();
+    syncMeta.exports.unshift({ em: agora.toISOString(), arquivo: name, dispositivo: syncMeta.device.nome, ciclos: pkg.resumo.ciclos, pessoas: pkg.resumo.pessoas, pendentes: pkg.resumo.pendentes, excluidos: excluidos.length });
     syncMeta.exports = syncMeta.exports.slice(0, 2);
     saveSyncMeta(); renderSync();
     showToast(`Exportação pronta: ${pkg.resumo.ciclos} ciclo(s) de ${pkg.resumo.pessoas} pessoa(s).`);
@@ -2437,13 +2470,20 @@ const sig = c => JSON.stringify([c.nome, c.setor, c.ciclo, c.data, (c.items || [
 const stamp = c => c.editadoEm || c.criadoEm || '';
 let pendingImport = null;
 function planImport(pkg) {
-    const plan = { novos: [], atualizados: [], status: [], iguais: [], locais: [], conflitosImp: [], conflitosLoc: [], invalidos: 0 };
+    const plan = { novos: [], atualizados: [], status: [], iguais: [], locais: [], conflitosImp: [], conflitosLoc: [], invalidos: 0,
+        excluirAqui: [], excluidosAqui: [], restauradosLa: [], mantidosEditados: [], tombs: [] };
     const seen = new Set();
     (pkg.ciclos || []).forEach(raw => {
         const inc = sanitizeCycle(raw);
         if (!inc || seen.has(inc.id)) { plan.invalidos++; return; }
         seen.add(inc.id);
         const loc = savedCycles.find(x => x.id === inc.id);
+        const tb = tombOf(inc.id);
+        if (!loc && tb) {
+            // excluído aqui: só volta se foi editado lá DEPOIS da exclusão
+            if (stamp(inc) > tb.em) { plan.restauradosLa.push(inc); return; }
+            plan.excluidosAqui.push(inc); return;
+        }
         if (!loc) { if (!inc.origem) inc.origem = pkg.dispositivo ? { id: pkg.dispositivo.id, nome: pkg.dispositivo.nome } : null; plan.novos.push(inc); return; }
         const lv = loc.versao || 1;
         if (inc.versao > lv) plan.atualizados.push(inc);
@@ -2453,6 +2493,21 @@ function planImport(pkg) {
         } else if (stamp(inc) > stamp(loc)) plan.conflitosImp.push(inc);
         else plan.conflitosLoc.push(inc);
     });
+    // exclusões feitas no outro dispositivo
+    (pkg.excluidos || []).forEach(t => {
+        if (!t || !ID_OK.test(String(t.id || '')) || isNaN(new Date(t.em))) return;
+        const tt = { id: String(t.id), em: new Date(t.em).toISOString(), no: t.no && ID_OK.test(String(t.no.id || '')) ? { id: String(t.no.id), nome: str(t.no.nome, 40) } : null };
+        if (tombOf(tt.id)) return;
+        const incC = (pkg.ciclos || []).find(c => c && c.id === tt.id);
+        if (incC && String(incC.editadoEm || incC.criadoEm || '') > tt.em) return; // editado depois da exclusão: a edição vence
+        const loc = savedCycles.find(x => x.id === tt.id);
+        if (loc && stamp(loc) > tt.em) { plan.mantidosEditados.push(loc); return; } // editado aqui depois: não exclui
+        if (loc) plan.excluirAqui.push({ c: loc, t: tt });
+        plan.tombs.push(tt);
+    });
+    // um ciclo do arquivo excluído lá não entra como novo
+    const tset = new Set(plan.tombs.map(t => t.id));
+    plan.novos = plan.novos.filter(c => !tset.has(c.id));
     return plan;
 }
 function onImportFile(input) {
@@ -2461,11 +2516,20 @@ function onImportFile(input) {
     if (editingId) { alert('Termine ou cancele a edição em andamento antes de importar.'); return; }
     if (f.size > 15 * 1024 * 1024) { alert('Arquivo grande demais para ser uma exportação do Ekoa Saber.'); return; }
     const r = new FileReader();
-    r.onload = () => {
+    r.onload = async () => {
+        const hint = wrongFileHint(f.name, String(r.result || ''));
+        if (hint) { alert(hint); return; }
         let pkg;
-        try { pkg = JSON.parse(r.result); } catch (e) { alert('Este arquivo não é uma exportação válida do Ekoa Saber.'); return; }
+        try { pkg = JSON.parse(r.result); } catch (e) { alert('Este arquivo não é uma exportação válida do Ekoa Saber. Escolha o arquivo EkoaSaber_<dispositivo>_<data>.json.'); return; }
         if (!pkg || pkg.app !== 'sankhya-sapiens' || !Array.isArray(pkg.ciclos)) { alert('Este arquivo não é uma exportação do Ekoa Saber.'); return; }
-        if (pkg.formato !== 1) { alert('Este arquivo foi gerado por uma versão do app com outro formato. Atualize os dois dispositivos para a mesma versão e exporte de novo.'); return; }
+        if (pkg.formato !== 1 && pkg.formato !== 2) { alert('Este arquivo foi gerado por uma versão mais nova do app. Atualize este dispositivo (Sobre > Verificar atualizações) e importe de novo.'); return; }
+        if (pkg.formato === 2) {
+            if (!Array.isArray(pkg.excluidos)) pkg.excluidos = [];
+            if (pkg.integridade) {
+                const h = await sha256(payloadOf(pkg));
+                if (h && h !== pkg.integridade) { alert('Este arquivo foi alterado ou está corrompido (a verificação de integridade não confere). Nada foi importado. Peça uma nova exportação do dispositivo de origem.'); return; }
+            }
+        } else pkg.excluidos = [];
         pkg.dispositivo = (pkg.dispositivo && ID_OK.test(String(pkg.dispositivo.id || ''))) ? { id: String(pkg.dispositivo.id), nome: str(pkg.dispositivo.nome, 40) || 'Dispositivo sem nome' } : null;
         const plan = planImport(pkg);
         pendingImport = { pkg, plan, arquivo: str(f.name, 120) };
@@ -2476,22 +2540,33 @@ function onImportFile(input) {
 }
 function renderImportPreview() {
     const { pkg, plan } = pendingImport;
-    const entra = plan.novos.length + plan.atualizados.length + plan.status.length + plan.conflitosImp.length;
+    const entra = plan.novos.length + plan.atualizados.length + plan.status.length + plan.conflitosImp.length + plan.excluirAqui.length + plan.restauradosLa.length + plan.tombs.length;
     const cf = plan.conflitosImp.length + plan.conflitosLoc.length;
     const names = arr => esc([...new Set(arr.map(c => c.nome))].slice(0, 6).join(', ')) + (arr.length > 6 ? '…' : '');
     let warn = '';
     if (pkg.dispositivo && syncMeta.device && pkg.dispositivo.id === syncMeta.device.id) warn += '<div class="imp-warn">Este arquivo foi exportado <b>deste mesmo dispositivo</b>. Normalmente não há nada a importar.</div>';
     if (pkg.versaoApp > APP_VERSION) warn += `<div class="imp-warn">O arquivo veio da versão ${esc(pkg.versaoApp)} e este dispositivo está na ${APP_VERSION}. Recomendo atualizar este dispositivo.</div>`;
     if (cf) warn += `<div class="imp-warn"><b>${cf}</b> ciclo(s) foram editados nos dois dispositivos com a mesma versão. Vale o mais recente: ${plan.conflitosImp.length} do arquivo, ${plan.conflitosLoc.length} deste dispositivo.</div>`;
+    const imp = (syncMeta.importedIds || []).find(x => x.id && x.id === pkg.exportId);
+    if (imp) warn += `<div class="imp-warn">Este mesmo arquivo <b>já foi importado</b> em ${fmtDT(imp.em)}. Importar de novo não duplica nada.</div>`;
+    const lastFrom = pkg.dispositivo && (syncMeta.lastFrom || {})[pkg.dispositivo.id];
+    if (lastFrom && pkg.exportadoEm && pkg.exportadoEm < lastFrom) warn += `<div class="imp-warn">Já foi importado um arquivo <b>mais recente</b> deste dispositivo (exportado em ${fmtDT(lastFrom)}). Este é mais antigo; versões antigas não substituem as mais novas, mas confira se escolheu o arquivo certo.</div>`;
+    if (plan.excluirAqui.length) warn += `<div class="imp-warn"><b>${plan.excluirAqui.length}</b> questionário(s) foram excluídos no outro dispositivo e serão movidos para a Lixeira aqui: ${names(plan.excluirAqui.map(x => x.c))}.</div>`;
+    if (plan.mantidosEditados.length) warn += `<div class="imp-warn"><b>${plan.mantidosEditados.length}</b> questionário(s) excluídos lá foram editados aqui depois da exclusão e serão <b>mantidos</b>: ${names(plan.mantidosEditados)}.</div>`;
+    if (plan.excluidosAqui.length) warn += `<div class="imp-ok">${plan.excluidosAqui.length} questionário(s) do arquivo foram excluídos neste dispositivo e continuarão excluídos.</div>`;
+    if (plan.restauradosLa.length) warn += `<div class="imp-ok">${plan.restauradosLa.length} questionário(s) excluídos aqui foram editados lá depois e voltarão: ${names(plan.restauradosLa)}.</div>`;
+    if (pkg.formato === 2 && pkg.integridade) warn += '<div class="imp-ok">Verificação de integridade do arquivo: <b>OK</b>.</div>';
+    else if (pkg.formato === 1) warn += '<div class="imp-ok">Arquivo de versão anterior (sem verificação de integridade). Pode importar normalmente.</div>';
     if (plan.invalidos) warn += `<div class="imp-warn">${plan.invalidos} registro(s) inválido(s) ou repetido(s) no arquivo serão ignorados.</div>`;
     document.getElementById('importPreview').innerHTML = `
         <div class="imp-src">De: <b>${esc(pkg.dispositivo ? pkg.dispositivo.nome : 'Dispositivo sem nome')}</b><br>Exportado em: ${fmtDT(pkg.exportadoEm)} • versão ${esc(pkg.versaoApp || '?')}<br>Para: <b>${esc(syncMeta.device ? syncMeta.device.nome : 'este dispositivo')}</b></div>
         <div class="imp-grid">
             <div><b>${plan.novos.length}</b><span>novos</span></div>
             <div><b>${plan.atualizados.length + plan.conflitosImp.length}</b><span>atualizados</span></div>
-            <div><b>${plan.status.length}</b><span>marcados como enviados</span></div>
+            <div><b>${plan.status.length}</b><span>marcados como exportados</span></div>
             <div><b>${plan.iguais.length}</b><span>já iguais</span></div>
             <div><b>${plan.locais.length + plan.conflitosLoc.length}</b><span>mantidos daqui (mais novos)</span></div>
+            <div><b>${plan.excluirAqui.length}</b><span>para a lixeira (excluídos lá)</span></div>
             <div><b>${savedCycles.length}</b><span>ciclos aqui hoje</span></div>
         </div>
         ${plan.novos.length ? `<div class="who">Novos: ${names(plan.novos)}</div>` : ''}
@@ -2504,18 +2579,24 @@ function cancelImport() { pendingImport = null; document.getElementById('importM
 async function applyImport() {
     if (!pendingImport) return;
     const { pkg, plan, arquivo } = pendingImport;
-    try { await idbSet('backupPreImport', { em: new Date().toISOString(), de: pkg.dispositivo ? pkg.dispositivo.nome : null, savedCycles: JSON.parse(JSON.stringify(savedCycles)) }); }
+    try { await idbSet('backupPreImport', { em: new Date().toISOString(), de: pkg.dispositivo ? pkg.dispositivo.nome : null, savedCycles: JSON.parse(JSON.stringify(savedCycles)), lixeira: JSON.parse(JSON.stringify(lixeira)), excluidos: JSON.parse(JSON.stringify(excluidos)) }); }
     catch (e) { alert('Não foi possível criar a cópia de segurança. A importação foi cancelada para proteger seus dados.'); return; }
     const replace = inc => { const k = savedCycles.findIndex(x => x.id === inc.id); if (k >= 0) savedCycles[k] = inc; };
     plan.novos.forEach(c => savedCycles.push(c));
     plan.atualizados.forEach(replace);
     plan.conflitosImp.forEach(replace);
+    plan.restauradosLa.forEach(inc => { excluidos = excluidos.filter(t => t.id !== inc.id); lixeira = lixeira.filter(x => x.id !== inc.id); savedCycles.push(inc); });
+    plan.excluirAqui.forEach(x => moveToTrash(x.c, x.t.em, x.t.no));
+    plan.tombs.forEach(t => { if (!tombOf(t.id)) excluidos.push(t); });
     plan.status.forEach(inc => { const loc = savedCycles.find(x => x.id === inc.id); if (loc) { loc.status = 'enviado'; loc.reenvio = false; if (inc.enviadoEm) loc.enviadoEm = inc.enviadoEm; } });
     saveDraft();
     syncMeta.imports.unshift({ em: new Date().toISOString(), arquivo, de: pkg.dispositivo ? pkg.dispositivo.nome : 'Dispositivo sem nome', exportadoEm: pkg.exportadoEm || null,
         novos: plan.novos.length, atualizados: plan.atualizados.length + plan.conflitosImp.length, enviados: plan.status.length,
         iguais: plan.iguais.length, mantidos: plan.locais.length + plan.conflitosLoc.length, conflitos: plan.conflitosImp.length + plan.conflitosLoc.length });
+    syncMeta.imports[0].excluidos = plan.excluirAqui.length; syncMeta.imports[0].restaurados = plan.restauradosLa.length;
     syncMeta.imports = syncMeta.imports.slice(0, 2);
+    if (pkg.exportId) syncMeta.importedIds = [{ id: pkg.exportId, em: new Date().toISOString() }, ...(syncMeta.importedIds || [])].slice(0, 20);
+    if (pkg.dispositivo && pkg.exportadoEm) { syncMeta.lastFrom = syncMeta.lastFrom || {}; if (!syncMeta.lastFrom[pkg.dispositivo.id] || pkg.exportadoEm > syncMeta.lastFrom[pkg.dispositivo.id]) syncMeta.lastFrom[pkg.dispositivo.id] = pkg.exportadoEm; }
     saveSyncMeta();
     pendingImport = null;
     document.getElementById('importModal').classList.remove('open');
@@ -2528,6 +2609,8 @@ async function undoImport() {
     if (editingId) { alert('Termine ou cancele a edição em andamento antes de desfazer.'); return; }
     if (!confirm(`Desfazer a importação de ${fmtDT(b.em)}${b.de ? ' (vinda de ' + b.de + ')' : ''}?\n\nOs ciclos voltam a ser exatamente como estavam antes dela. O que foi gravado aqui depois disso também volta ao estado anterior.`)) return;
     savedCycles = b.savedCycles;
+    if (Array.isArray(b.lixeira)) lixeira = b.lixeira;
+    if (Array.isArray(b.excluidos)) excluidos = b.excluidos;
     saveDraft();
     try { await idbSet('backupPreImport', null); } catch (e) {}
     if (syncMeta.imports[0]) { syncMeta.imports[0].desfeita = true; saveSyncMeta(); }
@@ -2538,13 +2621,18 @@ async function renderSync() {
     const nm = document.getElementById('syncDevName'); if (!nm) return;
     nm.textContent = syncMeta.device ? syncMeta.device.nome : 'Sem nome';
     const pes = new Set(savedCycles.map(personKey)).size;
-    document.getElementById('syncDevMeta').textContent = (syncMeta.device ? `ID ${syncMeta.device.id.slice(-6)} • ` : 'Dê um nome para identificar as exportações • ') + `${savedCycles.length} ciclo(s) de ${pes} pessoa(s) gravado(s) aqui`;
+    document.getElementById('syncDevMeta').textContent = (syncMeta.device ? `ID ${syncMeta.device.id.slice(-6)} • ` : 'Dê um nome para identificar as exportações • ') + `${savedCycles.length} ciclo(s) de ${pes} pessoa(s) gravado(s) aqui` + (lixeira.length ? ` • ${lixeira.length} na lixeira` : '');
+    const np = savedCycles.filter(c => c.status !== 'enviado').length;
+    let pb = document.getElementById('syncPend');
+    if (!pb) { pb = document.createElement('div'); pb.id = 'syncPend'; pb.className = 'sync-pend'; document.querySelector('.sync-device > div').appendChild(pb); }
+    pb.style.display = np ? '' : 'none';
+    pb.innerHTML = np ? `<b>${np}</b> ciclo(s) gravado(s) ou alterado(s) aqui ainda não foram exportados.` : '';
     let b = null; try { b = await idbGet('backupPreImport'); } catch (e) {}
     document.getElementById('undoBox').innerHTML = (b && b.savedCycles) ? `Última importação em ${fmtDT(b.em)}. <a href="#" onclick="undoImport();return false;">Desfazer última importação</a>` : '';
     const rows = [
         ...syncMeta.exports.map(x => ({ t: 'Exportação', em: x.em, onde: `de <b>${esc(x.dispositivo)}</b>`, res: `${x.ciclos} ciclo(s) • ${x.pessoas} pessoa(s) • ${x.pendentes} pendente(s)` })),
         ...syncMeta.imports.map(x => ({ t: 'Importação' + (x.desfeita ? ' (desfeita)' : ''), em: x.em, onde: `de <b>${esc(x.de)}</b>${x.exportadoEm ? ' • exportado em ' + fmtDT(x.exportadoEm) : ''}`,
-            res: `${x.novos} novo(s) • ${x.atualizados} atualizado(s) • ${x.enviados} marcado(s) como enviado • ${x.iguais} igual(is) • ${x.mantidos} mantido(s)${x.conflitos ? ' • ' + x.conflitos + ' conflito(s) resolvido(s)' : ''}` }))
+            res: `${x.novos} novo(s) • ${x.atualizados} atualizado(s) • ${x.enviados} marcado(s) como exportado • ${x.iguais} igual(is) • ${x.mantidos} mantido(s)${x.conflitos ? ' • ' + x.conflitos + ' conflito(s) resolvido(s)' : ''}${x.excluidos ? ' • ' + x.excluidos + ' para a lixeira' : ''}${x.restaurados ? ' • ' + x.restaurados + ' restaurado(s)' : ''}` }))
     ].sort((a, b) => String(b.em).localeCompare(String(a.em)));
     document.getElementById('syncLog').innerHTML = rows.length ? `<div class="tbl-wrap"><table class="tbl narrow"><thead><tr><th>Registro</th><th>Quando</th><th>Origem e resumo</th></tr></thead><tbody>
         ${rows.map(r => `<tr><td><span class="chip ${r.t.startsWith('Exp') ? 'ok' : 'wait'}">${r.t}</span></td><td class="who" style="white-space:nowrap">${fmtDT(r.em)}</td><td>${r.onde}<div class="who">${r.res}</div></td></tr>`).join('')}
@@ -2720,11 +2808,11 @@ function evolutionBlock(nome) {
 function baseBlock(cycles) {
     const rows = cycles.slice().sort(cycleSort).map(c => `<tr><td><b>${esc(c.nome)}</b><div class="rp-mut">${esc(c.setor || 'Sem setor')}</div></td><td>${esc(c.ciclo)}<div class="rp-mut">avaliado em ${fmtD(c.data)}</div></td>
         <td class="n">v${c.versao || 1}</td><td>${dev(c.origem)}<div class="rp-mut">${fmtDT(c.criadoEm)}</div></td><td>${c.editadoEm ? dev(c.editadoNo || c.origem) + `<div class="rp-mut">${fmtDT(c.editadoEm)}</div>` : '<span class="rp-mut">sem edição</span>'}</td>
-        <td>${c.status === 'enviado' ? `Enviado<div class="rp-mut">${fmtDT(c.enviadoEm)}</div>` : (c.reenvio ? 'Reenvio pendente' : 'Pendente')}</td><td class="n rp-mut">${shortId(c.id)}</td></tr>`).join('');
+        <td>${c.status === 'enviado' ? `Exportado<div class="rp-mut">${fmtDT(c.enviadoEm)}</div>` : (c.reenvio ? 'Exportar de novo' : 'Não exportado')}</td><td class="n rp-mut">${shortId(c.id)}</td></tr>`).join('');
     const devs = [...new Set(cycles.map(c => c.origem && c.origem.nome).filter(Boolean))];
     return `<div class="rp-sec flow rp-break"><h2>Base de dados do relatório</h2>
         <p class="rp-cap">Ciclos usados neste relatório, com a data da avaliação, a versão, o dispositivo onde cada ciclo foi criado e onde foi editado pela última vez. Dispositivos de origem: <b>${devs.length ? esc(devs.join(', ')) : 'não registrados'}</b>.</p>
-        <table class="rp-tbl"><thead><tr><th>Colaborador</th><th>Ciclo</th><th class="n">Versão</th><th>Criado em (dispositivo)</th><th>Última edição</th><th>Envio</th><th class="n">ID</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+        <table class="rp-tbl"><thead><tr><th>Colaborador</th><th>Ciclo</th><th class="n">Versão</th><th>Criado em (dispositivo)</th><th>Última edição</th><th>Exportação</th><th class="n">ID</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function rpPlan(cycles, max) {
     const plan = actionPlanRows(cycles); const by = {};
@@ -2750,7 +2838,7 @@ function tilesBlock(cycles, items) {
         <div class="rp-tile"><div class="k">Respostas</div><div class="v">${r.t}</div><div class="s">rotinas avaliadas</div></div>
         <div class="rp-tile"><div class="k">Índice de conhecimento</div><div class="v">${idx(items) ?? '—'}</div><div class="s">escala 0 a 100</div></div>
         <div class="rp-tile"><div class="k">Domínio (Confiante)</div><div class="v">${pct(r.c, r.t)}%</div><div class="s">${r.c} de ${r.t}</div></div>
-        <div class="rp-tile"><div class="k">Lacuna</div><div class="v">${pct(r.a + r.d, r.t)}%</div><div class="s">${pend} ciclo(s) não enviado(s)</div></div>
+        <div class="rp-tile"><div class="k">Lacuna</div><div class="v">${pct(r.a + r.d, r.t)}%</div><div class="s">${pend} ciclo(s) não exportado(s)</div></div>
     </div>${RP_LEGEND}${rpBar(r, true)}
     <p class="rp-mut" style="margin-top:5px">Confiante ${r.c} (${pct(r.c, r.t)}%) • Preciso aprender ${r.a} (${pct(r.a, r.t)}%) • Desconheço ${r.d} (${pct(r.d, r.t)}%)</p>`;
 }
@@ -2815,6 +2903,80 @@ function generateReport() {
     if (img && !img.complete) { img.onload = go; img.onerror = go; } else go();
 }
 
+
+/* ===================== v19: exclusão com lixeira ===================== */
+const tombOf = id => excluidos.find(t => t.id === id);
+function showToastAction(msg, label, fn) {
+    const t = document.getElementById('toast'); if (!t) return;
+    t.innerHTML = `${esc(msg)} <button class="t-act" type="button">${esc(label)}</button>`;
+    t.querySelector('.t-act').onclick = () => { t.classList.remove('on'); fn(); };
+    t.classList.add('on');
+    clearTimeout(showToast._t); showToast._t = setTimeout(() => t.classList.remove('on'), 7000);
+}
+function moveToTrash(c, when, by) {
+    savedCycles = savedCycles.filter(x => x.id !== c.id);
+    lixeira = lixeira.filter(x => x.id !== c.id);
+    lixeira.unshift(Object.assign({}, c, { excluidoEm: when, excluidoNo: by }));
+    if (!tombOf(c.id)) excluidos.push({ id: c.id, em: when, no: by });
+}
+function deleteCycle(id) {
+    const c = savedCycles.find(x => x.id === id); if (!c) return;
+    if (editingId === id) { alert('Este questionário está em edição. Grave ou cancele a edição antes de excluir.'); return; }
+    const extra = c.status === 'enviado' || c.origem && syncMeta.device && c.origem.id !== syncMeta.device.id
+        ? '\n\nEle já existe em outro dispositivo: a exclusão será levada para lá na próxima sincronização.' : '';
+    if (!confirm(`Excluir o questionário de ${c.nome}?\n${c.ciclo} • ${fmtD(c.data)} • ${c.totalRespondido} rotina(s)\n\nEle vai para a Lixeira, de onde pode ser restaurado.${extra}`)) return;
+    moveToTrash(c, new Date().toISOString(), deviceRef());
+    saveDraft(); refreshAfterChange();
+    showToastAction(`Questionário de ${c.nome} excluído.`, 'Desfazer', () => restoreCycle(id));
+}
+function restoreCycle(id) {
+    const c = lixeira.find(x => x.id === id); if (!c) return;
+    const r = Object.assign({}, c); delete r.excluidoEm; delete r.excluidoNo;
+    // restaurar conta como edição: vence exclusões mais antigas vindas de outros dispositivos
+    r.editadoEm = new Date().toISOString(); r.editadoNo = deviceRef();
+    if (r.status === 'enviado') { r.status = 'pendente'; r.reenvio = true; }
+    lixeira = lixeira.filter(x => x.id !== id);
+    excluidos = excluidos.filter(t => t.id !== id);
+    if (!savedCycles.some(x => x.id === id)) savedCycles.push(r);
+    saveDraft(); refreshAfterChange();
+    showToast(`Questionário de ${r.nome} restaurado.`);
+}
+function emptyTrash() {
+    if (!lixeira.length) return;
+    if (!confirm(`Apagar DE VEZ ${lixeira.length} questionário(s) da Lixeira?\n\nDepois disso, eles só poderão ser recuperados importando um arquivo de sincronização que ainda os contenha.`)) return;
+    lixeira = []; saveDraft(); refreshAfterChange();
+    showToast('Lixeira esvaziada.');
+}
+function renderTrash() {
+    const box = document.getElementById('trashList'); if (!box) return;
+    document.getElementById('trashCount').textContent = lixeira.length ? `(${lixeira.length})` : '(vazia)';
+    box.innerHTML = lixeira.length ? lixeira.map(c => `<div class="trash-row"><span><b>${esc(c.nome)}</b> <span class="who">• ${esc(c.ciclo)} • ${fmtD(c.data)} • excluído em ${fmtDT(c.excluidoEm)}${c.excluidoNo && c.excluidoNo.nome ? ' no ' + esc(c.excluidoNo.nome) : ''}</span></span>
+        <button class="btn" style="padding:6px 12px" onclick="restoreCycle('${c.id}')">Restaurar</button></div>`).join('') + '<div style="text-align:right;margin-top:10px"><button class="btn danger-outline" onclick="emptyTrash()">Esvaziar lixeira</button></div>'
+        : '<p class="who">A lixeira está vazia.</p>';
+}
+function refreshAfterChange() {
+    renderHistory(); updateKPIs();
+    if (currentView === 'edit') renderEditList();
+    if (currentView === 'panel') renderPanel();
+    if (currentView === 'sync') renderSync();
+    if (currentView === 'home') renderHome();
+}
+
+/* ===================== v19: integridade dos arquivos de sincronização ===================== */
+async function sha256(text) {
+    if (!(window.crypto && crypto.subtle)) return null;
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+const payloadOf = pkg => JSON.stringify({ ciclos: pkg.ciclos, excluidos: pkg.excluidos || [] });
+function wrongFileHint(name, text) {
+    const n = String(name || '').toLowerCase();
+    if (n.endsWith('.pdf') || text.startsWith('%PDF')) return 'Este arquivo é um PDF (relatório). Para importar, escolha o arquivo de sincronização: EkoaSaber_<dispositivo>_<data>.json.';
+    if (n.endsWith('.csv') || /Data_Avaliacao;|Prioridade;Modulo/.test(text.slice(0, 300))) return 'Este arquivo é um CSV (planilha). Ele serve para abrir no Excel, não para importar. Escolha o arquivo de sincronização: EkoaSaber_<dispositivo>_<data>.json.';
+    if (n.endsWith('.xlsx') || text.startsWith('PK')) return 'Este arquivo é uma planilha do Excel. Escolha o arquivo de sincronização: EkoaSaber_<dispositivo>_<data>.json.';
+    return null;
+}
+
 function toggleSidebarDesk(collapse) {
     const c = typeof collapse === 'boolean' ? collapse : !document.body.classList.contains('sb-collapsed');
     document.body.classList.toggle('sb-collapsed', c);
@@ -2849,7 +3011,7 @@ function updateEditBanner() {
 function editCycle(id) {
     const c = savedCycles.find(x => x.id === id); if (!c) return;
     if (c.status === 'enviado') {
-        if (!confirm('Este ciclo JÁ FOI ENVIADO.\n\nSe você editar, será necessário REENVIAR, e a versão reenviada passa a ser a versão FINAL deste ciclo.\n\nDeseja editar mesmo assim?')) return;
+        if (!confirm('Este ciclo JÁ FOI EXPORTADO.\n\nSe você editar, será preciso EXPORTAR DE NOVO, e a versão reexportada passa a ser a versão FINAL deste ciclo.\n\nDeseja editar mesmo assim?')) return;
     }
     if (editingId !== id && Object.keys(responses).length > 0) {
         if (!confirm('Há respostas na tela que ainda não foram gravadas. Elas serão substituídas pelas respostas do ciclo escolhido. Continuar?')) return;
