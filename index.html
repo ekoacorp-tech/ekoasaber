@@ -7,24 +7,24 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sankhya Blend">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1a2b3c">
+    <meta name="theme-color" content="#23505F">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <title>Balizador Sankhya Mobile &amp; Desktop | Blendcoffee &amp; Ekoa</title>
+    <title>Sankhya Sapiens | Conhecimento Sankhya • Ekoa Tech</title>
     <style>
         :root {
-            --bg-body: #f1f5f9;
-            --bg-surface: #ffffff;
-            --bg-sidebar: #1a2b3c;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --border-color: #cbd5e1;
-            --brand-gold: #d59b2a;
-            --brand-navy: #1a2b3c;
-            --brand-teal: #008080;
-            --brand-orange: #d97706;
-            --row-hover: #f8fafc;
-            --row-zebra: #f8fafc;
+            --bg-body: #EFE6DA;
+            --bg-surface: #FBF7F1;
+            --bg-sidebar: #23505F;
+            --text-primary: #3A2C24;
+            --text-secondary: #6E5D52;
+            --border-color: #DCCFBF;
+            --brand-gold: #C9922E;
+            --brand-navy: #23505F;
+            --brand-teal: #3B8A97;
+            --brand-orange: #C0714A;
+            --row-hover: #F5EDE2;
+            --row-zebra: #F7F1E8;
             --badge-sim-bg: #dcfce7;
             --badge-sim-txt: #166534;
             --badge-nao-bg: #fee2e2;
@@ -33,14 +33,14 @@
         }
 
         body.dark-mode {
-            --bg-body: #0b1120;
-            --bg-surface: #1e293b;
-            --bg-sidebar: #0f172a;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-color: #334155;
-            --row-hover: #263349;
-            --row-zebra: #162032;
+            --bg-body: #17120f;
+            --bg-surface: #251d18;
+            --bg-sidebar: #1c2f36;
+            --text-primary: #F3EBDF;
+            --text-secondary: #B9A898;
+            --border-color: #46372D;
+            --row-hover: #30261f;
+            --row-zebra: #1f1814;
             --badge-sim-bg: #064e3b;
             --badge-sim-txt: #6ee7b7;
             --badge-nao-bg: #7f1d1d;
@@ -208,7 +208,7 @@
         }
 
         .filter-group select option {
-            background: #1a2b3c;
+            background: #23505F;
             color: #ffffff;
         }
 
@@ -250,7 +250,7 @@
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #008080 50%, #d97706 50%);
+            background: linear-gradient(135deg, #3B8A97 50%, #C0714A 50%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -530,7 +530,7 @@
 
         .opt-pill.apr:has(input:checked) {
             background: #fef3c7;
-            border-color: #d97706;
+            border-color: #C0714A;
             color: #78350f;
         }
 
@@ -763,19 +763,67 @@
             .main-content { padding: 0; }
         }
     </style>
+
+<style>
+/* ===== Identidade Sankhya Sapiens — paleta Ekoa (petróleo, ouro, cobre, café, sálvia, areia) ===== */
+:root{--petrol:#23505F;--teal:#3B8A97;--sage:#8FB8A0;--gold:#C9922E;--copper:#C0714A;--coffee:#6B4A32;--ease:cubic-bezier(.22,.8,.3,1)}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(1200px 600px at 85% -10%,rgba(201,146,46,.14),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(59,138,151,.14),transparent 60%),var(--bg-body)}
+body.dark-mode{background:radial-gradient(1000px 500px at 85% -10%,rgba(201,146,46,.10),transparent 60%),var(--bg-body)}
+.sidebar{background:linear-gradient(170deg,#23505F 0%,#2C5663 45%,#4A3428 100%)!important}
+.mobile-header{background:linear-gradient(90deg,#23505F,#3a5560 60%,#5a4030)!important;backdrop-filter:blur(8px)}
+.mobile-bottom-bar{backdrop-filter:blur(10px);border-top:1px solid var(--border-color)}
+.brand-logo{width:48px;height:48px;border-radius:14px;object-fit:cover;box-shadow:0 4px 14px rgba(0,0,0,.28);border:1.5px solid rgba(255,255,255,.55);flex-shrink:0}
+.brand-logo.sm{width:38px;height:38px;border-radius:11px}
+.brand-tag{display:block;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--copper);margin-top:2px}
+.topbar h1{background:linear-gradient(90deg,var(--petrol),var(--coffee));-webkit-background-clip:text;background-clip:text;color:transparent}
+body.dark-mode .topbar h1{background:linear-gradient(90deg,#8FB8A0,#C9922E);-webkit-background-clip:text;background-clip:text}
+.ekoa-footer{border-top-color:rgba(255,255,255,.22)}
+.ekoa-text{letter-spacing:.14em}
+.ekoa-icon{background:linear-gradient(135deg,#3B8A97 50%,#C9922E 50%)!important}
+/* fluidez */
+.btn,.table-card,.modal-box,select,input,textarea,tr{transition:transform .18s var(--ease),box-shadow .25s var(--ease),background-color .25s,border-color .25s,opacity .25s}
+.btn{border-radius:12px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(35,80,95,.22)}
+.btn:active{transform:scale(.96)}
+.table-card{border-radius:16px;box-shadow:0 6px 24px rgba(107,74,50,.10);border:1px solid var(--border-color)}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!important;box-shadow:0 0 0 3px rgba(59,138,151,.22)}
+.main-content>*{animation:rise .5s var(--ease) both}
+.main-content>*:nth-child(2){animation-delay:.05s}.main-content>*:nth-child(3){animation-delay:.1s}.main-content>*:nth-child(4){animation-delay:.15s}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.modal-overlay{backdrop-filter:blur(6px);transition:opacity .25s}
+.modal-box{border-radius:20px;animation:pop .32s var(--ease) both}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#c9b8a4;border-radius:8px;border:2px solid transparent;background-clip:content-box}
+@media (max-width:900px){.btn{min-height:42px}.sidebar{transition:transform .35s var(--ease)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.blend-slot{display:inline-flex;align-items:center;justify-content:center;height:48px;min-width:48px;padding:4px;border-radius:14px;background:#FBF7F1;box-shadow:0 4px 14px rgba(0,0,0,.25);flex-shrink:0}
+.blend-slot.sm{height:38px;min-width:38px;border-radius:11px;padding:3px}
+.blend-slot img{height:100%;max-width:132px;object-fit:contain}
+.blend-fb{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;border-radius:10px;background:#111827;line-height:1.1}
+.blend-fb b{color:#C9922E;font-size:9px;letter-spacing:.05em}.blend-fb i{color:#cbd5e1;font-size:7px;font-style:normal;letter-spacing:.12em}
+.ekoa-mark{width:36px;height:36px;border-radius:10px;background:#FBF7F1;padding:2px;object-fit:contain;flex-shrink:0;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.beta{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:99px;background:var(--gold);color:#fff;font-size:.62rem;letter-spacing:.08em;vertical-align:middle;-webkit-text-fill-color:#fff}
+.hist-det{margin-top:8px;font-size:.76rem}.hist-det summary{cursor:pointer;font-weight:600;color:var(--teal)}
+.hist-det div{padding:4px 0;border-bottom:1px dashed var(--border-color)}
+/* splash de abertura */
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(160deg,#EFE6DA,#DCE6E6 55%,#E9D3C0);transition:opacity .5s var(--ease),visibility .5s}
+#splash.hide{opacity:0;visibility:hidden}
+#splash img{width:230px;height:auto;border-radius:20px;box-shadow:0 14px 40px rgba(35,80,95,.22);animation:pop .7s var(--ease) both}
+#splash b{font:700 1.4rem Georgia,serif;color:#23505F;letter-spacing:.02em}
+#splash span{font:600 .72rem system-ui,sans-serif;letter-spacing:.2em;color:#C0714A}
+</style>
 </head>
 <body>
+<div id="splash"><img src="icons/ekoa-logo.png" alt="Ekoa"><b>Sankhya Sapiens</b><span>EKOA TECH</span></div>
 
 <!-- Cabeçalho Fixo Mobile (Android & iOS) -->
 <header class="mobile-header">
     <div class="mobile-header-left">
         <button class="drawer-toggle-btn" onclick="toggleMobileSidebar()" aria-label="Abrir Menu e Filtros">&#9776;</button>
-        <div class="logo-blend-box" style="width:38px; height:38px; border-width:2px;">
-            <span class="b-gold" style="font-size:8px;">BLEND</span>
-            <span class="b-silver" style="font-size:7px;">COFFEE</span>
-        </div>
+        <span class="blend-slot sm"><img src="icons/logo-blend.png" alt="Blendcoffee" onerror="this.remove()"><span class="blend-fb"><b>BLEND</b><i>COFFEE</i></span></span>
         <div>
-            <div style="font-weight:700; font-size:0.9rem; line-height:1.1;">Balizador Sankhya</div>
+            <div style="font-weight:700; font-size:0.9rem; line-height:1.1;">Sankhya Sapiens</div>
             <div style="font-size:0.7rem; color:#cbd5e1;" id="mobileSubStatus">Toque em &#9776; p/ Filtros e KPIs</div>
         </div>
     </div>
@@ -791,12 +839,9 @@
 <aside class="sidebar" id="appSidebar">
     <div>
         <div class="logo-blend">
-            <div class="logo-blend-box">
-                <span class="b-gold">BLEND</span>
-                <span class="b-silver">COFFEE</span>
-            </div>
+            <span class="blend-slot"><img src="icons/logo-blend.png" alt="Blendcoffee" onerror="this.remove()"><span class="blend-fb"><b>BLEND</b><i>COFFEE</i></span></span>
             <div>
-                <h2>Conhecimento Sankhya</h2>
+                <h2>Sankhya Sapiens</h2>
                 <p class="sub">FAP 26511 • 194 Rotinas Datadas</p>
             </div>
         </div>
@@ -820,6 +865,7 @@
                 <option value="Confiante">Confiante</option>
                 <option value="Preciso Aprender Mais">Preciso Aprender Mais</option>
                 <option value="Desconheço">Desconheço</option>
+                <option value="Respondido">Já Respondidas (histórico do ciclo)</option>
                 <option value="Pendente">Ainda Não Respondido</option>
             </select>
         </div>
@@ -847,10 +893,10 @@
     </div>
 
     <div class="ekoa-footer">
-        <div class="ekoa-icon">e</div>
+        <img class="ekoa-mark" src="icons/icon-192.png" alt="Ekoa">
         <div>
-            <div class="ekoa-text">EKOA</div>
-            <div style="font-size: 0.7rem; color: #94a3b8;">Gestão e Processos</div>
+            <div class="ekoa-text">EKOA TECH</div>
+            <div style="font-size: 0.7rem; color: #94a3b8;">Processos • Tecnologia • Resultado</div>
         </div>
     </div>
 </aside>
@@ -858,7 +904,7 @@
 <main class="main-content">
     <div class="topbar">
         <div>
-            <h1 style="font-size: 1.22rem;">Balizador Evolutivo de Conhecimento Sankhya</h1>
+            <h1 style="font-size: 1.3rem;">Sankhya Sapiens <span class="brand-tag">Conhecimento Sankhya • Ekoa Tech <b class="beta">BETA</b></span></h1>
             <p style="font-size: 0.83rem; color: var(--text-secondary);">Compatível com Android, iPhone (iOS) e Computador • Grava Ciclo &#8594; Envia (CSV) &#8594; Limpa p/ Nova Pessoa</p>
         </div>
         <div class="topbar-actions">
@@ -1068,6 +1114,12 @@ function syncAndFilter(source) {
         document.getElementById('searchFilterMobile').value = document.getElementById('searchFilter').value;
     }
     applyFilters();
+    const modNow = document.getElementById('modFilter').value;
+    if (modNow !== window._lastMod) {
+        window._lastMod = modNow;
+        if (window.innerWidth <= 900) toggleMobileSidebar(false);
+        setTimeout(() => { const t = document.querySelector('.table-card'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+    }
 }
 
 function renderTable() {
@@ -1083,7 +1135,8 @@ function renderTable() {
         const currentResp = responses[item.id] || '';
         if (modF && item.modulo !== modF) return;
         if (statusF === 'Pendente' && currentResp !== '') return;
-        if (statusF && statusF !== 'Pendente' && currentResp !== statusF) return;
+        if (statusF === 'Respondido' && currentResp === '') return;
+        if (statusF && statusF !== 'Pendente' && statusF !== 'Respondido' && currentResp !== statusF) return;
 
         const textMatch = `${item.modulo} ${item.atividade} ${item.procedimento} ${item.dica}`.toLowerCase();
         if (searchF && !textMatch.includes(searchF)) return;
@@ -1102,7 +1155,6 @@ function renderTable() {
             </td>
             <td>
                 <strong>${item.procedimento}</strong>
-                <span class="hom-badge ${homClass}">Homologado: ${item.homologado}</span>
                 <div class="dica-box">&#9656; <em>Contexto Sankhya:</em> ${item.dica}</div>
                 <div id="stamp_${item.id}">${stamp}</div>
             </td>
@@ -1380,9 +1432,12 @@ function resetForNewPerson() {
     }, 250);
 }
 
+const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function renderHistory() {
     const container = document.getElementById('historyList');
     container.innerHTML = '';
+    const pend0 = document.getElementById('pendCount');
+    if (pend0) pend0.textContent = savedCycles.filter(c => c.status === 'pendente').length;
     if (savedCycles.length === 0) {
         container.innerHTML = '<div style="font-size:0.8rem; color:var(--text-secondary);">Nenhum ciclo gravado ainda.</div>';
         return;
@@ -1404,6 +1459,9 @@ function renderHistory() {
                 <span class="hom-badge ${c.status === 'enviado' ? 'hom-sim' : 'hom-nao'}">${c.status === 'enviado' ? 'Enviado' : 'Pendente'}</span>
                 <button class="btn" style="padding:5px 9px; font-size:0.75rem;" onclick="sendCycles(['${c.id}'])">${c.status === 'enviado' ? 'Reenviar' : 'Enviar'}</button>
             </div>
+            <details class="hist-det"><summary>Ver o que foi preenchido (${(c.items || []).length})</summary>
+                ${(c.items || []).map(r => `<div><strong>#${esc(r.id)}</strong> ${esc(r.atividade)} &mdash; <em>${esc(r.sentimento)}</em>${r.obs ? ' (' + esc(r.obs) + ')' : ''}</div>`).join('')}
+            </details>
         `;
         container.appendChild(card);
     });
@@ -1529,6 +1587,7 @@ function exportAllSavedHistoryCSV() {
 }
 
 init();
+window.addEventListener('load', () => setTimeout(() => { const sp = document.getElementById('splash'); if (sp) sp.classList.add('hide'); }, 600));
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
