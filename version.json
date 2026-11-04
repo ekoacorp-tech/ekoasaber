@@ -1,0 +1,20 @@
+{
+  "versao": 16,
+  "rotulo": "16 beta",
+  "data": "2026-11-04",
+  "titulo": "Sincronização entre dispositivos",
+  "notas": {
+    "16": {
+      "data": "2026-11-04",
+      "titulo": "Sincronização entre dispositivos",
+      "itens": [
+        "Nova tela Sincronizar: exporte os ciclos de um aparelho e importe em outro, nos dois sentidos.",
+        "Prévia antes de importar: você vê o que entra, o que muda e o que fica como está.",
+        "A versão mais nova de cada ciclo prevalece, nada é apagado, e é possível desfazer a última importação.",
+        "Histórico das duas últimas exportações e das duas últimas importações.",
+        "Nome do dispositivo: cada ciclo registra onde foi criado.",
+        "Aviso de nova versão com as novidades, e atualização sem perder dados."
+      ]
+    }
+  }
+}
