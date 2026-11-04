@@ -810,6 +810,15 @@ select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal)!im
 .client-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#cbbfae}
 .count-pill{display:inline-block;min-width:20px;padding:0 6px;margin-left:4px;border-radius:99px;background:var(--teal);color:#fff;font-size:.72rem;line-height:20px;text-align:center}
 .topbar{position:relative;z-index:30}
+.topbar-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.sb-toggle{display:none;width:42px;height:42px;padding:0;font-size:1.15rem;justify-content:center}
+.top-progress{display:none;padding:6px 12px;border-radius:99px;background:var(--row-hover);border:1px solid var(--border-color);font-size:.8rem;font-weight:600;color:var(--text-secondary);cursor:pointer}
+@media (min-width:901px){
+  .sb-toggle{display:inline-flex;align-items:center}
+  .sidebar{transition:width .35s var(--ease),padding .35s var(--ease),opacity .25s}
+  body.sb-collapsed .sidebar{width:0!important;padding:0!important;border-right:0!important;overflow:hidden;opacity:0}
+  body.sb-collapsed .top-progress{display:inline-block}
+}
 .more-wrap{position:relative}
 .more-menu{display:none;position:absolute;right:0;top:calc(100% + 8px);z-index:60;min-width:230px;padding:6px;border-radius:14px;background:var(--bg-surface);border:1px solid var(--border-color);box-shadow:0 14px 34px rgba(60,40,25,.22)}
 .more-menu.open{display:block;animation:pop .22s var(--ease) both}
@@ -861,7 +870,7 @@ body.dark-mode .badge-warn{background:#5a3a14;color:#ffd9a0}
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label="Sankhya Sapiens"><use href="#sapiensMark"/></svg>
             <div>
                 <h2>Sankhya Sapiens</h2>
-                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão 12 beta • Sobre</a></p>
+                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão 13 beta • Sobre</a></p>
             </div>
         </div>
 
@@ -879,7 +888,7 @@ body.dark-mode .badge-warn{background:#5a3a14;color:#ffd9a0}
 
         <div class="filter-group">
             <label>3. Filtrar por Sentimento</label>
-            <select id="statusFilter" onchange="applyFilters()">
+            <select id="statusFilter" onchange="applyFilters(); autoHideMenu();">
                 <option value="">Todos os Status</option>
                 <option value="Confiante">Confiante</option>
                 <option value="Preciso Aprender Mais">Preciso Aprender Mais</option>
@@ -923,8 +932,12 @@ body.dark-mode .badge-warn{background:#5a3a14;color:#ffd9a0}
 
 <main class="main-content">
     <div class="topbar">
-        <div>
+        <div class="topbar-title">
+            <button class="btn sb-toggle" onclick="toggleSidebarDesk()" aria-label="Mostrar ou ocultar o menu" title="Mostrar/ocultar menu">&#9776;</button>
+            <div>
             <h1 style="font-size: 1.3rem;">Sankhya Sapiens <span class="brand-tag">Conhecimento Sankhya • Ekoa Tech <b class="beta">BETA</b></span></h1>
+            </div>
+            <span class="top-progress" id="topProgress" onclick="toggleSidebarDesk(false)" title="Abrir menu com filtros e indicadores"></span>
         </div>
         <div class="topbar-actions">
             <button class="btn" onclick="toggleHistoryPanel()">Evolução <span class="count-pill" id="btnHistCount">0</span></button>
@@ -1044,7 +1057,7 @@ body.dark-mode .badge-warn{background:#5a3a14;color:#ffd9a0}
     <div class="modal-box compact">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label=""><use href="#sapiensMark"/></svg>
-            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão 12 beta</div></div>
+            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão 13 beta</div></div>
         </div>
         <div class="about-list">
             <div><b>Base</b><span>FAP 26511 &bull; 194 rotinas datadas</span></div>
@@ -1117,6 +1130,7 @@ function uuid() {
 }
 
 async function init() {
+    try { if (localStorage.getItem('sapiens_sb_collapsed') === '1') document.body.classList.add('sb-collapsed'); } catch (e) {}
     const modSelect = document.getElementById('modFilter');
     const modSelectMobile = document.getElementById('modFilterMobile');
     const modulos = [...new Set(DATA.map(d => d.modulo))];
@@ -1162,7 +1176,7 @@ function syncAndFilter(source) {
     const modNow = document.getElementById('modFilter').value;
     if (modNow !== window._lastMod) {
         window._lastMod = modNow;
-        if (window.innerWidth <= 900) toggleMobileSidebar(false);
+        autoHideMenu();
         setTimeout(() => { const t = document.querySelector('.table-card'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
     }
 }
@@ -1284,6 +1298,7 @@ function updateKPIs(visibleList) {
     document.getElementById('kpiProgress').textContent = progressText;
     document.getElementById('mobileBottomProgress').textContent = progressText;
     document.getElementById('mobileSubStatus').textContent = `Respondidas: ${answered}/${total} (${pct}%)`;
+    const tp = document.getElementById('topProgress'); if (tp) tp.textContent = `${answered}/${total} respondidas (${pct}%)`;
     document.getElementById('kpiConfiante').textContent = conf;
     document.getElementById('kpiAprender').textContent = apr;
     document.getElementById('kpiDesconheco').textContent = desc;
@@ -1585,6 +1600,14 @@ function clearHistory() {
     }
 }
 
+function toggleSidebarDesk(collapse) {
+    const c = typeof collapse === 'boolean' ? collapse : !document.body.classList.contains('sb-collapsed');
+    document.body.classList.toggle('sb-collapsed', c);
+    try { localStorage.setItem('sapiens_sb_collapsed', c ? '1' : '0'); } catch (e) {}
+}
+function autoHideMenu() {
+    if (window.innerWidth <= 900) toggleMobileSidebar(false); else toggleSidebarDesk(true);
+}
 function toggleAbout() { document.getElementById('aboutModal').classList.toggle('open'); }
 function toggleMore(ev) {
     if (ev) ev.stopPropagation();
