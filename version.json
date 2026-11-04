@@ -1,9 +1,20 @@
 {
-  "versao": 18,
-  "rotulo": "18 beta",
+  "versao": 19,
+  "rotulo": "19 beta",
   "data": "2026-11-04",
-  "titulo": "Ajuste do nome na tela de abertura",
+  "titulo": "Exclusão com lixeira e sincronização mais segura",
   "notas": {
+    "19": {
+      "data": "2026-11-04",
+      "titulo": "Exclusão com lixeira e sincronização mais segura",
+      "itens": [
+        "O envio por CSV de cada questionário foi aposentado: agora \"exportar\" na Sincronização é o envio, e o ciclo passa a \"Exportado\".",
+        "Excluir questionário: em Editar ou no histórico. Vai para a Lixeira, pode ser restaurado, e a exclusão chega aos outros dispositivos na sincronização.",
+        "Importação mais segura: avisa se o arquivo é um PDF ou CSV por engano, se já foi importado, se é mais antigo que outro já importado, e confere a integridade do arquivo.",
+        "O botão \"Limpar histórico\", que apagava tudo sem volta, foi removido.",
+        "O CSV continua disponível no Painel (Exportar respostas) para abrir no Excel."
+      ]
+    },
     "18": {
       "data": "2026-11-04",
       "titulo": "Ajuste do nome",
