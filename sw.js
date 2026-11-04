@@ -1,7 +1,7 @@
 /* Service Worker — cache do app para uso offline.
    Ao publicar uma nova versão do index.html, troque o número em V para forçar a atualização. */
-const V = 'ekoa-sankhya-v11';
-const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/ekoa-logo.png', './icons/sapiens-mark.png', './icons/ekoa-mark.png', './icons/logo-blend.png'];
+const V = 'ekoa-sankhya-v12';
+const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/logo-blend.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
