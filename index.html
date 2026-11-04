@@ -868,6 +868,11 @@ body.dark-mode .home-title{color:#F3EBDF}
 .hc-d{font-size:.84rem;line-height:1.4;color:var(--text-secondary)}
 .home-pend{display:none;margin-top:18px;padding:12px 16px;border-radius:14px;background:rgba(201,146,46,.14);border:1px solid var(--gold);font-size:.88rem;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .home-pend.on{display:flex}
+.install-box{display:none;margin-top:14px;padding:14px 16px;border-radius:14px;background:var(--bg-surface);border:1px solid var(--teal);align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.install-box.on{display:flex}
+.ib-txt{display:flex;flex-direction:column;gap:3px;font-size:.88rem}.ib-txt span{color:var(--text-secondary);font-size:.82rem}
+.edit-scope{display:inline-block;margin-top:4px;font-size:.8rem;color:var(--text-secondary)}
+.edit-scope a{color:var(--teal);font-weight:600}
 .home-links{display:flex;gap:22px;flex-wrap:wrap;margin-top:22px;font-size:.84rem}
 .home-links a{color:var(--text-secondary);text-decoration:none;border-bottom:1px dotted var(--border-color)}
 /* cabeçalho das telas */
@@ -991,7 +996,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label="Sankhya Sapiens"><use href="#sapiensMark"/></svg>
             <div>
                 <h2>Sankhya Sapiens</h2>
-                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão 14 beta • Sobre</a></p>
+                <p class="sub"><a href="#" class="about-link" onclick="toggleAbout();return false;">Versão 15 beta • Sobre</a></p>
             </div>
         </div>
 
@@ -1016,7 +1021,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
 
         <div class="filter-group">
             <label>3. Filtrar por Sentimento</label>
-            <select id="statusFilter" onchange="applyFilters(); autoHideMenu();">
+            <select id="statusFilter" onchange="applyFilters(); autoHideMenu(); if (editingId) updateEditBanner();">
                 <option value="">Todos os Status</option>
                 <option value="Confiante">Confiante</option>
                 <option value="Preciso Aprender Mais">Preciso Aprender Mais</option>
@@ -1072,6 +1077,10 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
             </button>
         </div>
         <div class="home-pend" id="homePend"></div>
+        <div class="install-box" id="installBox">
+            <div class="ib-txt"><strong>Instale o Sankhya Sapiens</strong><span id="installHint">Tenha o app na tela inicial e use mesmo sem internet.</span></div>
+            <button class="btn gold" id="installBtn" onclick="installApp()">Instalar app</button>
+        </div>
         <div class="home-links">
             <a href="#" onclick="toggleTutorial();return false;">Tutorial</a>
             <a href="#" onclick="toggleAbout();return false;">Sobre esta versão</a>
@@ -1124,6 +1133,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
                 <div class="more-menu" id="moreMenu">
                     <button onclick="toggleTutorial();toggleMore()">Tutorial &amp; App Celular</button>
                     <button onclick="toggleAbout();toggleMore()">Sobre esta versão</button>
+                    <button id="menuInstall" style="display:none" onclick="installApp();toggleMore()">Instalar app</button>
                     <button onclick="shareOrWhatsAppSummary();toggleMore()">Compartilhar resumo (texto)</button>
                     <button onclick="document.body.classList.toggle('dark-mode');toggleMore()">Modo escuro</button>
                     <button class="danger" onclick="promptNewPersonDirect();toggleMore()">Limpar p/ nova pessoa</button>
@@ -1235,7 +1245,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
     <div class="modal-box compact">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
             <svg class="app-mark" viewBox="0 0 200 200" role="img" aria-label=""><use href="#sapiensMark"/></svg>
-            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão 14 beta</div></div>
+            <div><h3 style="margin:0;">Sankhya Sapiens</h3><div style="font-size:.78rem;color:var(--text-secondary);">Conhecimento Sankhya &bull; versão 15 beta</div></div>
         </div>
         <div class="about-list">
             <div><b>Base</b><span>FAP 26511 &bull; 194 rotinas datadas</span></div>
@@ -1252,7 +1262,7 @@ body.dark-mode .lvl.alta{background:#5a2a18;color:#ffc9b3}body.dark-mode .lvl.me
     <div class="modal-box">
         <h3>&#9656; Como Usar no Celular (Android &amp; iPhone) e no Computador</h3>
         <div class="step-item"><strong>&#8962; Tela inicial:</strong><br>• <strong>Novo questionário</strong> abre um preenchimento em branco. <strong>Continuar</strong> aparece quando há respostas ainda não gravadas.<br>• <strong>Editar questionário</strong> lista os ciclos gravados. <strong>Painel</strong> mostra quem respondeu, o auditor das etapas e o plano de ação, que pode ser exportado.</div>
-        <div class="step-item"><strong>&#9998; Revisar um ciclo:</strong><br>• Em <strong>Evolução</strong>, toque em <strong>Editar</strong> no ciclo. Enquanto estiver <strong>pendente</strong>, você pode alterar à vontade e gravar de novo.<br>• Se o ciclo <strong>já foi enviado</strong>, o app avisa: depois de editar, é preciso <strong>reenviar</strong>, e a versão reenviada passa a ser a <strong>final</strong>.</div>
+        <div class="step-item"><strong>&#9998; Revisar um ciclo:</strong><br>• Ao editar, a lista mostra <strong>só as rotinas já respondidas</strong> naquele ciclo. Use <strong>Incluir outras rotinas</strong> no aviso de edição para acrescentar novas.<br>• Em <strong>Evolução</strong>, toque em <strong>Editar</strong> no ciclo. Enquanto estiver <strong>pendente</strong>, você pode alterar à vontade e gravar de novo.<br>• Se o ciclo <strong>já foi enviado</strong>, o app avisa: depois de editar, é preciso <strong>reenviar</strong>, e a versão reenviada passa a ser a <strong>final</strong>.</div>
         <div class="step-item">
             <strong>&#128241; No Android (Chrome / Samsung Internet) e iPhone (Safari):</strong><br>
             • Abra o <strong>link do app</strong> no celular, uma vez com internet, e instale na tela inicial. Depois disso ele abre e grava <strong>mesmo sem internet</strong>.<br>
@@ -1822,6 +1832,7 @@ function renderHome() {
         hp.innerHTML = pend ? `<span><strong>${pend}</strong> ciclo(s) gravado(s) aguardando envio.</span><button class="btn gold" onclick="sendPending()">Enviar agora</button>` : '';
     }
     updateNavCounts();
+    refreshInstallUI();
 }
 function updateNavCounts() {
     const e = document.getElementById('navEditCount'); if (e) e.textContent = savedCycles.length;
@@ -2032,6 +2043,35 @@ function exportPanelAnswers() {
     document.addEventListener('pointerdown', e => { const t = e.target.closest && e.target.closest('[data-tip]'); if (t) show(e, t.dataset.tip); });
 })();
 
+
+/* ---------- Instalação do app ---------- */
+let deferredInstall = null;
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function refreshInstallUI() {
+    const box = document.getElementById('installBox'), btn = document.getElementById('installBtn'), hint = document.getElementById('installHint'), mi = document.getElementById('menuInstall');
+    if (!box) return;
+    let show = false;
+    if (isStandalone()) show = false;
+    else if (deferredInstall) { show = true; btn.style.display = ''; hint.textContent = 'Tenha o app na tela inicial e use mesmo sem internet.'; }
+    else if (isIOS()) { show = true; btn.style.display = 'none'; hint.innerHTML = 'No Safari, toque em <strong>Compartilhar</strong> e depois em <strong>Adicionar à Tela de Início</strong>.'; }
+    box.classList.toggle('on', show);
+    if (mi) mi.style.display = (deferredInstall && !isStandalone()) ? '' : 'none';
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; refreshInstallUI(); });
+window.addEventListener('appinstalled', () => { deferredInstall = null; refreshInstallUI(); });
+async function installApp() {
+    if (!deferredInstall) {
+        alert(isIOS() ? 'No iPhone: abra no Safari, toque em Compartilhar e depois em "Adicionar à Tela de Início".'
+                      : 'Abra pelo Chrome e use o menu (três pontinhos) > "Instalar app". Se a opção não aparecer, o app provavelmente já está instalado.');
+        return;
+    }
+    deferredInstall.prompt();
+    try { await deferredInstall.userChoice; } catch (e) {}
+    deferredInstall = null;
+    refreshInstallUI();
+}
+
 function toggleSidebarDesk(collapse) {
     const c = typeof collapse === 'boolean' ? collapse : !document.body.classList.contains('sb-collapsed');
     document.body.classList.toggle('sb-collapsed', c);
@@ -2054,7 +2094,11 @@ function updateEditBanner() {
     const b = document.getElementById('editBanner'); if (!b) return;
     const c = editingId ? savedCycles.find(x => x.id === editingId) : null;
     if (!c) { b.classList.remove('on'); renderHistory(); return; }
-    document.getElementById('editBannerText').innerHTML = `&#9998; Editando <strong>${esc(c.nome)}</strong> &bull; ${esc(c.ciclo)} &bull; ${c.status === 'enviado' ? 'já enviado: será preciso reenviar' : 'pendente'}`;
+    const onlyAns = document.getElementById('statusFilter').value === 'Respondido';
+    const nAns = Object.keys(responses).filter(k => responses[k]).length;
+    document.getElementById('editBannerText').innerHTML = `&#9998; Editando <strong>${esc(c.nome)}</strong> &bull; ${esc(c.ciclo)} &bull; ${c.status === 'enviado' ? 'já enviado: será preciso reenviar' : 'pendente'}`
+        + `<br><span class="edit-scope">${onlyAns ? `Mostrando as <strong>${nAns}</strong> rotina(s) respondida(s) neste ciclo.` : 'Mostrando <strong>todas</strong> as rotinas: marque novas para incluí-las no ciclo.'} `
+        + `<a href="#" onclick="toggleEditScope();return false;">${onlyAns ? 'Incluir outras rotinas' : 'Ver só as respondidas'}</a></span>`;
     b.classList.add('on');
     renderHistory();
 }
@@ -2077,7 +2121,10 @@ function editCycle(id) {
     document.getElementById('userRole').value = c.setor || '';
     document.getElementById('userCycle').value = c.ciclo || document.getElementById('userCycle').value;
     document.getElementById('userDate').value = c.data || '';
-    document.getElementById('statusFilter').value = '';
+    document.getElementById('statusFilter').value = 'Respondido';
+    document.getElementById('modFilter').value = '';
+    document.getElementById('searchFilter').value = '';
+    syncAndFilter('sidebar');
     editingId = id;
     saveDraft();
     renderTable();
@@ -2087,6 +2134,13 @@ function editCycle(id) {
     if (window.innerWidth <= 900) toggleMobileSidebar(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return true;
+}
+
+function toggleEditScope() {
+    const sf = document.getElementById('statusFilter');
+    sf.value = sf.value === 'Respondido' ? '' : 'Respondido';
+    applyFilters();
+    updateEditBanner();
 }
 
 function cancelEdit() {
