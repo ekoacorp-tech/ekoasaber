@@ -11,7 +11,7 @@
 [![Offline](https://img.shields.io/badge/funciona-offline-3B8A97?style=flat-square)](#princípios-de-engenharia)
 [![Plataformas](https://img.shields.io/badge/Android%20%7C%20iPhone%20%7C%20Computador-6B4A32?style=flat-square)](#instalação)
 
-[**Abrir o app**](https://ekoacorp-tech.github.io/ekoasapiens/) · [Novidades](CHANGELOG.md) · [Arquitetura](docs/arquitetura.md) · [Sincronização](docs/sincronizacao.md)
+[**Abrir o app**](https://ekoacorp-tech.github.io/ekoasaber/) · [Novidades](CHANGELOG.md) · [Arquitetura](docs/arquitetura.md) · [Sincronização](docs/sincronizacao.md)
 
 </div>
 
@@ -90,7 +90,7 @@ flowchart LR
 
 ## Instalação
 
-Abra **https://ekoacorp-tech.github.io/ekoasapiens/** e instale:
+Abra **https://ekoacorp-tech.github.io/ekoasaber/** e instale:
 
 - **Android ou computador (Chrome/Edge):** botão **Instalar app** na tela inicial do Ekoa Saber, ou menu do navegador → *Instalar app*.
 - **iPhone (Safari):** Compartilhar → **Adicionar à Tela de Início**.
